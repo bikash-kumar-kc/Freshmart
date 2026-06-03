@@ -60,7 +60,7 @@ export const orderInsights = sqliteTable(
   "order_insights",
   {
     id: text("id").primaryKey(),
-    userId: text("userId")
+    userId: text("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     productId: text("product_id")
@@ -78,7 +78,49 @@ export const orderInsights = sqliteTable(
   ],
 );
 
-
 // frequency products...
 
-export const freq
+export const freqProducts = sqliteTable(
+  "freqproducts",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    productId: text("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+
+    lastBoughtAt: text("last_bought_at").notNull(),
+    nextExpectedAt: text("next_expected_at").notNull(),
+    status: text("status").notNull().default("active"), // "active" , "inactive"=> remove this product from freqproducts and order insights
+  },
+  (table) => [
+    index("freq_product_user_idx").on(table.userId),
+    index("freq_products_next_expected_idx").on(table.nextExpectedAt),
+  ],
+);
+
+// suggestedCarts...
+
+export const suggestedCarts = sqliteTable(
+  "suggested_carts",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    items: text("items", { mode: "json" })
+      .notNull()
+      .$type<Array<{ productId: string; quantity: number; reason: string }>>(),
+    status: text("status").notNull().default("pending"),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    expiresAt: text("expires_at").notNull(),
+  },
+  (table) => [
+    index("suggested_carts_user_idx").on(table.userId),
+    index("suggested_carts_status_idx").on(table.status),
+  ],
+);
