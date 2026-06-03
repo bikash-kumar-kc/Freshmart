@@ -124,3 +124,23 @@ export const suggestedCarts = sqliteTable(
     index("suggested_carts_status_idx").on(table.status),
   ],
 );
+
+
+// types...
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+ 
+export type Product = typeof products.$inferSelect;
+export type NewProduct = typeof products.$inferInsert;
+ 
+export type OrderHistory = typeof orderHistory.$inferSelect;
+export type NewOrderHistory = typeof orderHistory.$inferInsert;
+ 
+export type OrderInsight = typeof orderInsights.$inferSelect;
+export type NewOrderInsight = typeof orderInsights.$inferInsert;
+ 
+export type FreqProduct = typeof freqProducts.$inferSelect;
+export type NewFreqProduct = typeof freqProducts.$inferInsert;
+ 
+export type SuggestedCart = typeof suggestedCarts.$inferSelect;
+export type NewSuggestedCart = typeof suggestedCarts.$inferInsert;
