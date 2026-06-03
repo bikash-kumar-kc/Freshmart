@@ -29,7 +29,6 @@ export const products = sqliteTable("products", {
 });
 
 // order_history...
-
 export const orderHistory = sqliteTable(
   "order_history",
   {
@@ -54,3 +53,32 @@ export const orderHistory = sqliteTable(
     index("order_history_placed_at_idx").on(table.placedAt),
   ],
 );
+
+// orderInsights...
+
+export const orderInsights = sqliteTable(
+  "order_insights",
+  {
+    id: text("id").primaryKey(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    productId: text("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    avgIntervalDays: real("avg_interval_days"),
+    buyCount: integer("buy_count").notNull().default(0),
+    avgQuantity: real("avg_quantity").notNull().default(1),
+    lastComputedAt: text("last_computed_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (table) => [
+    index("order_insights_user_product_idx").on(table.userId, table.productId),
+  ],
+);
+
+
+// frequency products...
+
+export const freq
