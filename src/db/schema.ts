@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { real, integer } from "drizzle-orm/sqlite-core";
+import { real, integer, index } from "drizzle-orm/sqlite-core";
 import { text, sqliteTable } from "drizzle-orm/sqlite-core";
 
 // user table...
@@ -28,10 +28,29 @@ export const products = sqliteTable("products", {
     .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
 });
 
-
 // order_history...
 
-export const orderHistory = sqliteTable("order_history",{
-    id:text("id").primaryKey(),
-    userId:text("user_id").notNull().references(()=> users.id,{onDelete:"cascade"})
-})
+export const orderHistory = sqliteTable(
+  "order_history",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    items: text("items", { mode: "json" })
+      .notNull()
+      .$type<
+        Array<{ productId: string; quantity: number; priceAtTime: number }>
+      >(),
+    total: real("total").notNull(),
+    status: text("status").notNull().default("pending"),
+    stripePaymentId: text("stripe_payment_id"),
+    placedAt: text("placed_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (table) => [
+    index("order_history_user_idx").on(table.userId),
+    index("order_history_placed_at_idx").on(table.placedAt),
+  ],
+);
