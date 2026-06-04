@@ -1,19 +1,26 @@
-import {generateText, stepCountIs} from "ai";
+import { generateText, stepCountIs } from "ai";
 import { google } from "@ai-sdk/google";
 import z from "zod";
+import {
+  getLastComputedAt,
+  getOrderHistory,
+  getUserList,
+  upsertFreqProduct,
+  writeOrderInsight,
+} from "./tools";
 
-
-export async function runInsightSyncAgent(){
-
-    const {text,steps}  = await generateText({
-        model:google("gemini-2.5-flash"),
-        stopWhen:stepCountIs(500),
-        tools:{
-            schema:{
-
-            }
-        },
-        system:`
+export async function runInsightSyncAgent() {
+  const { text, steps } = await generateText({
+    model: google("gemini-2.5-flash"),
+    stopWhen: stepCountIs(500),
+    tools: {
+      getUserList,
+      getOrderHistory,
+      getLastComputedAt,
+      writeOrderInsight,
+      upsertFreqProduct,
+    },
+    system: `
       You are a background data-sync agent for a smart shopping assistant.
       Your job is to process order history for all users and keep the
       order_insights and freq_products tables up to date.
@@ -35,8 +42,8 @@ export async function runInsightSyncAgent(){
       7. Process users one at a time — do not skip ahead.
       8. When all users are processed, respond with a summary of what was done.
     `,
-    prompt:"Start the insight sync job.Process all users now."
-    })
+    prompt: "Start the insight sync job.Process all users now.",
+  });
 
-    return { summary: text, steps: steps.length };
+  return { summary: text, steps: steps.length };
 }
