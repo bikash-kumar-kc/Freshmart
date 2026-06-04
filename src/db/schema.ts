@@ -16,7 +16,6 @@ export const users = sqliteTable("users", {
 });
 
 // product table...
-
 export const products = sqliteTable("products", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
