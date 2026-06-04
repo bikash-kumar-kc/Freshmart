@@ -8,7 +8,7 @@ import {
   orderInsights,
   freqProducts,
 } from "@/src/db/schema";
-import { eq, gt, and } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export const getUserList = tool({
   description: `

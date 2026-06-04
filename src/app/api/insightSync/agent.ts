@@ -1,6 +1,5 @@
 import { generateText, stepCountIs } from "ai";
 import { google } from "@ai-sdk/google";
-import z from "zod";
 import {
   getLastComputedAt,
   getOrderHistory,
