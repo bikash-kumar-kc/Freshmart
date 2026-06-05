@@ -92,6 +92,7 @@ export const freqProducts = sqliteTable(
 
     lastBoughtAt: text("last_bought_at").notNull(),
     nextExpectedAt: text("next_expected_at").notNull(),
+    notificationSentAt:text("notification_sent_at").notNull(),
     status: text("status").notNull().default("active"), // "active" , "inactive"=> remove this product from freqproducts and order insights
   },
   (table) => [
