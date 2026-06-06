@@ -9,9 +9,7 @@ import {
 } from "@/src/db/schema";
 import { eq, and, gte, lt, isNull } from "drizzle-orm";
 import webpush from "web-push";
-import { Client as QStashClient } from "@upstash/qstash";
-
-const qstash = new QStashClient({ token: process.env.QSTASH_TOKEN! });
+import qstash from "../../../qstash/index";
 
 webpush.setVapidDetails(
   process.env.VAPID_MAILTO!,
@@ -267,7 +265,10 @@ export const sendRestockNotification = tool({
 
     await qstash.publishJSON({
       url: `${process.env.NEXT_PUBLIC_APP_URL}/api/agent/expiry-check`,
-      body: { userId, cartId, productIds },
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId, cartId, productIds }),
       delay: 60 * 60 * 48, // 48 hours in seconds
     });
 
