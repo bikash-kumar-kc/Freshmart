@@ -1,6 +1,9 @@
+import { success } from 'zod';
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { subscriptionNotify } from "../lib/serverAction";
+import { unsubscriptionNotify } from "../lib/serverAction";
 
 type PERMISSIONSTATE = "default" | "granted" | "denied";
 type SUBSCRIPATIONSTATE =
@@ -63,18 +66,15 @@ export const usePushNotification = () => {
 
       if (!vapidKey) throw new Error("VAPID public key is not configured !");
 
-      const subscriptionNotify = await registration.pushManager.subscribe({
+      const subscriptionNotify:PushSubscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(vapidKey),
       });
 
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, subscription: subscriptionNotify }),
-      });
+      const res = await subscriptionNotify({sub:subscriptionNotify,userId})
 
-      if (!res.ok) throw new Error("Failed to registered subscription !");
+
+      if (!res.success) throw new Error("Failed to registered subscription !");
       setSubscription("subscribed");
     } catch (err: unknown) {
       const error = err as Error;
@@ -93,11 +93,7 @@ export const usePushNotification = () => {
 
       if (subscription) {
         await subscriptionNotify?.unsubscribe();
-        await fetch("/api/unsubscribe", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId }),
-        });
+      await unsubscriptionNotify({userId});
       }
 
       setSubscription("unsubscribed");
