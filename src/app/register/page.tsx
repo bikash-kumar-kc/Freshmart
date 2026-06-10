@@ -59,7 +59,7 @@ const Page = () => {
   <div className="w-full flex flex-col items-center gap-4">
 
     <form onSubmit={handleSubmit(handleSubmitHandler)} className="w-full max-w-md">
-      <div className="w-full flex flex-col bg-blue-700 gap-y-4 px-6 py-6 rounded-xl border border-cyan-400 hover:border-cyan-500 transition-colors">
+      <div className="w-full flex flex-col  gap-y-4 px-6 py-6 rounded-xl border border-cyan-400 hover:border-cyan-500 transition-colors">
 
         <h2 className="text-xl font-bold text-center">Create Account</h2>
 
