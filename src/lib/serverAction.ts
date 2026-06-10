@@ -2,16 +2,16 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/config";
 import { users } from "../db/schema";
+import { IREGISTERTYPES } from "../app/register/page";
+import bcrypt from "bcryptjs";
+import { nanoid } from "nanoid";
 
 interface ISUBSCRIPTIONTYPES {
   sub: PushSubscription;
   userId: string;
 }
 
-interface IRESPONSETYPES {
-  success: boolean;
-  msg: string;
-}
+
 export const subscriptionNotify = async ({
   sub,
   userId,
@@ -39,4 +39,43 @@ export const unsubscriptionNotify = async ({ userId }: { userId: string }) => {
     success: true,
     msg: "unsubscribe successfully !",
   };
+};
+
+export const registerUser = async (data: IREGISTERTYPES) => {
+  try {
+    const { email, password } = data;
+
+    if (!email || !password) {
+      throw new Error("Email or password is required !");
+    }
+
+    const isExist = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.email, email));
+
+    if (isExist) {
+      throw new Error("User with this email already exist !");
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    if (!hashPassword) throw new Error("Failed to hashed password !");
+
+    const uniqueId = nanoid();
+
+    const newUser = await db
+      .insert(users)
+      .values({ id: uniqueId, email, password: hashPassword })
+      .returning();
+
+    if (!newUser) {
+      throw new Error("Failed to create new User !");
+    }
+
+    return { id: newUser[0].id, email: newUser[0].email };
+  } catch (error) {
+    console.log("Failed to register user !");
+    throw error;
+  }
 };
