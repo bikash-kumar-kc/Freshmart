@@ -11,7 +11,6 @@ interface ISUBSCRIPTIONTYPES {
   userId: string;
 }
 
-
 export const subscriptionNotify = async ({
   sub,
   userId,
@@ -41,7 +40,10 @@ export const unsubscriptionNotify = async ({ userId }: { userId: string }) => {
   };
 };
 
-export const registerUser = async (data: IREGISTERTYPES) => {
+export const registerUser = async (data: {
+  email: string;
+  password: string;
+}) => {
   try {
     const { email, password } = data;
 
@@ -49,12 +51,12 @@ export const registerUser = async (data: IREGISTERTYPES) => {
       throw new Error("Email or password is required !");
     }
 
-    const isExist = await db
+    const [isExist] = await db
       .select({ id: users.id })
       .from(users)
       .where(eq(users.email, email));
 
-    if (isExist) {
+    if (isExist?.id) {
       throw new Error("User with this email already exist !");
     }
 
@@ -66,7 +68,7 @@ export const registerUser = async (data: IREGISTERTYPES) => {
 
     const newUser = await db
       .insert(users)
-      .values({ id: uniqueId, email, password: hashPassword })
+      .values({ id: uniqueId, email, password: hashPassword ,name:"Bikash"+ Date.now()})
       .returning();
 
     if (!newUser) {

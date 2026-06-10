@@ -42,7 +42,7 @@ const Page = () => {
     });
 
     if (result?.error) {
-      console.error(result.error, "error");
+      console.log(result.error, "error");
       router.push("/register");
       return;
     }
