@@ -126,6 +126,19 @@ export const suggestedCarts = sqliteTable(
 );
 
 
+
+export const jobRuns = sqliteTable("job_runs", {
+  id: text("id").primaryKey(),
+  jobName: text("job_name").notNull(), 
+  status: text("status").notNull(),    
+  summary: text("summary"),           
+  steps: integer("steps"),             
+  startedAt: text("started_at").notNull(),
+  completedAt: text("completed_at"),
+  error: text("error"),                
+});
+
+
 // types...
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
