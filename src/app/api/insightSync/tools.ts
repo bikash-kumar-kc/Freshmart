@@ -33,11 +33,13 @@ export const getOrderHistory = tool({
     Call this once per user using the userId from getUserList.
      The returned items array contains every product the user has bought
     and when they bought it.Use this data to compute:
-    - how many times each product was bought (buy_count)
+    - how many times each product was bought (buy_count) 
     - average days between purchases (avg_interval_days)
     - average quantity per order (avg_quantity)
+    - if there is any product  that the user is buying in a regular interval.Like today is 12th june and then user is buying this product in every two days interval then call the write "writeOrderInsight" tool only at once. Here, considered the product must have at least 3 order that sync with the average days between purchases. The writeOrderInsight must be for each unique product not products at once.
     Do not call this for the same userId more than once.
-
+    - note: one thing that take the latest 4 order history for each product and then find the frequency criteria.
+    - note: considered one thing that is : like if a user buy a product in 8th then 10th then 12th then 14th but did not buy at 16th and then while calculating the frequncy product then considered today days and the interval remains same then processed otherwise skip.
     `,
 
   inputSchema: z.object({
