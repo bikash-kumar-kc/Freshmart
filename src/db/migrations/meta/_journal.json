@@ -15,6 +15,13 @@
       "when": 1780651263794,
       "tag": "0001_heavy_wallow",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1781235249903,
+      "tag": "0002_broken_multiple_man",
+      "breakpoints": true
     }
   ]
 }
