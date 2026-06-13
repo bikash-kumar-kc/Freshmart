@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import { real, integer, index } from "drizzle-orm/sqlite-core";
 import { text, sqliteTable } from "drizzle-orm/sqlite-core";
+import { NotificationType } from "../types/notificationTypes";
 
 // user table...
 // root table every other tables links...
@@ -92,7 +93,7 @@ export const freqProducts = sqliteTable(
 
     lastBoughtAt: text("last_bought_at").notNull(),
     nextExpectedAt: text("next_expected_at").notNull(),
-    notificationSentAt:text("notification_sent_at"),
+    notificationSentAt: text("notification_sent_at"),
     status: text("status").notNull().default("active"), // "active" , "inactive"=> remove this product from freqproducts and order insights
   },
   (table) => [
@@ -125,35 +126,45 @@ export const suggestedCarts = sqliteTable(
   ],
 );
 
-
-
 export const jobRuns = sqliteTable("job_runs", {
   id: text("id").primaryKey(),
-  jobName: text("job_name").notNull(), 
-  status: text("status").notNull(),    
-  summary: text("summary"),           
-  steps: integer("steps"),             
+  jobName: text("job_name").notNull(),
+  status: text("status").notNull(),
+  summary: text("summary"),
+  steps: integer("steps"),
   startedAt: text("started_at").notNull(),
   completedAt: text("completed_at"),
-  error: text("error"),                
+  error: text("error"),
 });
 
+export const notfications = sqliteTable("notifications", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  type: text("type").notNull().$type<NotificationType>(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  isShown: integer("is_shown", { mode: "boolean" }).notNull().default(false),
+  isDelete: integer("is_delete", { mode: "boolean" }).notNull().default(false),
+  isMarked: interger("is_marked", { mode: "boolean" }).notNull().default(false),
+});
 
 // types...
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
- 
+
 export type Product = typeof products.$inferSelect;
 export type NewProduct = typeof products.$inferInsert;
- 
+
 export type OrderHistory = typeof orderHistory.$inferSelect;
 export type NewOrderHistory = typeof orderHistory.$inferInsert;
- 
+
 export type OrderInsight = typeof orderInsights.$inferSelect;
 export type NewOrderInsight = typeof orderInsights.$inferInsert;
- 
+
 export type FreqProduct = typeof freqProducts.$inferSelect;
 export type NewFreqProduct = typeof freqProducts.$inferInsert;
- 
+
 export type SuggestedCart = typeof suggestedCarts.$inferSelect;
 export type NewSuggestedCart = typeof suggestedCarts.$inferInsert;
