@@ -1,12 +1,13 @@
 "use client";
-import React from "react";
+
 import SearchBar from "../client/SearchBar";
 import Image from "next/image";
-import { Divide, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlinePersonRemoveAlt1 } from "react-icons/md";
 import { IoPersonAddSharp } from "react-icons/io5";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 const Header = () => {
   const { data } = useSession();
@@ -63,17 +64,20 @@ const Header = () => {
               <MdOutlinePersonRemoveAlt1
                 size={24}
                 className="text-xl transition-transform group-hover:text-white"
+                onClick={() => signOut({ callbackUrl: "/" })}
               />
             </button>
           </div>
         ) : (
           <>
-            <button className="group p-2 rounded-full bg-white/80 text-black shadow-md backdrop-blur-sm transition-all hover:bg-transparent hover:scale-110">
-              <IoPersonAddSharp
-                size={24}
-                className="text-xl transition-transform group-hover:text-white"
-              />
-            </button>
+            <Link href={"/register"}>
+              <button className="group p-2 rounded-full bg-white/80 text-black shadow-md backdrop-blur-sm transition-all hover:bg-transparent hover:scale-110">
+                <IoPersonAddSharp
+                  size={24}
+                  className="text-xl transition-transform group-hover:text-white"
+                />
+              </button>
+            </Link>
           </>
         )}
       </div>
