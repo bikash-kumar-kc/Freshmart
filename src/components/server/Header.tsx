@@ -9,7 +9,13 @@ import { IoPersonAddSharp } from "react-icons/io5";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
-const Header = () => {
+
+
+interface IStateHandler{
+  handleNotificationPanelOpen:()=>void;
+}
+
+const Header = ({ handleNotificationPanelOpen }:IStateHandler) => {
   const { data } = useSession();
 
   return (
@@ -38,6 +44,7 @@ const Header = () => {
             <IoIosNotifications
               size={24}
               className="text-black group-hover:text-white transition-colors"
+              onClick={() => handleNotificationPanelOpen()}
             />
           </button>
 
