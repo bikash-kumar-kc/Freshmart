@@ -32,8 +32,8 @@ const NotificationPanel = ({isOpen}:{isOpen:boolean}) => {
   return (
     <aside
       className={`
-        w-100 h-screen bg-[#f7f7f7] border-l 
-        fixed right-0 top-31 flex flex-col  transition-transform duration-300 ease-in-out
+        w-100 h-screen bg-[#f7f7f7] border-l  z-10
+        fixed right-0 top-19 flex flex-col  transition-transform duration-300 ease-in-out
           ${isOpen ? "translate-x-0" : "translate-x-full"}
        `}
     >

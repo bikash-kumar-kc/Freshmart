@@ -26,7 +26,7 @@ const Header = ({ handleNotificationPanelOpen }:IStateHandler) => {
     >
       <div className="">
         <Image
-          src="/window.svg"
+          src="/fasto_logo.png"
           alt={"logo"}
           width={100}
           height={10}
