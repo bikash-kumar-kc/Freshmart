@@ -1,0 +1,1 @@
+ALTER TABLE `products` ADD `expire_at` text NOT NULL;

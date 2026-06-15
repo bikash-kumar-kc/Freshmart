@@ -16,17 +16,120 @@ export const users = sqliteTable("users", {
     .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
 });
 
-// product table...
-export const products = sqliteTable("products", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  category: text("category").notNull(),
-  price: real("price").notNull(),
-  stockQty: integer("stock_qty").notNull().default(0),
-  createdAt: text("created_at")
-    .notNull()
-    .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
-});
+
+
+
+export const products = sqliteTable(
+  "products",
+  {
+    id: text("id").primaryKey(),
+
+    name: text("name").notNull(),
+    slug: text("slug").notNull().unique(), // unique — see index below
+
+    category: text("category").notNull(),
+
+    // comma-separated search terms, e.g. "potato,aalu"
+   
+    keywords: text("keywords").notNull().default(""),
+
+    description: text("description").notNull(),
+
+    thumbnail: text("thumbnail").notNull(),
+    // JSON array of image URLs
+    images: text("images", { mode: "json" })
+      .notNull()
+      .$type<string[]>()
+      .default(sql`'[]'`),
+
+    // small category/product icon — separate from thumbnail
+    icon: text("icon"),
+
+    // ── curation flags ──
+    isMostPopular: integer("is_most_popular", { mode: "boolean" })
+      .notNull()
+      .default(false),
+    isFeatured: integer("is_featured", { mode: "boolean" })
+      .notNull()
+      .default(false),
+
+    // ── offers ──
+    isOffered: integer("is_offered", { mode: "boolean" })
+      .notNull()
+      .default(false),
+
+    // percentage, e.g. 20 = 20% off
+    discount: real("discount").notNull().default(0),
+
+    // renamed from isOfferedDateStartDate/EndDate — these are dates, not booleans
+    offerStartDate: text("offer_start_date"),
+    offerEndDate: text("offer_end_date"),
+
+    // ── organic provenance ──
+    originCountry: text("origin_country").notNull(),
+    farmName: text("farm_name").notNull(),
+
+   
+    freshnessTags: text("freshness_tags", { mode: "json" })
+      .notNull()
+      .$type<string[]>()
+      .default(sql`'[]'`),
+
+    // always an array now — even a single banner is ["url"]
+    featuredBanner: text("featured_banner", { mode: "json" })
+      .notNull()
+      .$type<string[]>()
+      .default(sql`'[]'`),
+
+    // "active" | "draft" | "out_of_stock" | "discontinued"
+    
+    status: text("status").notNull().default("active"),
+    expireAt:text("expire_at").notNull(),
+
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (table) => [
+    index("products_slug_idx").on(table.slug),
+    index("products_category_idx").on(table.category),
+    index("products_status_idx").on(table.status),
+  ]
+);
+
+
+export const productVariants = sqliteTable(
+  "product_variants",
+  {
+    id: text("id").primaryKey(),
+
+    productId: text("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+
+   
+    weightValue: real("weight_value").notNull(), 
+    weightUnit: text("weight_unit").notNull(),    
+
+    price: real("price").notNull(),
+    stock: integer("stock").notNull().default(0),
+
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (table) => [
+    index("product_variants_product_idx").on(table.productId),
+  ]
+);
+
+
 
 // order_history...
 export const orderHistory = sqliteTable(
@@ -147,7 +250,7 @@ export const notfications = sqliteTable("notifications", {
   content: text("content").notNull(),
   isShown: integer("is_shown", { mode: "boolean" }).notNull().default(false),
   isDelete: integer("is_delete", { mode: "boolean" }).notNull().default(false),
-  isMarked: interger("is_marked", { mode: "boolean" }).notNull().default(false),
+  isMarked: integer("is_marked", { mode: "boolean" }).notNull().default(false),
 });
 
 // types...
@@ -168,3 +271,6 @@ export type NewFreqProduct = typeof freqProducts.$inferInsert;
 
 export type SuggestedCart = typeof suggestedCarts.$inferSelect;
 export type NewSuggestedCart = typeof suggestedCarts.$inferInsert;
+
+export type ProductVariant = typeof productVariants.$inferSelect;
+export type NewProductVariant = typeof productVariants.$inferInsert;
