@@ -9,6 +9,8 @@ import BannerCarousel from "../components/client/bannerCarousel";
 import ImageSlider from "../components/client/messageBanner";
 import OrganicProductCards from "../components/client/ProductCard";
 import HoverRevealCard from "../components/client/NormalProduct";
+import BlogCard from "../components/client/BlogCard";
+import { blogs } from "../constants/blog.dummy";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -210,7 +212,17 @@ export default function Home() {
               }
               name={"Hass avocados"}
             />
+
+
           </div>
+
+           <section>
+        <h2 className="text-xl font-semibold mb-4">
+          Healthy Living Journal
+        </h2>
+
+
+      </section>
         </main>
       </SessionProvider>
     </div>
