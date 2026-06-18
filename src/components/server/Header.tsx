@@ -2,20 +2,18 @@
 
 import SearchBar from "../client/SearchBar";
 import Image from "next/image";
-import { ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart, Truck } from "lucide-react";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlinePersonRemoveAlt1 } from "react-icons/md";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
-
-
-interface IStateHandler{
-  handleNotificationPanelOpen:()=>void;
+interface IStateHandler {
+  handleNotificationPanelOpen: () => void;
 }
 
-const Header = ({ handleNotificationPanelOpen }:IStateHandler) => {
+const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const { data } = useSession();
 
   return (
@@ -54,6 +52,7 @@ const Header = ({ handleNotificationPanelOpen }:IStateHandler) => {
           </span>
         </div>
 
+        <Link href={'/cart'}>
         <div className="relative group">
           <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
             <ShoppingCart className="text-black group-hover:text-white transition-colors" />
@@ -63,6 +62,19 @@ const Header = ({ handleNotificationPanelOpen }:IStateHandler) => {
           <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
             3
           </span>
+        </div>
+        </Link>
+
+        <div className="relative group">
+          <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
+            <Heart className="text-black group-hover:text-white transition-colors" />
+          </button>
+        </div>
+
+        <div className="relative group">
+          <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
+            <Truck className="text-black group-hover:text-white transition-colors" />
+          </button>
         </div>
 
         {data?.user.id ? (
