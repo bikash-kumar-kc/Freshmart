@@ -77,7 +77,7 @@ const Header = ({ handleNotificationPanelOpen }:IStateHandler) => {
           </div>
         ) : (
           <>
-            <Link href={"/register"}>
+            <Link href={"/auth/register"}>
               <button className="group p-2 rounded-full bg-white/80 text-black shadow-md backdrop-blur-sm transition-all hover:bg-transparent hover:scale-110">
                 <IoPersonAddSharp
                   size={24}
