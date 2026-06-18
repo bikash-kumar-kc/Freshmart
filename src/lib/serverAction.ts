@@ -2,7 +2,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/config";
 import { users } from "../db/schema";
-import { IREGISTERTYPES } from "../app/register/page";
+import { IREGISTERTYPES } from "../app/auth/register/page";
 import bcrypt from "bcryptjs";
 import { nanoid } from "nanoid";
 
