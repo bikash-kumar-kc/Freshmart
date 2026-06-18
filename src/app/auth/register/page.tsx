@@ -66,8 +66,8 @@ const Page = () => {
         <div className="mb-10 flex flex-col items-center">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl">🌿</span>
-            <span className="text-lg font-bold text-green-700 tracking-tight">
-              YourBrandName
+            <span className="text-lg font-bold text-green-700 tracking-wider">
+              FRESHMART
             </span>
           </div>
           <p className="text-gray-400 text-sm">Create your account</p>
