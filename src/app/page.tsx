@@ -11,6 +11,7 @@ import OrganicProductCards from "../components/client/ProductCard";
 import HoverRevealCard from "../components/client/NormalProduct";
 import BlogCard from "../components/client/BlogCard";
 import { blogs } from "../constants/blog.dummy";
+import Footer from "../components/server/Footer";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -224,6 +225,10 @@ export default function Home() {
 
       </section>
         </main>
+
+       
+          <Footer/>
+
       </SessionProvider>
     </div>
   );
