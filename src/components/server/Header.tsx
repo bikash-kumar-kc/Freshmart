@@ -8,6 +8,9 @@ import { MdOutlinePersonRemoveAlt1 } from "react-icons/md";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { countUnreadNotifications } from "@/src/app/api/server action/notifications.server";
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
@@ -15,6 +18,30 @@ interface IStateHandler {
 
 const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const { data } = useSession();
+  const [count, setCount] = useState<number>(0);
+
+  const handleUnreadNotification = useCallback(async () => {
+    try {
+      console.log("hejasef");
+      if (data?.user.id) {
+        const { totalCount } = await countUnreadNotifications(data?.user.id);
+        setCount(totalCount);
+        console.log("Successfully, fetched unread notification !");
+      }
+      return;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.error("Failed to read unread notification !");
+      console.log(error);
+    }
+  }, [data?.user.id]);
+
+  useEffect(() => {
+    handleUnreadNotification();
+  }, [handleUnreadNotification]);
 
   return (
     <div
@@ -47,22 +74,24 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
           </button>
 
           {/* Badge */}
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-            3
-          </span>
+          {count > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+              {count}
+            </span>
+          )}
         </div>
 
-        <Link href={'/cart'}>
-        <div className="relative group">
-          <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
-            <ShoppingCart className="text-black group-hover:text-white transition-colors" />
-          </button>
+        <Link href={"/cart"}>
+          <div className="relative group">
+            <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
+              <ShoppingCart className="text-black group-hover:text-white transition-colors" />
+            </button>
 
-          {/* Badge */}
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-            3
-          </span>
-        </div>
+            {/* Badge */}
+            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+              3
+            </span>
+          </div>
         </Link>
 
         <div className="relative group">
