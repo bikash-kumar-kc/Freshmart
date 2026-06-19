@@ -6,7 +6,6 @@ import { authOptions } from "@/src/lib/auth";
 import { and, count, eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 
-
 interface IUnreadNotificationTypes {
   totalCount: number;
 }
@@ -89,9 +88,8 @@ export const updateNotificationsStatus = async (id: string) => {
 export const getAllNotifications = async (
   id: string,
 ): Promise<IGetAllNotificationsTypes> => {
-  if (!id?.trim()) throw new Error("User id is missing !");
-
   try {
+    if (!id?.trim()) throw new Error("User id is missing !");
     const isLoggedIn = await checkUserLoggedIn();
     if (!isLoggedIn) throw new Error("Unauthenticated !");
     const isValidUser = await isUserValid(id);
@@ -113,6 +111,30 @@ export const getAllNotifications = async (
       console.log(error.message);
     }
 
+    throw error;
+  }
+};
+
+export const unMarkedNotification = async (userId: string, notifId: string) => {
+  try {
+    if (!userId?.trim() || !notifId?.trim()) {
+      throw new Error("UserId or notifId is missing !");
+    }
+
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) throw new Error("Unauthenticated !");
+    const isValidUser = await isUserValid(userId);
+    if (!isValidUser) throw new Error("Unauthorized !");
+    await db
+      .update(notfications)
+      .set({ isMarked: true })
+      .where(
+        and(eq(notfications.userId, userId), eq(notfications.id, notifId)),
+      );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message);
+    }
     throw error;
   }
 };
