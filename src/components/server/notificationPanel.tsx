@@ -2,33 +2,58 @@
 
 import React, { useState } from "react";
 import { Bell } from "lucide-react";
-import { MOCK_NOTIFICATIONS, Notification, TYPE_CONFIG } from "@/src/constants/mockNotifications";
+import {
+  MOCK_NOTIFICATIONS,
+  Notification,
+  TYPE_CONFIG,
+} from "@/src/constants/mockNotifications";
 import { timeAgo } from "@/src/lib/timeFormater";
+import { useGetAllNotifications } from "@/src/hooks/useGetAllNotifications";
+import { useSession } from "next-auth/react";
+import { NotificationTypes } from "@/src/db/schema";
 
+const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
+  const [notifis, setNotifis] = useState<NotificationTypes[]>([]);
+  const { data } = useSession();
 
-
-const NotificationPanel = ({isOpen}:{isOpen:boolean}) => {
-  const [notifis, setNotifis] = useState<Notification[]>(MOCK_NOTIFICATIONS);
-
-  const unreadCount = notifis.filter((n) => !n.readAt).length;
+  // const unreadCount = notifis.filter((n) => !n.readAt).length;
 
   const markAllRead = () => {
     const now = new Date().toISOString();
     setNotifis((prev) => prev.map((n) => ({ ...n, readAt: n.readAt ?? now })));
   };
 
-  const handleClick = (n: Notification) => {
-    if (!n.readAt) {
+  const handleClick = (n: NotificationTypes) => {
+    if (!n.isMarked) {
       setNotifis((prev) =>
         prev.map((item) =>
-          item._id === n._id
-            ? { ...item, readAt: new Date().toISOString() }
-            : item,
+          item.id === n.id ? { ...item, isMarked: true } : item,
         ),
       );
     }
   };
 
+  const {
+    data: notifications,
+    isLoading,
+    error,
+  } = useGetAllNotifications(data?.user.id);
+
+  if (isLoading) {
+    return (
+      <div className="w-full min-h-screen">
+        <p className="text-gray-500">Its loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full min-h-screen">
+        <p className="text-red-500">{error.message}</p>
+      </div>
+    );
+  }
   return (
     <aside
       className={`
@@ -39,7 +64,7 @@ const NotificationPanel = ({isOpen}:{isOpen:boolean}) => {
     >
       {/* header */}
       <div className="flex items-center justify-end px-5 py-4 border-b border-[#262626]">
-        {unreadCount > 0 && (
+        {notifications && notifications?.totalNotifications > 0 && (
           <button
             onClick={markAllRead}
             className="text-[13px] text-[#5227ee] hover:text-[#a3a3a3] transition-colors"
@@ -51,20 +76,20 @@ const NotificationPanel = ({isOpen}:{isOpen:boolean}) => {
 
       {/* list */}
       <div className="flex-1 overflow-y-auto divide-y divide-[#262626]">
-        {notifis.length === 0 && (
+        {notifications?.notifications.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-2 pb-10">
             <Bell size={28} className="text-[#404040]" />
             <p className="text-sm text-[#525252]">No notifications yet</p>
           </div>
         )}
 
-        {notifis.map((n) => {
+        {notifications?.notifications.map((n) => {
           const config = TYPE_CONFIG[n.type];
-          const isUnread = !n.readAt;
+          const isUnread = !n.isMarked;
 
           return (
             <div
-              key={n._id}
+              key={n.id}
               onClick={() => handleClick(n)}
               className={`
                 flex gap-3 px-4 py-3 cursor-pointer transition-colors
@@ -103,7 +128,7 @@ const NotificationPanel = ({isOpen}:{isOpen:boolean}) => {
                   )}
                 </div>
                 <p className="text-xs text-[#737373] mt-0.5 leading-snug line-clamp-2">
-                  {n.message}
+                  {n.content}
                 </p>
                 <p className="text-[10px] text-[#525252] mt-1">
                   {timeAgo(n.createdAt)}
