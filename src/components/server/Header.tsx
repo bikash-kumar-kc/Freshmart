@@ -8,9 +8,12 @@ import { MdOutlinePersonRemoveAlt1 } from "react-icons/md";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { countUnreadNotifications } from "@/src/app/api/server action/notifications.server";
+import {
+  countUnreadNotifications,
+  updateNotificationsStatus,
+} from "@/src/app/api/server action/notifications.server";
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
@@ -18,7 +21,9 @@ interface IStateHandler {
 
 const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const { data } = useSession();
+  console.log(data);
   const [count, setCount] = useState<number>(0);
+  const changeNotificationRef = useRef<boolean | null>(null);
 
   const handleUnreadNotification = useCallback(async () => {
     try {
@@ -38,6 +43,22 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
       console.log(error);
     }
   }, [data?.user.id]);
+
+  const handleNotificationStatusUpdate = async () => {
+    if (changeNotificationRef.current) return;
+    if (!data?.user.id) return;
+    try {
+      await updateNotificationsStatus(data?.user.id);
+      setCount(0);
+      changeNotificationRef.current = true;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.error("Failed to update notification status!");
+    }
+  };
 
   useEffect(() => {
     handleUnreadNotification();
@@ -69,7 +90,10 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
             <IoIosNotifications
               size={24}
               className="text-black group-hover:text-white transition-colors"
-              onClick={() => handleNotificationPanelOpen()}
+              onClick={() => {
+                handleNotificationPanelOpen();
+                handleNotificationStatusUpdate();
+              }}
             />
           </button>
 
