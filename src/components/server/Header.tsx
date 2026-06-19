@@ -125,9 +125,11 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
         </div>
 
         <div className="relative group">
+          <Link href={'/orderstatus'}>
           <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
             <Truck className="text-black group-hover:text-white transition-colors" />
           </button>
+          </Link>
         </div>
 
         {data?.user.id ? (
