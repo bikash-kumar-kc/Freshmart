@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Bell } from "lucide-react";
 import {
   MOCK_NOTIFICATIONS,
@@ -8,9 +8,14 @@ import {
   TYPE_CONFIG,
 } from "@/src/constants/mockNotifications";
 import { timeAgo } from "@/src/lib/timeFormater";
-import { useGetAllNotifications } from "@/src/hooks/useGetAllNotifications";
+import {
+  useGetAllNotifications,
+  useMarkedNotification,
+} from "@/src/hooks/notificationHooks";
 import { useSession } from "next-auth/react";
 import { NotificationTypes } from "@/src/db/schema";
+import { toast } from "react-toastify";
+import { markedNotification } from "@/src/app/api/server action/notifications.server";
 
 const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
   const [notifis, setNotifis] = useState<NotificationTypes[]>([]);
@@ -19,8 +24,7 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
   // const unreadCount = notifis.filter((n) => !n.readAt).length;
 
   const markAllRead = () => {
-    const now = new Date().toISOString();
-    setNotifis((prev) => prev.map((n) => ({ ...n, readAt: n.readAt ?? now })));
+    setNotifis((prev) => prev.map((n) => ({ ...n, isMarked: true })));
   };
 
   const handleClick = (n: NotificationTypes) => {
@@ -39,6 +43,26 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
     error,
   } = useGetAllNotifications(data?.user.id);
 
+  const { mutate: markedNotifications, isPending } = useMarkedNotification();
+
+  const handleNotificationsMarked = () => {
+    try {
+      if (!data?.user.id) return;
+      markedNotifications(data?.user.id);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.error("Failed to Marked Notifications!");
+    }
+  };
+
+  useEffect(() => {
+    if (notifications && notifications?.notifications?.length > 0) {
+      setNotifis(notifications.notifications);
+    }
+  }, [notifications?.notifications.length, notifications]);
   if (isLoading) {
     return (
       <div className="w-full min-h-screen">
@@ -66,10 +90,14 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
       <div className="flex items-center justify-end px-5 py-4 border-b border-[#262626]">
         {notifications && notifications?.totalNotifications > 0 && (
           <button
-            onClick={markAllRead}
+            onClick={() => {
+              markAllRead();
+              handleNotificationsMarked();
+            }}
+            disabled={isPending}
             className="text-[13px] text-[#5227ee] hover:text-[#a3a3a3] transition-colors"
           >
-            Mark all read
+            {isPending ? "pending..." : " Mark all read"}
           </button>
         )}
       </div>
@@ -83,14 +111,17 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
           </div>
         )}
 
-        {notifications?.notifications.map((n) => {
+        {notifis?.map((n) => {
           const config = TYPE_CONFIG[n.type];
           const isUnread = !n.isMarked;
 
           return (
             <div
               key={n.id}
-              onClick={() => handleClick(n)}
+              onClick={() => {
+                handleClick(n);
+                markedNotification(data?.user.id as string, n.id);
+              }}
               className={`
                 flex gap-3 px-4 py-3 cursor-pointer transition-colors
                 hover:bg-[#97f979]

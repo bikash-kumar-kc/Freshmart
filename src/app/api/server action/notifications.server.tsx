@@ -115,7 +115,7 @@ export const getAllNotifications = async (
   }
 };
 
-export const unMarkedNotification = async (userId: string, notifId: string) => {
+export const markedNotification = async (userId: string, notifId: string) => {
   try {
     if (!userId?.trim() || !notifId?.trim()) {
       throw new Error("UserId or notifId is missing !");
@@ -130,6 +130,30 @@ export const unMarkedNotification = async (userId: string, notifId: string) => {
       .set({ isMarked: true })
       .where(
         and(eq(notfications.userId, userId), eq(notfications.id, notifId)),
+      );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message);
+    }
+    throw error;
+  }
+};
+
+export const markedNotifications = async (userId: string) => {
+  try {
+    if (!userId?.trim()) {
+      throw new Error("UserId is missing !");
+    }
+
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) throw new Error("Unauthenticated !");
+    const isValidUser = await isUserValid(userId);
+    if (!isValidUser) throw new Error("Unauthorized !");
+    await db
+      .update(notfications)
+      .set({ isMarked: true })
+      .where(
+        and(eq(notfications.userId, userId), eq(notfications.isMarked, false)),
       );
   } catch (error: unknown) {
     if (error instanceof Error) {
