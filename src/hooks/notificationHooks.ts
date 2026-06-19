@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../app/constants/queryKeys";
 import {
+  deleteNotifications,
   getAllNotifications,
   markedNotifications,
 } from "../app/api/server action/notifications.server";
@@ -17,5 +18,12 @@ export const useMarkedNotification = () => {
   return useMutation({
     mutationKey: [QUERY_KEYS.MARKED_NOTIFICATIONS],
     mutationFn: (id: string) => markedNotifications(id),
+  });
+};
+
+export const useDeleteNotification = () => {
+  return useMutation({
+    mutationKey: [QUERY_KEYS.DELETED_NOTIFICATIONS],
+    mutationFn: (id: string) => deleteNotifications(id),
   });
 };

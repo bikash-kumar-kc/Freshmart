@@ -1,30 +1,38 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Bell } from "lucide-react";
+import { Bell, Trash2 } from "lucide-react";
 import {
-  MOCK_NOTIFICATIONS,
-  Notification,
   TYPE_CONFIG,
 } from "@/src/constants/mockNotifications";
 import { timeAgo } from "@/src/lib/timeFormater";
 import {
+  useDeleteNotification,
   useGetAllNotifications,
   useMarkedNotification,
 } from "@/src/hooks/notificationHooks";
 import { useSession } from "next-auth/react";
 import { NotificationTypes } from "@/src/db/schema";
 import { toast } from "react-toastify";
-import { markedNotification } from "@/src/app/api/server action/notifications.server";
+import {
+  deleteNotification,
+  markedNotification,
+} from "@/src/app/api/server action/notifications.server";
 
 const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
   const [notifis, setNotifis] = useState<NotificationTypes[]>([]);
+  const [isAllMarked, setIsAllMarked] = useState<boolean>(false);
   const { data } = useSession();
 
-  // const unreadCount = notifis.filter((n) => !n.readAt).length;
 
   const markAllRead = () => {
     setNotifis((prev) => prev.map((n) => ({ ...n, isMarked: true })));
+    setIsAllMarked(true)
+  };
+
+  const handleDelete = (id: string) => {
+    if (!id) return;
+    setNotifis((prevs) => prevs.filter((p) => p.id !== id));
   };
 
   const handleClick = (n: NotificationTypes) => {
@@ -34,8 +42,8 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
           item.id === n.id ? { ...item, isMarked: true } : item,
         ),
       );
-    }
   };
+}
 
   const {
     data: notifications,
@@ -43,7 +51,10 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
     error,
   } = useGetAllNotifications(data?.user.id);
 
-  const { mutate: markedNotifications, isPending } = useMarkedNotification();
+  const { mutate: markedNotifications, isPending: marking } =
+    useMarkedNotification();
+  const { mutate: deletedNotifications, isPending: deleting } =
+    useDeleteNotification();
 
   const handleNotificationsMarked = () => {
     try {
@@ -58,11 +69,33 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
     }
   };
 
+  const handleNotificatinsDeleted = () => {
+    try {
+      if (!data?.user.id) return;
+      deletedNotifications(data?.user.id);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.error("Failed to Marked Notifications!");
+    }
+  };
+
   useEffect(() => {
     if (notifications && notifications?.notifications?.length > 0) {
       setNotifis(notifications.notifications);
     }
   }, [notifications?.notifications.length, notifications]);
+
+  useEffect(()=>{
+    if(notifis.some((p)=>p.isMarked === false)){
+    setIsAllMarked(false)
+    }else{
+      setIsAllMarked(true)
+    }
+  },[])
+
   if (isLoading) {
     return (
       <div className="w-full min-h-screen">
@@ -78,6 +111,7 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
       </div>
     );
   }
+
   return (
     <aside
       className={`
@@ -87,24 +121,39 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
        `}
     >
       {/* header */}
-      <div className="flex items-center justify-end px-5 py-4 border-b border-[#262626]">
+      <div className="flex items-center justify-end px-5 py-4 border-b gap-3 border-[#262626]">
         {notifications && notifications?.totalNotifications > 0 && (
-          <button
-            onClick={() => {
-              markAllRead();
-              handleNotificationsMarked();
-            }}
-            disabled={isPending}
-            className="text-[13px] text-[#5227ee] hover:text-[#a3a3a3] transition-colors"
-          >
-            {isPending ? "pending..." : " Mark all read"}
-          </button>
+          <>
+            {!isAllMarked && (
+              <button
+                onClick={() => {
+                  markAllRead();
+                  handleNotificationsMarked();
+                }}
+                disabled={marking}
+                className="text-[13px] text-[#ffffff] rounded-[5px] px-2 py-1 bg-green-600 hover:bg-green-800 transition-colors duration-200"
+              >
+                {marking ? "marking..." : " Mark all read"}
+              </button>
+            )}
+
+            <button
+              onClick={() => {
+                handleNotificatinsDeleted();
+                setNotifis([]);
+              }}
+              disabled={deleting}
+              className="text-[13px] text-[#ffffff] rounded-[5px] px-2 py-1 bg-red-600 hover:bg-red-800 transition-colors duration-200"
+            >
+              {marking ? "deleting..." : "Delete All"}
+            </button>
+          </>
         )}
       </div>
 
       {/* list */}
       <div className="flex-1 overflow-y-auto divide-y divide-[#262626]">
-        {notifications?.notifications.length === 0 && (
+        {notifis?.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-2 pb-10">
             <Bell size={28} className="text-[#404040]" />
             <p className="text-sm text-[#525252]">No notifications yet</p>
@@ -152,11 +201,15 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
                     {n.title}
                   </p>
                   {/* unread dot */}
-                  {isUnread && (
-                    <span
-                      className={`shrink-0 w-1.5 h-1.5 rounded-full mt-1.5 ${config.dot}`}
-                    />
-                  )}
+
+                  <Trash2
+                    size={"15px"}
+                    color="red"
+                    onClick={() => {
+                      deleteNotification(data?.user.id as string, n.id);
+                      handleDelete(n.id);
+                    }}
+                  />
                 </div>
                 <p className="text-xs text-[#737373] mt-0.5 leading-snug line-clamp-2">
                   {n.content}
@@ -171,6 +224,7 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
       </div>
     </aside>
   );
-};
 
-export default React.memo(NotificationPanel);
+}
+
+export default React.memo(NotificationPanel)
