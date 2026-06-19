@@ -2,9 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Bell, Trash2 } from "lucide-react";
-import {
-  TYPE_CONFIG,
-} from "@/src/constants/mockNotifications";
+import { TYPE_CONFIG } from "@/src/constants/mockNotifications";
 import { timeAgo } from "@/src/lib/timeFormater";
 import {
   useDeleteNotification,
@@ -22,12 +20,13 @@ import {
 const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
   const [notifis, setNotifis] = useState<NotificationTypes[]>([]);
   const [isAllMarked, setIsAllMarked] = useState<boolean>(false);
+  const [isSticky, setIsSticky] = useState<boolean>(false);
+  
   const { data } = useSession();
-
 
   const markAllRead = () => {
     setNotifis((prev) => prev.map((n) => ({ ...n, isMarked: true })));
-    setIsAllMarked(true)
+    setIsAllMarked(true);
   };
 
   const handleDelete = (id: string) => {
@@ -42,8 +41,8 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
           item.id === n.id ? { ...item, isMarked: true } : item,
         ),
       );
+    }
   };
-}
 
   const {
     data: notifications,
@@ -83,18 +82,30 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
   };
 
   useEffect(() => {
+    const handleScroll = () => {
+      setIsSticky(window.scrollY >= 30);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
     if (notifications && notifications?.notifications?.length > 0) {
       setNotifis(notifications.notifications);
     }
   }, [notifications?.notifications.length, notifications]);
 
-  useEffect(()=>{
-    if(notifis.some((p)=>p.isMarked === false)){
-    setIsAllMarked(false)
-    }else{
-      setIsAllMarked(true)
+  useEffect(() => {
+    if (notifis.some((p) => p.isMarked === false)) {
+      setIsAllMarked(false);
+    } else {
+      setIsAllMarked(true);
     }
-  },[])
+  }, [notifis]);
 
   if (isLoading) {
     return (
@@ -116,12 +127,13 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
     <aside
       className={`
         w-100 h-screen bg-[#f7f7f7] border-l  z-10
-        fixed right-0 top-19 flex flex-col  transition-transform duration-300 ease-in-out
+        fixed right-0 flex flex-col  transition-transform duration-300 ease-in-out
+        ${isSticky ? 'top-0':'top-20'}
           ${isOpen ? "translate-x-0" : "translate-x-full"}
        `}
     >
       {/* header */}
-      <div className="flex items-center justify-end px-5 py-4 border-b gap-3 border-[#262626]">
+      <div className="flex items-center justify-end px-5 py-4  gap-3 border-[#262626] ">
         {notifications && notifications?.totalNotifications > 0 && (
           <>
             {!isAllMarked && (
@@ -152,9 +164,9 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
       </div>
 
       {/* list */}
-      <div className="flex-1 overflow-y-auto divide-y divide-[#262626]">
+      <div className="flex-1 overflow-y-auto ">
         {notifis?.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full gap-2 pb-10">
+          <div className="flex flex-col items-center justify-center h-full gap-2 pb-10 ">
             <Bell size={28} className="text-[#404040]" />
             <p className="text-sm text-[#525252]">No notifications yet</p>
           </div>
@@ -172,8 +184,8 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
                 markedNotification(data?.user.id as string, n.id);
               }}
               className={`
-                flex gap-3 px-4 py-3 cursor-pointer transition-colors
-                hover:bg-[#97f979]
+                flex gap-3 px-4 py-3 cursor-pointer border transition-colors shadow-sm
+                hover:bg-[#005700] group rounded-sm
                 ${isUnread ? "bg-[#cdcaca]" : "bg-transparent"}
               `}
             >
@@ -194,9 +206,9 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
                   <p
                     className={`text-sm leading-snug ${
                       isUnread
-                        ? "font-medium text-[#f5f5f5]"
-                        : "font-normal text-[#a3a3a3]"
-                    }`}
+                        ? "font-medium text-[#2c2a2a]"
+                        : "font-normal text-[#171717]"
+                    } group-hover:text-gray-50`}
                   >
                     {n.title}
                   </p>
@@ -211,10 +223,10 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
                     }}
                   />
                 </div>
-                <p className="text-xs text-[#737373] mt-0.5 leading-snug line-clamp-2">
+                <p className="text-xs text-[#737373] mt-0.5 leading-snug line-clamp-2 group-hover:text-gray-300">
                   {n.content}
                 </p>
-                <p className="text-[10px] text-[#525252] mt-1">
+                <p className="text-[10px] text-[#525252] mt-1 group-hover:text-gray-300">
                   {timeAgo(n.createdAt)}
                 </p>
               </div>
@@ -224,7 +236,6 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
       </div>
     </aside>
   );
+};
 
-}
-
-export default React.memo(NotificationPanel)
+export default React.memo(NotificationPanel);

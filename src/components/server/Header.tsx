@@ -60,6 +60,8 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
     }
   };
 
+  
+
   useEffect(() => {
     handleUnreadNotification();
   }, [handleUnreadNotification]);
@@ -67,7 +69,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   return (
     <div
       className="w-full px-4 py-3 flex items-center justify-between gap-8
-             bg-green-400 backdrop-blur-xl shadow-sm
+             bg-green-400 backdrop-blur-xl shadow-sm z-20
              border-b border-white/20"
     >
       <div className="">
