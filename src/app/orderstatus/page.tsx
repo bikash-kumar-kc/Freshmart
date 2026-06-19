@@ -164,7 +164,7 @@ const OrderCard = ({ order }: { order: Order }) => {
   const config = STATUS_CONFIG[order.status];
 
   return (
-    <div className="bg-white border border-gray-100 rounded-sm overflow-hidden hover:border-green-500 hover:shadow-sm transition-all duration-200">
+    <div className="bg-white border border-gray-100 rounded-sm overflow-hidden hover:border-green-500 hover:shadow-sm animate-fade-up transition-all duration-200">
 
       {/* Card header */}
       <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 bg-gray-50/60">
@@ -192,9 +192,9 @@ const OrderCard = ({ order }: { order: Order }) => {
 
         {/* Store */}
         <div className="flex flex-col gap-0.5">
-          <p className="text-[11px] uppercase tracking-wider text-gray-700 font-medium">Store</p>
-          <p className="text-sm text-gray-400">{order.storeName}</p>
-          <p className="text-xs text-gray-400 truncate">{order.address}</p>
+          <p className="text-[11px] uppercase tracking-wider text-gray-800 font-medium">Store</p>
+          <p className="text-sm text-gray-600">{order.storeName}</p>
+          <p className="text-xs text-gray-600 truncate">{order.address}</p>
         </div>
 
         {/* Est. delivery */}
@@ -202,17 +202,17 @@ const OrderCard = ({ order }: { order: Order }) => {
           <p className="text-[11px]  tracking-wider text-gray-700 font-medium">
             {order.status === "delivered" ? "Delivered on" : "Est. delivery"}
           </p>
-          <p className={`text-sm font-medium ${order.status === "delivered" ? "text-green-600" : "text-gray-400"}`}>
+          <p className={`text-sm font-medium ${order.status === "delivered" ? "text-green-600" : "text-gray-600"}`}>
             {formatDate(order.estimatedDelivery)}
           </p>
-          <p className="text-xs text-gray-400">{order.items.length} item{order.items.length > 1 ? "s" : ""}</p>
+          <p className="text-xs text-gray-600">{order.items.length} item{order.items.length > 1 ? "s" : ""}</p>
         </div>
 
         {/* Cost */}
         <div className="flex flex-col gap-0.5">
           <p className="text-[11px] uppercase tracking-wider text-gray-700 font-medium">Total cost</p>
           <p className="text-sm font-semibold text-gray-900">{formatCurrency(order.cost)}</p>
-          <p className="text-xs text-gray-400 truncate">
+          <p className="text-xs text-gray-600 truncate">
             {order.items.map((i) => i.name).join(", ")}
           </p>
         </div>
@@ -220,11 +220,11 @@ const OrderCard = ({ order }: { order: Order }) => {
       </div>
 
       {/* Card footer */}
-      <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-between">
-        <p className="text-xs text-gray-400">
+      <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-end">
+        {/* <p className="text-xs text-gray-600">
           {order.items.length} item{order.items.length > 1 ? "s" : ""} ·{" "}
           {order.items.map((i) => `${i.name} ×${i.qty}`).join(" · ")}
-        </p>
+        </p> */}
         <Link
           href={`/orders/${order.id}`}
           className="inline-flex items-center gap-1.5 text-xs font-medium text-green-600 hover:text-green-700 transition-colors"
