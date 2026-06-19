@@ -1,14 +1,19 @@
 "use server";
 
 import { db } from "@/src/db/config";
-import { notfications } from "@/src/db/schema";
+import { notfications, NotificationTypes } from "@/src/db/schema";
 import { authOptions } from "@/src/lib/auth";
 import { and, count, eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
-import { getSession } from "next-auth/react";
+
 
 interface IUnreadNotificationTypes {
   totalCount: number;
+}
+
+interface IGetAllNotificationsTypes {
+  totalNotifications: number;
+  notifications: NotificationTypes[] | [];
 }
 
 const checkUserLoggedIn = async (): Promise<boolean> => {
@@ -77,6 +82,37 @@ export const updateNotificationsStatus = async (id: string) => {
     if (error instanceof Error) {
       console.log(error.message);
     }
+    throw error;
+  }
+};
+
+export const getAllNotifications = async (
+  id: string,
+): Promise<IGetAllNotificationsTypes> => {
+  if (!id?.trim()) throw new Error("User id is missing !");
+
+  try {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) throw new Error("Unauthenticated !");
+    const isValidUser = await isUserValid(id);
+    if (!isValidUser) throw new Error("Unauthorized !");
+
+    const response = await db
+      .select()
+      .from(notfications)
+      .where(
+        and(eq(notfications.userId, id), eq(notfications.isDelete, false)),
+      );
+
+    return {
+      totalNotifications: response.length,
+      notifications: response,
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
+    }
+
     throw error;
   }
 };

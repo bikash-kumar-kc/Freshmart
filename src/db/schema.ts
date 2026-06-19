@@ -16,9 +16,6 @@ export const users = sqliteTable("users", {
     .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
 });
 
-
-
-
 export const products = sqliteTable(
   "products",
   {
@@ -30,7 +27,7 @@ export const products = sqliteTable(
     category: text("category").notNull(),
 
     // comma-separated search terms, e.g. "potato,aalu"
-   
+
     keywords: text("keywords").notNull().default(""),
 
     description: text("description").notNull(),
@@ -69,7 +66,6 @@ export const products = sqliteTable(
     originCountry: text("origin_country").notNull(),
     farmName: text("farm_name").notNull(),
 
-   
     freshnessTags: text("freshness_tags", { mode: "json" })
       .notNull()
       .$type<string[]>()
@@ -82,9 +78,9 @@ export const products = sqliteTable(
       .default(sql`'[]'`),
 
     // "active" | "draft" | "out_of_stock" | "discontinued"
-    
+
     status: text("status").notNull().default("active"),
-    expireAt:text("expire_at").notNull(),
+    expireAt: text("expire_at").notNull(),
 
     createdAt: text("created_at")
       .notNull()
@@ -97,9 +93,8 @@ export const products = sqliteTable(
     index("products_slug_idx").on(table.slug),
     index("products_category_idx").on(table.category),
     index("products_status_idx").on(table.status),
-  ]
+  ],
 );
-
 
 export const productVariants = sqliteTable(
   "product_variants",
@@ -110,9 +105,8 @@ export const productVariants = sqliteTable(
       .notNull()
       .references(() => products.id, { onDelete: "cascade" }),
 
-   
-    weightValue: real("weight_value").notNull(), 
-    weightUnit: text("weight_unit").notNull(),    
+    weightValue: real("weight_value").notNull(),
+    weightUnit: text("weight_unit").notNull(),
 
     price: real("price").notNull(),
     stock: integer("stock").notNull().default(0),
@@ -124,12 +118,8 @@ export const productVariants = sqliteTable(
       .notNull()
       .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
   },
-  (table) => [
-    index("product_variants_product_idx").on(table.productId),
-  ]
+  (table) => [index("product_variants_product_idx").on(table.productId)],
 );
-
-
 
 // order_history...
 export const orderHistory = sqliteTable(
@@ -251,6 +241,9 @@ export const notfications = sqliteTable("notifications", {
   isShown: integer("is_shown", { mode: "boolean" }).notNull().default(false),
   isDelete: integer("is_delete", { mode: "boolean" }).notNull().default(false),
   isMarked: integer("is_marked", { mode: "boolean" }).notNull().default(false),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
 });
 
 // types...
@@ -274,3 +267,5 @@ export type NewSuggestedCart = typeof suggestedCarts.$inferInsert;
 
 export type ProductVariant = typeof productVariants.$inferSelect;
 export type NewProductVariant = typeof productVariants.$inferInsert;
+
+export type NotificationTypes = typeof notfications.$inferSelect;
