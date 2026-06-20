@@ -60,8 +60,6 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
     }
   };
 
-  
-
   useEffect(() => {
     handleUnreadNotification();
   }, [handleUnreadNotification]);
@@ -72,16 +70,14 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
              bg-green-400 backdrop-blur-xl shadow-sm z-20
              border-b border-white/20"
     >
-      <div className="">
-        <Image
-          src="/fasto_logo.png"
-          alt={"logo"}
-          width={100}
-          height={10}
-          priority
-        />
+     <Link href={"/"}>
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-2xl ">🌿</span>
+        <span className="text-lg font-extrabold italic text-white tracking-wider">
+          FRESHMART
+        </span>
       </div>
-
+</Link>
       <div className="flex-1">
         <SearchBar />
       </div>
@@ -127,10 +123,10 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
         </div>
 
         <div className="relative group">
-          <Link href={'/orderstatus'}>
-          <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
-            <Truck className="text-black group-hover:text-white transition-colors" />
-          </button>
+          <Link href={"/orderstatus"}>
+            <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
+              <Truck className="text-black group-hover:text-white transition-colors" />
+            </button>
           </Link>
         </div>
 
