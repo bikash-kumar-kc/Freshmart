@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerUser } from "../../../lib/serverAction";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { getLocally, saveLocally } from "@/src/lib/localstorage";
 
 const schemaForRegister = z
   .object({
@@ -28,6 +29,14 @@ export type IREGISTERTYPES = z.infer<typeof schemaForRegister>;
 
 const Page = () => {
   const router = useRouter();
+
+  const localAuth = getLocally("auth");
+  let localEmail;
+  let localPassword;
+  if (localAuth) {
+    localEmail = localAuth.email;
+    localPassword = localAuth.password;
+  }
   const {
     register,
     handleSubmit,
@@ -35,8 +44,8 @@ const Page = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: "",
-      password: "",
+      email: localEmail ?? "",
+      password: localPassword ?? "",
       confirmPassword: "",
     },
     resolver: zodResolver(schemaForRegister),
@@ -46,6 +55,10 @@ const Page = () => {
     try {
       const user = await registerUser(data);
       console.log("User created successfully! userId: ", user.id);
+      saveLocally({
+        type: "auth",
+        data: { auth: { email: data.email, password: data.password } },
+      });
       router.push("/auth/login");
       reset();
     } catch (error: unknown) {

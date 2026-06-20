@@ -120,6 +120,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { getLocally } from "@/src/lib/localstorage";
 
 const schemaForSession = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -135,12 +136,19 @@ export type ISESSIONTYPES = z.infer<typeof schemaForSession>;
 
 const Page = () => {
   const router = useRouter();
+  const localAuth = getLocally("auth");
+  let localEmail;
+  let localPassword;
+  if (localAuth) {
+    localEmail = localAuth.email;
+    localPassword = localAuth.password;
+  }
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: localEmail ?? "", password: localPassword ?? "" },
     resolver: zodResolver(schemaForSession),
   });
 
@@ -162,7 +170,7 @@ const Page = () => {
   return (
     <>
       {/* ── Left: Image panel (hidden on mobile) ───────────────────────── */}
-     
+
       {/* ── Right: Form panel ───────────────────────────────────────────── */}
       <div className="w-full lg:w-[40%] flex flex-col justify-center px-8 sm:px-12 bg-amber-50">
         {/* Logo / brand name */}
