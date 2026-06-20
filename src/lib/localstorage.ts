@@ -190,3 +190,66 @@ export const removeLocally = ({
       break;
   }
 };
+
+export const getLocally = (type: string) => {
+  if (!type?.trim()) return;
+
+  switch (type) {
+    case "auth":
+      try {
+        const authLocally: { email: string; password: string } | undefined =
+          localStorage.getItem(type)
+            ? JSON.parse(localStorage.getItem(type)!)
+            : undefined;
+
+        return authLocally;
+      } catch (error) {
+        console.log("problem in getting from local : ", type);
+        console.log(error);
+      }
+
+    case "cart":
+      try {
+        const cartLocally:
+          | { productId: string; category: string; quantity: number }[]
+          | undefined = localStorage.getItem(type)
+          ? JSON.parse(localStorage.getItem(type)!)
+          : undefined;
+
+        return cartLocally;
+      } catch (error) {
+        console.log("problem in getting from local : ", type);
+        console.log(error);
+      }
+
+      break;
+    case "favourites":
+      try {
+        const favLocally:
+          | { productId: string; category: string }[]
+          | undefined = localStorage.getItem(type)
+          ? JSON.parse(localStorage.getItem(type)!)
+          : undefined;
+
+        return favLocally;
+      } catch (error) {
+        console.log("problem in getting from local : ", type);
+        console.log(error);
+      }
+
+    case "theme":
+      try {
+        const themelocally: { theme: string } | undefined =
+          localStorage.getItem(type)
+            ? JSON.parse(localStorage.getItem(type)!)
+            : undefined;
+
+        return themelocally;
+      } catch (error) {
+        console.log("problem in getting from local : ", type);
+        console.log(error);
+      }
+
+      break;
+  }
+};
