@@ -1,22 +1,21 @@
 interface ILocalstorageTypes {
   type: "auth" | "theme" | "favourites" | "cart";
   data: {
-    auth?:{
-email: string;
-    password: string;
-    }
-    
+    auth?: {
+      email: string;
+      password: string;
+    };
+
     theme?: string;
 
-    product?:ILocalProduct[]
-    
+    product?: ILocalProduct[];
   };
 }
 
 interface ILocalProduct {
-    productId: string;
-    quantity: number;
-    category?: string;
+  productId: string;
+  quantity: number;
+  category?: string;
 }
 
 export const saveLocally = ({ type, data }: ILocalstorageTypes): void => {
@@ -72,7 +71,7 @@ export const saveLocally = ({ type, data }: ILocalstorageTypes): void => {
       break;
 
     case "favourites":
-        if(!data.product) return;
+      if (!data.product) return;
       const { productId, category } = data.product[0];
 
       if (!productId?.trim() || !category?.trim()) return;
@@ -117,14 +116,11 @@ export const saveLocally = ({ type, data }: ILocalstorageTypes): void => {
       break;
 
     case "cart":
+      if (!data.product) return;
 
-    if(!data.product) return;
-    
-    const cart = data.product;
+      const cart = data.product;
 
-     if(!(cart.length > 0)) return;
-
-      
+      if (!(cart.length > 0)) return;
 
       const cartLocal = localStorage.getItem(type);
 
@@ -141,11 +137,12 @@ export const saveLocally = ({ type, data }: ILocalstorageTypes): void => {
         localStorage.setItem(type, cartJson);
       } else {
         try {
+          const cartLocalParse: ILocalProduct[] = JSON.parse(cartLocal);
+          const filterCart = cart.map((c) =>
+            cartLocalParse.filter((ci) => ci.productId !== c.productId),
+          );
+          const newCart = [...cartLocalParse, ...filterCart];
 
-            const cartLocalParse:ILocalProduct[] = JSON.parse(cartLocal);
-            const filterCart = cart.map((c)=> cartLocalParse.filter(ci=>ci.productId !==c.productId));
-            const newCart = [...cartLocalParse,...filterCart]
-        
           const cartArrayJson = JSON.stringify(newCart);
           localStorage.setItem(type, cartArrayJson);
         } catch (error) {
@@ -153,11 +150,43 @@ export const saveLocally = ({ type, data }: ILocalstorageTypes): void => {
           console.log(error);
           return;
         }
-    break;
-    }
-
-
-        
+        break;
+      }
   }
-     
+};
+
+export const removeLocally = ({
+  type,
+  productId,
+}: {
+  type: "cart" | "favourites";
+  productId: string;
+}) => {
+  const typeEnum = ["cart", "favourites"];
+
+  if (!typeEnum.includes(type)) return;
+  if (!productId?.trim()) return;
+
+  switch (type) {
+    case "cart":
+      localStorage.removeItem(type);
+      break;
+    case "favourites":
+      try {
+        const localFav = localStorage.getItem(type);
+        if (!localFav) return;
+
+        const localFavParse: ILocalProduct[] = JSON.parse(localFav);
+        localStorage.setItem(
+          type,
+          JSON.stringify(
+            localFavParse.filter((f) => f.productId !== productId),
+          ),
+        );
+      } catch (error) {
+        console.log(type, "Problem in remove locally ");
+        console.log(error);
+      }
+      break;
+  }
 };
