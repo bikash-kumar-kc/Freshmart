@@ -1,4 +1,7 @@
-import { Product, ProductVariant } from "@/src/db/schema";
+import {
+  IPRODUCTRESPONSE,
+  IPRODUCTVARIENTS,
+} from "@/src/lib/server actions/product.server.action";
 import { discountedPrice, formatWeight } from "./helper.fun";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,8 +10,8 @@ export const RelatedProductCard = ({
   product,
   variants,
 }: {
-  product: Product;
-  variants: ProductVariant[];
+  product: IPRODUCTRESPONSE;
+  variants: IPRODUCTVARIENTS[];
 }) => {
   const cheapest = variants.reduce(
     (min, v) => (v.price < min.price ? v : min),
@@ -26,7 +29,7 @@ export const RelatedProductCard = ({
         overflow-hidden hover:border-green-300 hover:shadow-sm
         transition-all duration-200"
     >
-      <div className="relative aspect-4/3 bg-green-50 overflow-hidden">
+      <div className="relative aspect-4/3 bg-green-50 overflow-hidden animate-fade-up">
         <Image
           src={product.thumbnail}
           alt={product.name}
@@ -35,7 +38,6 @@ export const RelatedProductCard = ({
           className="object-cover group-hover:scale-105
             transition-transform duration-300"
         />
-        
       </div>
       <div className="p-3">
         <p className="text-xs text-green-700 font-medium mb-0.5">

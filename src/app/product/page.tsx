@@ -1,9 +1,10 @@
-import { SampleProductPage } from "@/src/components/client/product/ProductDetailsPage";
+
+
 
 const page = () => {
   return (
     <div>
-      <SampleProductPage />
+    <h1>this is product...</h1>
     </div>
   );
 };

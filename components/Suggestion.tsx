@@ -9,10 +9,10 @@ export interface ISuggestionTypes {
 }
 const Suggestion = ({ suggestions, showLoading }: ISuggestionTypes) => {
   const router = useRouter();
-
+console.log("here")
   const handleOnClick = useCallback(
     (slug: string, category: string) => {
-      router.push(`/productpage/${category}:${slug}`);
+      router.push(`/product/${category}/${slug}`);
     },
     [router],
   );

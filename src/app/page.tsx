@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-import SearchBar from "../components/client/SearchBar";
 import Header from "../components/server/Header";
 import { SessionProvider } from "next-auth/react";
 import NotificationPanel from "../components/server/notificationPanel";
@@ -9,8 +7,6 @@ import BannerCarousel from "../components/client/bannerCarousel";
 import ImageSlider from "../components/client/messageBanner";
 import OrganicProductCards from "../components/client/ProductCard";
 import HoverRevealCard from "../components/client/NormalProduct";
-import BlogCard from "../components/client/BlogCard";
-import { blogs } from "../constants/blog.dummy";
 import Footer from "../components/server/Footer";
 
 export default function Home() {
