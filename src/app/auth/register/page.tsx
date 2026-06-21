@@ -6,8 +6,9 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerUser } from "../../../lib/serverAction";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { getLocally, saveLocally } from "@/src/lib/localstorage";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 const schemaForRegister = z
   .object({
@@ -29,6 +30,7 @@ export type IREGISTERTYPES = z.infer<typeof schemaForRegister>;
 
 const Page = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const localAuth = getLocally("auth");
   let localEmail;
@@ -52,6 +54,7 @@ const Page = () => {
   });
 
   const handleSubmitHandler = async (data: IREGISTERTYPES) => {
+    setLoading(true);
     try {
       const user = await registerUser(data);
       console.log("User created successfully! userId: ", user.id);
@@ -64,10 +67,12 @@ const Page = () => {
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log("Failed to create user ! msg: ", error.message);
-
+        toast.error(error.message);
         return;
       }
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -161,7 +166,7 @@ const Page = () => {
             type="submit"
             className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white text-sm font-semibold py-2.5 rounded-sm transition-colors duration-200 mt-1"
           >
-            Create Account
+            {loading ? "loading..." : " Create Account"}
           </button>
         </form>
 
