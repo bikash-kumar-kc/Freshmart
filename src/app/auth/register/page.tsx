@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerUser } from "../../../lib/serverAction";
 import { useRouter } from "next/navigation";
 import { getLocally, saveLocally } from "@/src/lib/localstorage";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { registerUser } from "@/src/lib/server actions/auth.server.action";
 
 const schemaForRegister = z
   .object({

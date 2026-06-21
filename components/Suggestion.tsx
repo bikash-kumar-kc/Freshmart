@@ -1,17 +1,18 @@
+import { ISearchResult } from "@/src/types/searchBar.types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import  { useCallback } from "react";
+import { useCallback } from "react";
 
 export interface ISuggestionTypes {
-  suggestions: { productId: number; productName: string }[];
+  suggestions: ISearchResult[] | [];
   showLoading: boolean;
 }
 const Suggestion = ({ suggestions, showLoading }: ISuggestionTypes) => {
   const router = useRouter();
 
   const handleOnClick = useCallback(
-    (productId: number) => {
-      router.push(`/displayProducts/${productId}`);
+    (slug: string, category: string) => {
+      router.push(`/productpage/${category}:${slug}`);
     },
     [router],
   );
@@ -47,11 +48,13 @@ const Suggestion = ({ suggestions, showLoading }: ISuggestionTypes) => {
             <div
               key={suggestion?.productId || idx}
               className="flex items-center gap-2 hover:bg-gray-100 px-3 cursor-pointer h-fit"
-              onClick={() => handleOnClick(suggestion.productId)}
+              onClick={() =>
+                handleOnClick(suggestion.slug, suggestion.category)
+              }
             >
               <div className="relative w-8 h-8">
                 <Image
-                  src={"/file.svg"}
+                  src={suggestion.thumbnail}
                   alt={suggestion.productName}
                   fill
                   className="rounded-full"

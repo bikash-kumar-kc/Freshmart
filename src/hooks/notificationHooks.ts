@@ -4,7 +4,7 @@ import {
   deleteNotifications,
   getAllNotifications,
   markedNotifications,
-} from "../app/api/server action/notifications.server";
+} from "../lib/server actions/notifications.server";
 
 export const useGetAllNotifications = (id: string | undefined) => {
   return useQuery({

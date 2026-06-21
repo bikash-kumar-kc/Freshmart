@@ -48,7 +48,7 @@ const products = [
     alt: "Rainbow carrots",
   },
   {
-    id: 1,
+    id: 5,
     name: "Hass avocado",
     price: 1.29,
     unit: "per piece",
@@ -57,7 +57,7 @@ const products = [
     alt: "Hass avocados",
   },
   {
-    id: 2,
+    id: 6,
     name: "Baby spinach",
     price: 4.99,
     unit: "142g bag",
@@ -66,7 +66,7 @@ const products = [
     alt: "Baby spinach leaves",
   },
   {
-    id: 3,
+    id: 7,
     name: "Cherry tomatoes",
     price: 5.49,
     unit: "250g",
@@ -75,7 +75,7 @@ const products = [
     alt: "Cherry tomatoes",
   },
   {
-    id: 4,
+    id: 8,
     name: "Rainbow carrots",
     price: 3.29,
     unit: "500g bunch",
@@ -291,7 +291,7 @@ export default function OrganicProductCards({types}:{types:string}) {
         }}
       >
         {products.map((p) => (
-          <ProductCard key={p.id} product={p} />
+          <ProductCard key={p.id } product={p} />
         ))}
       </div>
     </div>

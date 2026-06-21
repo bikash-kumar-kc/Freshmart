@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import {
   deleteNotification,
   markedNotification,
-} from "@/src/app/api/server action/notifications.server";
+} from "@/src/lib/server actions/notifications.server";
 
 const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
   const [notifis, setNotifis] = useState<NotificationTypes[]>([]);

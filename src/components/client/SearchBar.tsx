@@ -1,22 +1,27 @@
 "use client";
 
-import  { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { Search, X } from "lucide-react";
 import useDebounce from "@/src/hooks/useDebounce";
-import useProductOnSearchTerm from "@/src/tanstackquery/useProductOnSearchTerm";
-import Suggestions, { ISuggestionTypes } from "@/components/Suggestion";
+import Suggestions from "@/components/Suggestion";
 import { useRouter } from "next/navigation";
+import { useSearchBarResult } from "@/src/hooks/useSearchBar";
 
 const SearchBar = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { debouncedTerm } = useDebounce(searchTerm, 500);
-  const { data, isLoading } = useProductOnSearchTerm(debouncedTerm);
+  const { data, isLoading } = useSearchBarResult(debouncedTerm);
 
-  const handleSearchSubmit = useCallback(() => {
-    if (!searchTerm.trim()) return;
-    router.push(`/displayProducts/${searchTerm}`);
-  }, [router, searchTerm]);
+  const handleSearchSubmit: React.SubmitEventHandler<HTMLFormElement> =
+    useCallback(
+      (e) => {
+        e.preventDefault();
+        if (!searchTerm.trim()) return;
+        router.push(`/productpage/${searchTerm}`);
+      },
+      [router, searchTerm],
+    );
 
   return (
     <div className="relative w-full">
@@ -41,7 +46,8 @@ const SearchBar = () => {
           )}
           <button
             type="submit"
-            className="px-4 bg-[#ffeaef] text-gray-600 flex items-center justify-center cursor-pointer"
+            disabled={!searchTerm.trim()}
+            className="px-4 bg-[#ffeaef] text-gray-600 flex items-center justify-center cursor-pointer hover:bg-[#e27991] hover:text-white duration-200"
           >
             <Search />
           </button>
@@ -50,10 +56,7 @@ const SearchBar = () => {
 
       {searchTerm.length > 0 && (
         <div className="absolute z-20 top-14 left-0 w-full">
-          <Suggestions
-            suggestions={data as ISuggestionTypes["suggestions"]}
-            showLoading={isLoading}
-          />
+          <Suggestions suggestions={data ?? []} showLoading={isLoading} />
         </div>
       )}
     </div>

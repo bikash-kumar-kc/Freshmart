@@ -1,7 +1,6 @@
 "use client";
 
 import SearchBar from "../client/SearchBar";
-import Image from "next/image";
 import { Heart, ShoppingCart, Truck } from "lucide-react";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlinePersonRemoveAlt1 } from "react-icons/md";
@@ -13,7 +12,7 @@ import { toast } from "react-toastify";
 import {
   countUnreadNotifications,
   updateNotificationsStatus,
-} from "@/src/app/api/server action/notifications.server";
+} from "@/src/lib/server actions/notifications.server";
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
