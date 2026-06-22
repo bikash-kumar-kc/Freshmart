@@ -1,14 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ShoppingCart, MapPin, ChevronDown, ChevronLeft } from "lucide-react";
+import { ShoppingCart, MapPin, ChevronDown} from "lucide-react";
 import { discountedPrice, formatWeight } from "./utilities/helper.fun";
 import { ImageGallery } from "./utilities/image.gallary";
 import { FreshnessBadge } from "./utilities/FreshnessBadge";
 import { RelatedProductCard } from "./utilities/subProductCard";
 import { GetProductResult } from "@/src/lib/server actions/product.server.action";
 import GoBackButton from "../buttons/GotoBackBtn";
-import isBackNavigation from "@/src/lib/Browser/isBackNavigation";
 import { usePathname } from "next/navigation";
 
 export default function ProductDetailPage({
