@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ShoppingCart, MapPin, ChevronDown, ChevronLeft } from "lucide-react";
 import { discountedPrice, formatWeight } from "./utilities/helper.fun";
@@ -7,13 +7,18 @@ import { ImageGallery } from "./utilities/image.gallary";
 import { FreshnessBadge } from "./utilities/FreshnessBadge";
 import { RelatedProductCard } from "./utilities/subProductCard";
 import { GetProductResult } from "@/src/lib/server actions/product.server.action";
+import GoBackButton from "../buttons/GotoBackBtn";
+import isBackNavigation from "@/src/lib/Browser/isBackNavigation";
+import { usePathname } from "next/navigation";
 
 export default function ProductDetailPage({
   product,
   variantRows,
   relatedProducts,
 }: GetProductResult) {
+  const pathname = usePathname();
   const [addedToCart, setAddedToCart] = useState(false);
+  const [animate, setAnimate] = useState(false);
 
   const finalPrice = product?.isOffered
     ? discountedPrice(variantRows[0]?.price, product.discount)
@@ -28,14 +33,23 @@ export default function ProductDetailPage({
     setTimeout(() => setAddedToCart(false), 2500);
   };
 
+  useEffect(() => {
+    const key = `visited:${pathname}`;
+    const alreadySeen = sessionStorage.getItem(key);
+
+    if (!alreadySeen) {
+      setAnimate(true);
+      sessionStorage.setItem(key, "1");
+    }
+  }, [pathname]);
+
   return (
     <main className="flex flex-col bg-[#F5F9F0] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Link href={"/"} className="mb-4 flex gap-3 px-4 py-1 bg-green-700 w-fit rounded-sm text-gray-300 hover:bg-green-800 hover:text-gray-200 duration-100">
-          <ChevronLeft/>
-          <p>Back</p>
-        </Link>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 animate-fade-up">
+        <GoBackButton />
+        <div
+          className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 ${animate ? "animate-fade-up" : ""}`}
+        >
           <div>
             <ImageGallery
               images={product?.images ?? []}
@@ -155,6 +169,7 @@ export default function ProductDetailPage({
                   key={rp.id}
                   product={rp}
                   variants={variantRows}
+                  isAnimate={animate}
                 />
               ))}
             </div>

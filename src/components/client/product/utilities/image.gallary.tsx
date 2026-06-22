@@ -25,10 +25,10 @@ export const ImageGallery = ({
 
   return (
     <div className="flex flex-col gap-3">
-      {/* main image */}
+
       <div
         ref={mainRef}
-        className="relative w-full aspect-4/3 rounded-2xl overflow-hidden
+        className="relative w-full aspect-4/3 rounded-md overflow-hidden
           bg-green-50 cursor-zoom-in border border-green-100"
         onMouseEnter={() => setZoomed(true)}
         onMouseLeave={() => setZoomed(false)}

@@ -9,9 +9,11 @@ import Link from "next/link";
 export const RelatedProductCard = ({
   product,
   variants,
+  isAnimate,
 }: {
   product: IPRODUCTRESPONSE;
   variants: IPRODUCTVARIENTS[];
+  isAnimate: boolean;
 }) => {
   const cheapest = variants.reduce(
     (min, v) => (v.price < min.price ? v : min),
@@ -24,12 +26,14 @@ export const RelatedProductCard = ({
 
   return (
     <Link
-      href={`/products/${product.slug}`}
+      href={`/product/${product.category}/${product.slug}`}
       className="group bg-white rounded-2xl border border-gray-100
         overflow-hidden hover:border-green-300 hover:shadow-sm
         transition-all duration-200"
     >
-      <div className="relative aspect-4/3 bg-green-50 overflow-hidden animate-fade-up">
+      <div
+        className={`relative aspect-4/3 bg-green-50 overflow-hidden ${isAnimate ? "animate-fade-up" : ""} `}
+      >
         <Image
           src={product.thumbnail}
           alt={product.name}
