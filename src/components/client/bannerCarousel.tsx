@@ -9,16 +9,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { useGetFeaturedProducts } from "@/src/hooks/usePromotionProducts";
 
 
-const groceryImages = [
-  "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&h=900&q=80",
-  "https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=1600&h=900&q=80",
-  "https://images.unsplash.com/photo-1516594798947-e65505dbb29d?auto=format&fit=crop&w=1600&h=900&q=80",
-];
 
 const BannerCarousel = () => {
-  
+  const { data: FeaturedProducts } = useGetFeaturedProducts();
+
   return (
     <Carousel
       plugins={[
@@ -28,14 +25,19 @@ const BannerCarousel = () => {
       ]}
     >
       <CarouselContent>
-        {groceryImages.map((img, index) => (
-          <CarouselItem key={index} className="basis-full w-300 h-125 rounded-2xl">
-            <div className={` w-full h-full flex justify-center items-center rounded-2xl `}>
+        {FeaturedProducts?.map((prod, index) => (
+          <CarouselItem
+            key={index}
+            className="basis-full w-300 h-125 rounded-2xl"
+          >
+            <div
+              className={` w-full h-full flex justify-center items-center rounded-2xl `}
+            >
               <Image
-                src={img}
+                src={prod.thumbnail}
                 width={1280}
                 height={20}
-                alt={img as string}
+                alt={prod.thumbnail as string}
                 className={`h-full object-cover rounded-2xl`}
                 priority={index == 0}
               />

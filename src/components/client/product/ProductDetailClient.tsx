@@ -19,7 +19,7 @@ export default function ProductDetailClient({ productPromise }: Props) {
 
   const { product, relatedProducts, variantRows } = use(productPromise);
 
-  if (product) notFound();
+  if (!product?.id) notFound();
 
   return (
     <ProductDetailPage

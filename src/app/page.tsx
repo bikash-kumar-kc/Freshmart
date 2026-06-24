@@ -2,12 +2,15 @@
 import Header from "../components/server/Header";
 import { SessionProvider } from "next-auth/react";
 import NotificationPanel from "../components/server/notificationPanel";
-import { useCallback, useState } from "react";
-import BannerCarousel from "../components/client/bannerCarousel";
+import { Suspense, useCallback, useState } from "react";
 import ImageSlider from "../components/client/messageBanner";
 import OrganicProductCards from "../components/client/ProductCard";
 import HoverRevealCard from "../components/client/NormalProduct";
 import Footer from "../components/server/Footer";
+import BannerCarouselSkeleton from "@/components/skeleton/BannerCarouselSkeleton";
+import BannerCarousel from "../components/client/bannerCarousel";
+
+
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -23,7 +26,11 @@ export default function Home() {
         <NotificationPanel isOpen={isOpen} />
         <main className="w-full max-w-7xl mx-auto mt-10">
           {/* // banner */}
-          <BannerCarousel />
+
+          <Suspense fallback={<BannerCarouselSkeleton />}>
+            <BannerCarousel />
+          </Suspense>
+
           <ImageSlider />
 
           <OrganicProductCards types={"Popular Now"} />
@@ -209,22 +216,15 @@ export default function Home() {
               }
               name={"Hass avocados"}
             />
-
-
           </div>
 
-           <section>
-        <h2 className="text-xl font-semibold mb-4">
-          Healthy Living Journal
-        </h2>
-
-
-      </section>
+          <section>
+            <h2 className="text-xl font-semibold mb-4">
+              Healthy Living Journal
+            </h2>
+          </section>
         </main>
-
-       
-          <Footer/>
-
+        <Footer />
       </SessionProvider>
     </div>
   );

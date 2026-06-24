@@ -6,5 +6,6 @@ export const QUERY_KEYS ={
     MARKED_NOTIFICATIONS:"marknotifications",
     DELETED_NOTIFICATIONS:'deletenotifications',
     SEARCH_BAR:'searchbarproducts',
-    PRODUCT_ON_SEARCH:'productonsearch'
+    PRODUCT_ON_SEARCH:'productonsearch',
+    FEATURED_PRODUCT:'getfeaturedproducts'
 }
