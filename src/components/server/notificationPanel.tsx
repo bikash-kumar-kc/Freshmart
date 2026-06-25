@@ -107,6 +107,8 @@ const NotificationPanel = ({ isOpen }: { isOpen: boolean }) => {
     }
   }, [notifis]);
 
+  if(!isOpen) return;
+
   if (isLoading) {
     return (
       <div className="w-full min-h-screen">
