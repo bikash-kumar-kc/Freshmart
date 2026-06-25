@@ -123,7 +123,7 @@ function HeartIcon({ filled }:{filled:boolean}) {
   );
 }
 
-function ProductCard({ product }: { product: IPRODUCTTYPE }) {
+export function ProductCard({ product }: { product: IPRODUCTTYPE }) {
   const [wished, setWished] = useState(false);
   const [added, setAdded] = useState(false);
 
