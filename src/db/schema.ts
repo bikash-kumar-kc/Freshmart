@@ -82,6 +82,9 @@ export const products = sqliteTable(
     status: text("status").notNull().default("active"),
     expireAt: text("expire_at").notNull(),
 
+    // popularity check -------------
+    popularityScore: real("popularity_score").notNull().default(0),
+
     createdAt: text("created_at")
       .notNull()
       .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
