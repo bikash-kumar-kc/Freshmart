@@ -9,6 +9,11 @@ import {
   freqProducts,
 } from "@/src/db/schema";
 import { eq, and } from "drizzle-orm";
+import { collectProductSignals } from "./utilities/popularProducts";
+import { computePopularityScores } from "./utilities/normalityCalculation";
+import { getTop20PercentThreshold } from "./utilities/top20Percent";
+import { pickTop5Popular } from "./utilities/pickTop5Popular";
+import { writePopularityScores } from "./utilities/popularityStatusUpdated";
 
 export const getUserList = tool({
   description: `
@@ -216,5 +221,64 @@ export const upsertFreqProduct = tool({
       });
 
     return { success: true, userId, productId, nextExpectedAt };
+  },
+});
+
+export const updatePopularityScoresTool = tool({
+  description: `
+    Compute and update popularity scores for all products.
+    Call this ONCE at the very END of the Job 1 run,
+    after all user order insights have been processed.
+ 
+    This tool:
+    1. Reads all orders from the last 7 days
+    2. Counts recent orders and unique buyers per product
+    3. Normalizes scores (between 0 and 1) across all products
+    4. Marks the top 20% as popular candidates
+    5. Picks exactly 5 popular products — one per category
+       (if two from the same category qualify, the higher scorer wins)
+    6. Updates popularity_score and isMostPopular on all products
+ 
+    Do not call this more than once per Job 1 run.
+    Do not call this before all user insights are synced.
+  `,
+  inputSchema: z.object({}),
+  execute: async () => {
+  
+    const signals = await collectProductSignals();
+ 
+    if (signals.length === 0) {
+      return {
+        success: true,
+        message: "No orders in last 7 days — all popularity scores reset to 0",
+        popularProducts: [],
+      };
+    }
+ 
+    // step 2 — score
+    const scored = computePopularityScores(signals);
+ 
+    // step 3 — threshold
+    const threshold = getTop20PercentThreshold(scored);
+ 
+    // step 4 — pick top 5
+    const top5 = pickTop5Popular(scored, threshold);
+    const top5Ids = new Set(top5.map((p) => p.productId));
+ 
+    // step 5 — write to DB
+    await writePopularityScores(scored, top5Ids);
+ 
+    return {
+      success: true,
+      threshold: threshold,
+      totalScored: scored.length,
+      popularProducts: top5.map((p) => ({
+        productId: p.productId,
+        category: p.category,
+        score: p.score,
+        recentOrders: p.recentOrders,
+        uniqueBuyers: p.uniqueBuyers,
+      })),
+    };
   },
 });
