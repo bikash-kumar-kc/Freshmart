@@ -1,6 +1,6 @@
 import { ProductSignal } from "./popularProducts";
 
-interface ScoredProduct extends ProductSignal {
+export interface ScoredProduct extends ProductSignal {
   score: number; // 0–1
 }
  

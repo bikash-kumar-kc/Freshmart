@@ -4,7 +4,7 @@ import { gte } from "drizzle-orm";
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
  
-interface ProductSignal {
+export interface ProductSignal {
   productId: string;
   category: string;
   recentOrders: number;   
