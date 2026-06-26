@@ -3,6 +3,7 @@ import { google } from "@ai-sdk/google";
 import {
   getOrderHistory,
   getUserList,
+  updatePopularityScoresTool,
   writeOrderInsight,
 } from "./tools";
 
@@ -15,6 +16,7 @@ export async function runInsightSyncAgent() {
       getOrderHistory,
       // getLastComputedAt,
       writeOrderInsight,
+      updatePopularityScores:updatePopularityScoresTool,
       // upsertFreqProduct,
     },
     system: `
@@ -33,7 +35,10 @@ export async function runInsightSyncAgent() {
          with buyCount < 3.
       6. Never call getUserList more than once.
       7. Process users one at a time — do not skip ahead.
-      8. When all users are processed, respond with a summary of what was done.
+       8. After ALL users have been processed — call updatePopularityScores
+         exactly once. This must be the very last tool call of the job.
+      9. When done, respond with a summary of what was processed and
+         which 5 products were marked as most popular.
     `,
     prompt: "Start the insight sync job.Process all users now.",
   });
