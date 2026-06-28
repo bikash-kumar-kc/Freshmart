@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { useGetFeaturedProducts } from "@/src/hooks/usePromotionProducts";
-import { ProductCard } from "./ProductCard";
 import BannerProductCard from "../server/bannerCard";
 
 const BannerCarousel = () => {

@@ -56,7 +56,7 @@ export const products = sqliteTable(
       .default(false),
 
     // percentage, e.g. 20 = 20% off
-    discount: real("discount").notNull().default(0),
+    discount: real("discount").default(0),
 
     // renamed from isOfferedDateStartDate/EndDate — these are dates, not booleans
     offerStartDate: text("offer_start_date"),

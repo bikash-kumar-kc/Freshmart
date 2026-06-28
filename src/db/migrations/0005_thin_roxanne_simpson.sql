@@ -1,2 +1,0 @@
-ALTER TABLE `notifications` ADD `created_at` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL;--> statement-breakpoint
-ALTER TABLE `products` ADD `popularity_score` real DEFAULT 0 NOT NULL;

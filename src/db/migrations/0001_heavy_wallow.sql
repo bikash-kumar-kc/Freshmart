@@ -1,1 +1,0 @@
-ALTER TABLE `freqproducts` ADD `notification_sent_at` text NOT NULL;
