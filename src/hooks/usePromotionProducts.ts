@@ -1,7 +1,7 @@
 "use client";
 
 import { QUERY_KEYS } from "../app/constants/queryKeys";
-import { getFeaturedProducts } from "../lib/server actions/feature.server.action";
+import { getFeaturedProducts } from "../lib/api calls/featuredProducts";
 
 import { useSuspenseQuery } from '@tanstack/react-query'
 
