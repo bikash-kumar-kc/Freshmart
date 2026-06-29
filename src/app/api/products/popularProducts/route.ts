@@ -3,17 +3,20 @@ import { products } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
 
 export const REVALIDATE_TIME = 86400;
+
+export const productInformationRequired = {
+  id: products.id,
+  slug: products.slug,
+  thumbnail: products.thumbnail,
+  name: products.name,
+  description: products.description,
+  isOffered: products.isOffered,
+};
+
 export async function GET() {
   try {
     const popularProducts = await db
-      .select({
-        id: products.id,
-        slug: products.slug,
-        thumbnail: products.thumbnail,
-        name: products.name,
-        description: products.description,
-        isOffered: products.isOffered,
-      })
+      .select(productInformationRequired)
       .from(products)
       .where(eq(products.isMostPopular, true));
 

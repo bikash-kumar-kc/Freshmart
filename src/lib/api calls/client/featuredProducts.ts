@@ -1,6 +1,6 @@
 
 import { IAPIResponseTypes } from "../server/getPopularProducts";
-import { IFeaturedProductsData } from "@/src/app/api/featuredProducts/route";
+import { IFeaturedProductsData } from "@/src/app/api/products/featuredProducts/route";
 
 
 type IFeaturedProductResponse = IAPIResponseTypes<IFeaturedProductsData>;

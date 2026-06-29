@@ -1,4 +1,4 @@
-import { REVALIDATE_TIME } from "@/src/app/api/popularProducts/route";
+import { REVALIDATE_TIME } from "@/src/app/api/products/popularProducts/route";
 
 export interface IAPIResponseTypes<T> {
   success: boolean;
