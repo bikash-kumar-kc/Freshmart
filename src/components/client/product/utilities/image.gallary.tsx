@@ -69,7 +69,7 @@ export const ImageGallery = ({
               key={i}
               onClick={() => setActiveIdx(i)}
               className={`
-                relative shrink-0 w-16 h-16 rounded-xl overflow-hidden
+                relative shrink-0 w-16 h-16 rounded-sm overflow-hidden
                 border-2 transition-all duration-150
                 ${
                   i === activeIdx

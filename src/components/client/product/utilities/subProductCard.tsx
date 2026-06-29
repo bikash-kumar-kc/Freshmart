@@ -27,7 +27,7 @@ export const RelatedProductCard = ({
   return (
     <Link
       href={`/product/${product.category}/${product.slug}`}
-      className="group bg-white rounded-2xl border border-gray-100
+      className="group bg-white rounded-sm border border-gray-100
         overflow-hidden hover:border-green-300 hover:shadow-sm
         transition-all duration-200"
     >

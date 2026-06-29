@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
           .from(users)
           .where(eq(users.email, email));
 
-        if (!user.id) {
+        if (!user?.id) {
           return null;
         }
 

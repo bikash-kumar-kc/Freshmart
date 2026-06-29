@@ -79,7 +79,7 @@ export default function ProductDetailPage({
               </div>
             )}
 
-            <div className="bg-white rounded-2xl border border-gray-100 p-4 mb-4">
+            <div className="bg-white rounded-sm border border-gray-100 p-4 mb-4">
               <div className="flex items-end gap-3 mb-1">
                 <span className="text-3xl font-bold text-gray-900">
                   ${finalPrice.toFixed(2)}
@@ -101,7 +101,7 @@ export default function ProductDetailPage({
                 disabled={isOutOfStock}
                 className={`
                   flex-1 flex items-center justify-center gap-2
-                  py-3.5 px-5 rounded-2xl font-semibold text-sm
+                  py-3.5 px-5 rounded-sm font-semibold text-sm
                   border-2 transition-all duration-200
                   ${
                     isOutOfStock
@@ -120,7 +120,7 @@ export default function ProductDetailPage({
                 disabled={isOutOfStock}
                 className={`
                   flex-1 flex items-center justify-center gap-2
-                  py-3.5 px-5 rounded-2xl font-semibold text-sm
+                  py-3.5 px-5 rounded-sm font-semibold text-sm
                   transition-all duration-200
                   ${
                     isOutOfStock
@@ -134,7 +134,7 @@ export default function ProductDetailPage({
             </div>
 
             <div
-              className="mt-4 bg-green-100 rounded-2xl border border-gray-100
+              className="mt-4 bg-green-100 rounded-sm border border-gray-100
           p-6 lg:p-8"
             >
               <p className="text-sm text-gray-700 leading-relaxed max-w-3xl">
