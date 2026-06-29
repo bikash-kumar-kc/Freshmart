@@ -13,7 +13,8 @@ import { useGetFeaturedProducts } from "@/src/hooks/usePromotionProducts";
 import BannerProductCard from "../server/bannerCard";
 
 const BannerCarousel = () => {
-  const { data: FeaturedProducts } = useGetFeaturedProducts();
+  const { data: FeaturedProductsResponse } = useGetFeaturedProducts();
+  const FeaturedProducts = FeaturedProductsResponse.featuredProducts;
 
   return (
     <Carousel
