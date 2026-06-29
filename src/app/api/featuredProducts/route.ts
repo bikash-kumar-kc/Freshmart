@@ -1,6 +1,11 @@
 import { db } from "@/src/db/config";
-import { products } from "@/src/db/schema";
+import { Product, products } from "@/src/db/schema";
 import { and, eq } from "drizzle-orm";
+
+export interface IFeaturedProductsData {
+  featuredProducts: Product[];
+  totalFeaturedProducts: number;
+}
 
 export async function GET() {
   try {
@@ -9,8 +14,28 @@ export async function GET() {
       .from(products)
       .where(and(eq(products.isFeatured, true), eq(products.status, "active")));
 
-    return Response.json({ featuredProducts });
+    return Response.json(
+      {
+        success: true,
+        data: {
+          featuredProducts,
+          totalFeaturedProducts: featuredProducts.length,
+        },
+      },
+      {
+        status: 200,
+      },
+    );
   } catch (error) {
     console.error(error);
+    return Response.json(
+      {
+        success: false,
+        message: "Failed to get featured Products !",
+      },
+      {
+        status: 500,
+      },
+    );
   }
 }
