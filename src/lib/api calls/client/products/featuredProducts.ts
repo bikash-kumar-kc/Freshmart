@@ -1,5 +1,4 @@
-
-import { IAPIResponseTypes } from "../server/getPopularProducts";
+import { IAPIResponseTypes } from "../../server/getPopularProducts";
 import { IFeaturedProductsData } from "@/src/app/api/products/featuredProducts/route";
 
 
@@ -7,7 +6,7 @@ type IFeaturedProductResponse = IAPIResponseTypes<IFeaturedProductsData>;
 
 export const getFeaturedProducts = async (): Promise<IFeaturedProductsData> => {
   try {
-    const response = await fetch("http://localhost:3000/api/featuredProducts");
+    const response = await fetch("http://localhost:3000/api/products/featuredProducts");
     if (!response.ok) {
       const error =
         response.status === 404 ? await response.text() : await response.json();
@@ -34,3 +33,5 @@ export const getFeaturedProducts = async (): Promise<IFeaturedProductsData> => {
     throw new Error("Failed to fetch featuredProducts");
   }
 };
+
+

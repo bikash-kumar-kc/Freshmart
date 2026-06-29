@@ -1,3 +1,4 @@
+import { success } from "zod";
 import { db } from "@/src/db/config";
 import { products } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
@@ -41,4 +42,9 @@ export async function GET() {
       { status: 500 },
     );
   }
+}
+
+export interface IErrorTypes {
+  success: boolean;
+  message: string;
 }
