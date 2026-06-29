@@ -21,7 +21,7 @@ export async function GET() {
       .where(eq(products.isOffered, true))
       .limit(5);
 
-    const responseObj = manageApiResponse<IFilterProductType>(
+    const responseObj = manageApiResponse(
       "filterProducts",
       response,
     );
@@ -63,10 +63,12 @@ export function manageError(error: unknown) {
   }
 }
 
-export function manageApiResponse<T>(top: string, res: T[]) {
-  if (!top?.trim()) return;
+export function manageApiResponse<K extends string, T>(
+  key: K,
+  data: T[],
+): Record<K, T[]> & { total: number } {
   return {
-    [top]: res,
-    total: res.length,
-  };
+    [key]: data,
+    total: data.length,
+  } as Record<K, T[]> & { total: number };
 }

@@ -2,8 +2,13 @@ import { db } from "@/src/db/config";
 import { products } from "@/src/db/schema";
 import { manageApiResponse, manageError } from "../offerProducts/route";
 
-interface ICategoriesTypes {
+export interface ICategoriesTypes {
   category: string;
+}
+
+export interface ICategoriesResponseTypes {
+  categories: ICategoriesTypes[];
+  total: number;
 }
 
 export async function GET() {
@@ -14,7 +19,10 @@ export async function GET() {
       })
       .from(products);
 
-    const resObj = manageApiResponse<ICategoriesTypes>("Categories", response);
+    const resObj: ICategoriesResponseTypes | undefined = manageApiResponse(
+      "categories",
+      response,
+    );
 
     if (!resObj) {
       throw new Error("Failed to generate response obj at [categories]");
