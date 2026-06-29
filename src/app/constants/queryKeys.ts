@@ -7,5 +7,6 @@ export const QUERY_KEYS ={
     DELETED_NOTIFICATIONS:'deletenotifications',
     SEARCH_BAR:'searchbarproducts',
     PRODUCT_ON_SEARCH:'productonsearch',
-    FEATURED_PRODUCT:'getfeaturedproducts'
+    FEATURED_PRODUCT:'getfeaturedproducts',
+    CATEGORIES:'getcategories'
 }
