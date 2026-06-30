@@ -9,13 +9,13 @@ import {
 } from "@/components/ui/pagination";
 import Link from "next/link";
 
-const PaginationComponent = ({ page=1 }: { page?: number }) => {
-  console.log("here in pagination component")
+const PaginationComponent = ({ page = 1 }: { page?: number }) => {
+  console.log("here in pagination component");
   const { data: categoriesInfo, isLoading: loadingCategories } =
     useGetCategories();
 
-    console.log("categoriesInfo")
-    console.log(categoriesInfo)
+  console.log("categoriesInfo");
+  console.log(categoriesInfo);
 
   if (loadingCategories) {
     return (
@@ -78,9 +78,12 @@ const PaginationComponent = ({ page=1 }: { page?: number }) => {
                         pathname: "/",
                         query: {
                           page,
-                          categories: pageCategories.map(c=>c.trim()).join(","),
+                          categories: pageCategories
+                            .map((c) => c.trim())
+                            .join(","),
                         },
                       }}
+                      scroll={false}
                     >
                       {page}
                     </Link>
