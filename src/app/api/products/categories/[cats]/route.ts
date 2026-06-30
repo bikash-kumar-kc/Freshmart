@@ -2,7 +2,6 @@ import { db } from "@/src/db/config";
 import { products } from "@/src/db/schema";
 import { manageApiResponse, manageError } from "@/src/utils/response";
 import { inArray } from "drizzle-orm";
-import { success } from "zod";
 
 interface ICategoriesProductReponse {
   productId: string;
