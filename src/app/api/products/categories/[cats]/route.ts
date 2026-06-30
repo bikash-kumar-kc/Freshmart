@@ -20,7 +20,7 @@ export async function GET(
 
     const catArray = cats.split(",");
     const categoriesArray = catArray.map((c) =>
-      c.includes("&") ? c.split("&").join(" & ") : c,
+      c.includes("&") ? c.split("&").join("&") : c,
     );
     console.log("categoriesArray", categoriesArray);
     const response: ICategoriesProductReponse[] = await db

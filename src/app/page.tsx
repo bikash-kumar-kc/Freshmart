@@ -23,7 +23,8 @@ export default function Home() {
 
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page")) ?? 1;
-  const categories = searchParams.get("categories") ?? "Dairy&Eggs,Fruits";
+  console.log("page: ", page);
+  const categories = searchParams.get("categories") ?? "Dairy & Eggs,Fruits";
   console.log(page);
   console.log(categories);
   return (
@@ -236,7 +237,7 @@ export default function Home() {
             </h2>
           </section>
         </main>
-        <PaginationComponent page={page} />
+        <PaginationComponent page={page ? page : 1} />
         <Footer />
       </SessionProvider>
     </div>
