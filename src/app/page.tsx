@@ -11,6 +11,8 @@ import BannerCarouselSkeleton from "@/components/skeleton/BannerCarouselSkeleton
 import BannerCarousel from "../components/client/bannerCarousel";
 import PaginationComponent from "../components/client/pagination/Pagination";
 import { useSearchParams } from "next/navigation";
+import ProductsCategories from "../components/client/product/ProductsCategories/ProductsCategories";
+import ProductsSuspenseFallback from "../components/client/product/ProductsCategories/Fallback";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -41,6 +43,10 @@ export default function Home() {
 
           <OrganicProductCards types={"Popular Now"} />
           <OrganicProductCards types={"Offers"} />
+
+          <Suspense fallback={<ProductsSuspenseFallback />}>
+            <ProductsCategories cats={categories} />
+          </Suspense>
           <div className="flex flex-wrap gap-15 mt-4 w-full justify-cente">
             <HoverRevealCard
               image={

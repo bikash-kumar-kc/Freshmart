@@ -1,15 +1,10 @@
 import { db } from "@/src/db/config";
 import { products } from "@/src/db/schema";
+import { ICategoriesProductReponse } from "@/src/types/product.types/productsbycategories.types";
 import { manageApiResponse, manageError } from "@/src/utils/response";
 import { inArray } from "drizzle-orm";
 
-interface ICategoriesProductReponse {
-  productId: string;
-  slug: string;
-  productName: string;
-  thumbnail: string;
-  categoryName: string;
-}
+
 
 export async function GET(
   req: Request,
@@ -74,6 +69,8 @@ export async function GET(
       filteredGroupProducts,
     );
 
+
+    
     return Response.json(
       {
         success: true,
