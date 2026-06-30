@@ -1,6 +1,6 @@
 import { db } from "@/src/db/config";
 import { products } from "@/src/db/schema";
-import { manageApiResponse, manageError } from "../offerProducts/route";
+import { manageApiResponse, manageError } from "@/src/utils/response";
 
 export interface ICategoriesTypes {
   category: string;

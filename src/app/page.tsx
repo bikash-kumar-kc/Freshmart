@@ -9,8 +9,8 @@ import HoverRevealCard from "../components/client/NormalProduct";
 import Footer from "../components/server/Footer";
 import BannerCarouselSkeleton from "@/components/skeleton/BannerCarouselSkeleton";
 import BannerCarousel from "../components/client/bannerCarousel";
-
-
+import PaginationComponent from "../components/client/pagination/Pagination";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -18,6 +18,12 @@ export default function Home() {
   const handleOpenNotificationPanel = useCallback(() => {
     setIsOpen((prevs) => !prevs);
   }, []);
+
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const categories = searchParams.get("categories");
+  console.log(page);
+  console.log(categories);
   return (
     <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 font-sans">
       <SessionProvider>
@@ -224,6 +230,7 @@ export default function Home() {
             </h2>
           </section>
         </main>
+        <PaginationComponent />
         <Footer />
       </SessionProvider>
     </div>

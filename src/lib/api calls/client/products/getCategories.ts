@@ -1,17 +1,33 @@
-import { manageError } from "@/src/app/api/products/offerProducts/route";
-import { IErrorTypes } from "@/src/app/api/products/popularProducts/route";
+
+
 import { IAPIResponseTypes } from "../../server/getPopularProducts";
-import { ICategoriesResponseTypes } from "@/src/app/api/products/categories/route";
+import { manageError } from "@/src/utils/response";
+
+interface ICategoriesResponseTypes {
+  categories: { category: string }[];
+  total: number;
+}
+
+interface IErrorTypes {
+  success: boolean;
+  message: string;
+}
+
+type CategoriesResult = {
+  categories: string[];
+  total: number;
+};
 
 type ICategoriesResponse = IAPIResponseTypes<ICategoriesResponseTypes>;
 
-export const getCategories = async (): Promise<
-  { categories: string[] | []; total: number } | undefined
-> => {
+export const getCategories = async (): Promise<CategoriesResult> => {
   try {
+    console.log("here in getcategories !");
     const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL;
+    console.log("Base_api_url: ", BASE_API_URL);
+
     if (!BASE_API_URL) throw new Error("Failed to get base url !");
-    const response = await fetch(`${BASE_API_URL}/products/categories`);
+    const response = await fetch(`${BASE_API_URL}api/products/categories`);
 
     if (!response.ok) {
       const error: IErrorTypes = await response.json();
@@ -32,6 +48,7 @@ export const getCategories = async (): Promise<
     }
 
     const filteredCategories = categories.map((c) => c.category);
+    console.log(filteredCategories);
     return {
       categories: filteredCategories,
       total: data.data.total,
@@ -39,5 +56,6 @@ export const getCategories = async (): Promise<
   } catch (error: unknown) {
     const errRes = manageError(error);
     console.log(errRes ? errRes : "Failed to fetch categories");
+    throw new Error(errRes?? "Failed to fetch categories");
   }
 };
