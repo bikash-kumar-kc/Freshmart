@@ -6,12 +6,10 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
 import Link from "next/link";
 
-const PaginationComponent = ({ page='0' }: { page?: string }) => {
+const PaginationComponent = ({ page=1 }: { page?: number }) => {
   console.log("here in pagination component")
   const { data: categoriesInfo, isLoading: loadingCategories } =
     useGetCategories();

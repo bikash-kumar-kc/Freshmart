@@ -22,8 +22,8 @@ export default function Home() {
   }, []);
 
   const searchParams = useSearchParams();
-  const page = searchParams.get("page");
-  const categories = searchParams.get("categories");
+  const page = Number(searchParams.get("page")) ?? 1;
+  const categories = searchParams.get("categories") ?? "Dairy&Eggs,Fruits";
   console.log(page);
   console.log(categories);
   return (
@@ -47,7 +47,7 @@ export default function Home() {
           <Suspense fallback={<ProductsSuspenseFallback />}>
             <ProductsCategories cats={categories} />
           </Suspense>
-          <div className="flex flex-wrap gap-15 mt-4 w-full justify-cente">
+          {/* <div className="flex flex-wrap gap-15 mt-4 w-full justify-cente">
             <HoverRevealCard
               image={
                 "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
@@ -228,7 +228,7 @@ export default function Home() {
               }
               name={"Hass avocados"}
             />
-          </div>
+          </div> */}
 
           <section>
             <h2 className="text-xl font-semibold mb-4">
@@ -236,7 +236,7 @@ export default function Home() {
             </h2>
           </section>
         </main>
-        <PaginationComponent />
+        <PaginationComponent page={page} />
         <Footer />
       </SessionProvider>
     </div>

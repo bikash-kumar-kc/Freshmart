@@ -6,7 +6,7 @@ function CategorySkeleton({
   count = 10,
 }: CategorySkeletonProps) {
   return (
-    <section className="w-full mt-10">
+    <section className="w-full mt-10 animate-[shimmer_4s_infinite]">
       {/* Category Title */}
       <div className="h-8 w-56 rounded-md bg-gray-200 animate-pulse mb-6" />
 
@@ -22,7 +22,7 @@ function CategorySkeleton({
 
 function ProductCardSkeleton() {
   return (
-    <div className="w-[220px] overflow-hidden rounded-2xl">
+    <div className="w-[220px] overflow-hidden rounded-2xl animate-[shimmer_4s_infinite]">
       {/* Image */}
       <div className="relative overflow-hidden rounded-2xl">
         <div className="h-[280px] w-full bg-gray-200 animate-pulse relative">

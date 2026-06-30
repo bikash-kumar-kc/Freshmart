@@ -5,7 +5,7 @@ import { manageError } from "@/src/utils/response";
 interface IGetProductsByCategories {
   categoriesBasedProducts: {
     category: string;
-    products: ICategoriesProductReponse;
+    products: ICategoriesProductReponse[];
   }[];
   total: number;
 }
@@ -14,7 +14,7 @@ type IProductByCategoriesResponse = IAPIResponseTypes<IGetProductsByCategories>;
 type IProductByCategoriesResult = {
   catBundle: {
     category: string;
-    products: ICategoriesProductReponse;
+    products: ICategoriesProductReponse[];
   }[];
   totalCategory: number;
 };
