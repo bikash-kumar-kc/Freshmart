@@ -1,4 +1,5 @@
 "use client";
+import { CATEGORIES } from "@/src/app/categories/categories";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,22 +10,14 @@ type ProductCardProps = {
 };
 
 
-function toSlug(str:string):string {
-  return str
-    .toLowerCase()
-    .trim()
-    .replace(/&/g, "and")
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
+
 
 export default function HoverRevealCard({
   image,
   name,
   cat,
 }: ProductCardProps) {
-  const slug = toSlug(cat)
+  const {slug} = CATEGORIES.find((c)=>c.dbName === cat)
   return (
     <Link href={`/categories/${slug}`}>
       <div className="group relative w-40 overflow-hidden rounded-x">
