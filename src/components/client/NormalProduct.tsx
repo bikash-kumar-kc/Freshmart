@@ -8,13 +8,25 @@ type ProductCardProps = {
   cat: string;
 };
 
+
+function toSlug(str:string):string {
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, "and")
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
 export default function HoverRevealCard({
   image,
   name,
   cat,
 }: ProductCardProps) {
+  const slug = toSlug(cat)
   return (
-    <Link href={`/categories/${cat}`}>
+    <Link href={`/categories/${slug}`}>
       <div className="group relative w-40 overflow-hidden rounded-x">
         {/* Image */}
         <div className="relative h-40 w-full">
