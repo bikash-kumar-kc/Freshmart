@@ -8,8 +8,11 @@ import {
   PaginationLink,
 } from "@/components/ui/pagination";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
-const PaginationComponent = ({ page = 1 }: { page?: number }) => {
+const PaginationComponent = () => {
+  const searchParams = useSearchParams()
+   const page = Number(searchParams.get("page")) ?? 1;
   console.log("here in pagination component");
   const { data: categoriesInfo, isLoading: loadingCategories } =
     useGetCategories();

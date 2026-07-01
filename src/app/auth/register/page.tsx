@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { getLocally, saveLocally } from "@/src/lib/localstorage";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { registerUser } from "@/src/lib/server actions/auth.server.action";
 
 const schemaForRegister = z
@@ -32,13 +32,21 @@ const Page = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const localAuth = getLocally("auth");
-  let localEmail;
-  let localPassword;
-  if (localAuth) {
-    localEmail = localAuth.email;
-    localPassword = localAuth.password;
-  }
+  const [localAuth, setLocalAuth] = useState<{
+    email: string;
+    password: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const auth = getLocally("auth") as { email: string; password: string };
+
+    if (auth) {
+      setLocalAuth(auth);
+    }
+  }, []);
+
+  const localEmail = localAuth?.email ?? "kcbikash886@gmail.com";
+  const localPassword = localAuth?.password ?? "123456789";
   const {
     register,
     handleSubmit,

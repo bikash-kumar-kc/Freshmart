@@ -17,7 +17,7 @@ export default function HoverRevealCard({
   name,
   cat,
 }: ProductCardProps) {
-  const {slug} = CATEGORIES.find((c)=>c.dbName === cat)
+  const {slug} = CATEGORIES.find((c)=>c.dbName === cat) as {slug:string}
   return (
     <Link href={`/categories/${slug}`}>
       <div className="group relative w-40 overflow-hidden rounded-x">

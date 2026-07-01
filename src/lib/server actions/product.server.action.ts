@@ -16,7 +16,7 @@ export interface IPRODUCTRESPONSE {
   isMostPopular: boolean;
   isFeatured: boolean;
   isOffered: boolean;
-  discount: number;
+  discount: number | null;
   originCountry: string;
   farmName: string;
   freshnessTags: string[];
@@ -45,8 +45,6 @@ export async function getProductByCategorySlug(
 ): Promise<GetProductResult> {
   try {
 
-    console.log("category",category)
-     console.log(slug)
     if (!category?.trim() || !slug?.trim()) {
       return { product: null, relatedProducts: [], variantRows: [] };
     }
@@ -57,9 +55,6 @@ export async function getProductByCategorySlug(
       .from(products)
       .where(eq(products.slug, slug))
       .get();
-
-      console.log("product")
-      console.log(product)
 
     if (!product || product.status === "inactive") {
       return { product: null, relatedProducts: [], variantRows: [] };

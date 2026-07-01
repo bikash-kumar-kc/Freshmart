@@ -20,7 +20,7 @@ export default function ProductDetailPage({
   const [animate, setAnimate] = useState(false);
 
   const finalPrice = product?.isOffered
-    ? discountedPrice(variantRows[0]?.price, product.discount)
+    ? discountedPrice(variantRows[0]?.price, product.discount as number)
     : variantRows[0]?.price;
 
   const isOutOfStock =

@@ -12,7 +12,7 @@ interface PopularProduct {
   thumbnail: string;
   popularityScore: number;
   isOffered: boolean;
-  discount: number;
+  discount: number | null;
   variants: {
     id: string;
     weightValue: number;

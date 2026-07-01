@@ -1,12 +1,9 @@
-// components/ProductDetailClient.tsx  — CLIENT component
 "use client";
 
 import { use } from "react";
 import { notFound } from "next/navigation";
 import ProductDetailPage from "./ProductDetailsPage";
 import { getProductByCategorySlug} from "@/src/lib/server actions/product.server.action";
-
-
 
 
 interface Props {

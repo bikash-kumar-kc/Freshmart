@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getLocally } from "@/src/lib/localstorage";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const schemaForSession = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -24,14 +24,23 @@ export type ISESSIONTYPES = z.infer<typeof schemaForSession>;
 
 const Page = () => {
   const router = useRouter();
-  const localAuth = getLocally("auth");
+
   const [loading, setLoading] = useState(false);
-  let localEmail;
-  let localPassword;
-  if (localAuth) {
-    localEmail = localAuth.email;
-    localPassword = localAuth.password;
+  const [localAuth, setLocalAuth] = useState<{
+  email: string;
+  password: string;
+} | null>(null);
+
+useEffect(() => {
+  const auth = getLocally("auth") as {email:string,password:string};
+
+  if (auth) {
+    setLocalAuth(auth);
   }
+}, []);
+
+const localEmail = localAuth?.email ?? "kcbikash886@gmail.com";
+const localPassword = localAuth?.password ?? "123456789";
   const {
     register,
     handleSubmit,
@@ -67,11 +76,9 @@ const Page = () => {
 
   return (
     <>
-      {/* ── Left: Image panel (hidden on mobile) ───────────────────────── */}
-
-      {/* ── Right: Form panel ───────────────────────────────────────────── */}
+    
       <div className="w-full lg:w-[40%] flex flex-col justify-center px-8 sm:px-12 bg-amber-50">
-        {/* Logo / brand name */}
+
         <div className="mb-10 flex flex-col items-center">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl">🌿</span>

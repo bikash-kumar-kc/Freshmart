@@ -23,10 +23,10 @@ export default function ProductCard({
   isFeatured,
   onAddToCart,
 }: ProductCardProps) {
-  const hasDiscount = originalPrice && originalPrice > price;
+  const hasDiscount = originalPrice && originalPrice > price!;
 
   return (
-    <div className="group w-[215px] overflow-hidden rounded-sm bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <div className="group w-53.75 overflow-hidden rounded-sm bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <Link href={`/products/${slug}`} className="block">
         {/* Image */}
         <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
@@ -45,7 +45,7 @@ export default function ProductCard({
 
           {hasDiscount && (
             <span className="absolute right-3 top-3 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-semibold text-white">
-              -{Math.round(((originalPrice! - price) / originalPrice!) * 100)}%
+              -{Math.round(((originalPrice! - price!) / originalPrice!) * 100)}%
             </span>
           )}
         </div>

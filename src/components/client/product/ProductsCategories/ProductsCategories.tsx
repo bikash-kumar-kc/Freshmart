@@ -1,8 +1,12 @@
 "use client";
 import { useGetProductsByCategories } from "@/src/hooks/useGetProductsByCategories";
 import HoverRevealCard from "../../NormalProduct";
+import { useSearchParams } from "next/navigation";
 
-const ProductsCategories = ({ cats }: { cats: string }) => {
+const ProductsCategories = () => {
+  const searchParams = useSearchParams();
+  const cats = searchParams.get("categories") ?? "Dairy & Eggs,Fruits";
+
   const {
     data: categoriesProducts,
     isLoading: productsLoading,

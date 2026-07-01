@@ -5,12 +5,10 @@ import NotificationPanel from "../components/server/notificationPanel";
 import { Suspense, useCallback, useState } from "react";
 import ImageSlider from "../components/client/messageBanner";
 import OrganicProductCards from "../components/client/ProductCard";
-import HoverRevealCard from "../components/client/NormalProduct";
 import Footer from "../components/server/Footer";
 import BannerCarouselSkeleton from "@/components/skeleton/BannerCarouselSkeleton";
 import BannerCarousel from "../components/client/bannerCarousel";
 import PaginationComponent from "../components/client/pagination/Pagination";
-import { useSearchParams } from "next/navigation";
 import ProductsCategories from "../components/client/product/ProductsCategories/ProductsCategories";
 import ProductsSuspenseFallback from "../components/client/product/ProductsCategories/Fallback";
 
@@ -21,12 +19,6 @@ export default function Home() {
     setIsOpen((prevs) => !prevs);
   }, []);
 
-  const searchParams = useSearchParams();
-  const page = Number(searchParams.get("page")) ?? 1;
-  console.log("page: ", page);
-  const categories = searchParams.get("categories") ?? "Dairy & Eggs,Fruits";
-  console.log(page);
-  console.log(categories);
   return (
     <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 font-sans">
       <SessionProvider>
@@ -46,7 +38,7 @@ export default function Home() {
           <OrganicProductCards types={"Offers"} />
 
           <Suspense fallback={<ProductsSuspenseFallback />}>
-            <ProductsCategories cats={categories} />
+            <ProductsCategories />
           </Suspense>
           {/* <div className="flex flex-wrap gap-15 mt-4 w-full justify-cente">
             <HoverRevealCard
@@ -237,7 +229,9 @@ export default function Home() {
             </h2>
           </section>
         </main>
-        <PaginationComponent page={page ? page : 1} />
+        <Suspense fallback={<p>loading...</p>}>
+          <PaginationComponent />
+        </Suspense>
         <Footer />
       </SessionProvider>
     </div>

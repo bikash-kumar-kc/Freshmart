@@ -191,7 +191,7 @@ export const removeLocally = ({
   }
 };
 
-export const getLocally = (type: string) => {
+export const getLocally = (type: string):unknown => {
   if (!type?.trim()) return;
 
   switch (type) {

@@ -21,7 +21,7 @@ export const RelatedProductCard = ({
   );
 
   const finalPrice = product.isOffered
-    ? discountedPrice(cheapest?.price ?? 0, product.discount)
+    ? discountedPrice(cheapest?.price ?? 0, product.discount as number)
     : (cheapest?.price ?? 0);
 
   return (
