@@ -18,7 +18,7 @@ interface IOfferedProductApiResponse {
 }
 type IOfferedProductResponse = IAPIResponseTypes<IOfferedProductApiResponse>;
 
-export const getPopularProducts =
+export const getOfferedProducts =
   async (): Promise<IOfferedProductApiResponse> => {
     try {
       const response = await fetch(
