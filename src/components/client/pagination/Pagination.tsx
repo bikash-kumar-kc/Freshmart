@@ -11,14 +11,11 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 const PaginationComponent = () => {
-  const searchParams = useSearchParams()
-   const page = Number(searchParams.get("page")) ?? 1;
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page")) ?? 1;
   console.log("here in pagination component");
   const { data: categoriesInfo, isLoading: loadingCategories } =
     useGetCategories();
-
-  console.log("categoriesInfo");
-  console.log(categoriesInfo);
 
   if (loadingCategories) {
     return (
@@ -36,7 +33,7 @@ const PaginationComponent = () => {
 
   const categoriesPerPage = 2;
   const totalPages = Math.ceil(
-    categoriesInfo.categories.length / categoriesPerPage,
+    categoriesInfo?.categories?.length / categoriesPerPage,
   );
   const currentPage = Number(page ?? 1);
 
@@ -45,24 +42,7 @@ const PaginationComponent = () => {
       <div className="w-full flex justify-end flex-row items-cente">
         <Pagination className="flex justify-end">
           <PaginationContent>
-            {/* Previous */}
-            {/* {currentPage > 1 && (
-              <PaginationItem>
-                <PaginationPrevious>
-                  <Link
-                    href={{
-                      pathname: "/",
-                      query: {
-                        page: currentPage - 1,
-                        categories: categoriesInfo.categories
-                          .slice((currentPage - 2) * 2, currentPage * 2 - 2)
-                          .join(","),
-                      },
-                    }}
-                  />
-                </PaginationPrevious>
-              </PaginationItem>
-            )} */}
+           
 
             {/* Pages */}
             {Array.from({ length: totalPages }, (_, index) => {
@@ -75,7 +55,9 @@ const PaginationComponent = () => {
 
               return (
                 <PaginationItem key={page}>
-                  <PaginationLink isActive={page === currentPage}>
+                  <PaginationLink
+                    isActive={page === (currentPage ? currentPage : 1)}
+                  >
                     <Link
                       href={{
                         pathname: "/",

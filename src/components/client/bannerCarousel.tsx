@@ -36,7 +36,7 @@ const BannerCarousel = () => {
                 className={` w-full h-full flex justify-center items-center rounded-2xl `}
               >
                 <Image
-                  src={prod.thumbnail}
+                  src={"/pic_2_banner.jpg"}
                   width={1280}
                   height={20}
                   alt={prod.thumbnail as string}
@@ -47,7 +47,7 @@ const BannerCarousel = () => {
                 <div className="relative py-10 bg-red-500">
                   <div className="absolute left-8 -top-25">
                     <BannerProductCard
-                      thumbnail={prod.thumbnail}
+                      thumbnail={""}
                       productName={prod.name}
                       category={prod.category}
                       slug={prod.slug}

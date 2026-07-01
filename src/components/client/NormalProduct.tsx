@@ -24,7 +24,7 @@ export default function HoverRevealCard({
         {/* Image */}
         <div className="relative h-40 w-full">
           <Image
-            src={image}
+            src={'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80'}
             alt={name}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"

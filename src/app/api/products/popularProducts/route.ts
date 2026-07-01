@@ -1,4 +1,4 @@
-// app/api/popularProducts/route.ts
+
 import { db } from "@/src/db/config";
 import { products, productVariants } from "@/src/db/schema";
 import { eq, inArray } from "drizzle-orm";
@@ -33,7 +33,7 @@ export interface IPopularProduct {
 
 export async function GET() {
   try {
-    // ── 1. fetch popular products ──
+   
     const popularProducts = await db
       .select(productInformationRequired)
       .from(products)
@@ -52,7 +52,7 @@ export async function GET() {
       );
     }
 
-    // ── 2. fetch variants for popular products ──
+    
     const productIds = popularProducts.map((p) => p.id);
 
     const variantRows = await db
@@ -65,7 +65,7 @@ export async function GET() {
       .from(productVariants)
       .where(inArray(productVariants.productId, productIds));
 
-    // ── 3. pick cheapest variant per product ──
+   
     const cheapestByProductId = new Map<string, (typeof variantRows)[0]>();
     for (const v of variantRows) {
       const existing = cheapestByProductId.get(v.productId);
@@ -74,7 +74,7 @@ export async function GET() {
       }
     }
 
-    // ── 4. merge into flat product objects ──
+    
     const result: IPopularProduct[] = popularProducts.map((p) => {
       const variant = cheapestByProductId.get(p.id);
       return {

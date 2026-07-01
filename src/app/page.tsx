@@ -11,6 +11,9 @@ import BannerCarousel from "../components/client/bannerCarousel";
 import PaginationComponent from "../components/client/pagination/Pagination";
 import ProductsCategories from "../components/client/product/ProductsCategories/ProductsCategories";
 import ProductsSuspenseFallback from "../components/client/product/ProductsCategories/Fallback";
+import SpecialProductsSkeleton from "@/components/skeleton/SpecialProductSkeleton";
+import OfferedProducts from "../components/client/product/OfferedProducts";
+import PopularProducts from "../components/client/product/PopularProducts";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -20,7 +23,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 font-sans">
+    <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 ">
       <SessionProvider>
         {" "}
         <Header handleNotificationPanelOpen={handleOpenNotificationPanel} />
@@ -34,195 +37,20 @@ export default function Home() {
 
           <ImageSlider />
 
-          <OrganicProductCards types={"Popular Now"} />
-          <OrganicProductCards types={"Offers"} />
+          <Suspense fallback={<SpecialProductsSkeleton />}>
+            <PopularProducts />
+          </Suspense>
+
+          <Suspense fallback={<SpecialProductsSkeleton />}>
+            <OfferedProducts />
+          </Suspense>
+
+          {/* <OrganicProductCards types={"Popular Now"} />
+          <OrganicProductCards types={"Offers"} /> */}
 
           <Suspense fallback={<ProductsSuspenseFallback />}>
             <ProductsCategories />
           </Suspense>
-          {/* <div className="flex flex-wrap gap-15 mt-4 w-full justify-cente">
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-            <HoverRevealCard
-              image={
-                "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-              }
-              name={"Hass avocados"}
-            />
-          </div> */}
-
           <section>
             <h2 className="text-xl font-semibold mb-4">
               Healthy Living Journal

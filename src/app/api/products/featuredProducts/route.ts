@@ -12,7 +12,8 @@ export interface IProduct {
   descriptions: string;
   thumbnail: string;
   discount: number | null;
-  isFeatured:boolean;
+  isFeatured: boolean;
+  category: string;
 }
 export interface IFeaturedProductsData {
   featuredProducts: IProduct[];
@@ -29,7 +30,8 @@ export async function GET() {
         descriptions: products.description,
         thumbnail: products.thumbnail,
         discount: products.discount,
-        isFeatured:products.isFeatured,
+        isFeatured: products.isFeatured,
+        category: products.category,
       })
       .from(products)
       .where(and(eq(products.isFeatured, true), eq(products.status, "active")));
