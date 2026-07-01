@@ -12,6 +12,9 @@ interface IPopularProducts {
   name: string;
   description: string;
   isOffered: boolean;
+  weightValue: number;
+  weightUnit: string;
+  price: number | null;
 }
 
 interface IPopularProductsData {
@@ -22,7 +25,7 @@ interface IPopularProductsData {
 type IPopularProductResponse = IAPIResponseTypes<IPopularProductsData>;
 
 export const getPopularProducts = async (): Promise<IPopularProductsData> => {
-  const res = await fetch("http://localhost:3000/api/popularProducts", {
+  const res = await fetch("http://localhost:3000/api/products/popularProducts", {
     next: {
       revalidate: REVALIDATE_TIME,
     },
