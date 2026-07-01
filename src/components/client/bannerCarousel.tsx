@@ -14,7 +14,7 @@ import BannerProductCard from "../server/bannerCard";
 
 const BannerCarousel = () => {
   const { data: FeaturedProductsResponse } = useGetFeaturedProducts();
-  const FeaturedProducts = FeaturedProductsResponse.featuredProducts;
+  const FeaturedProducts = FeaturedProductsResponse?.featuredProducts;
 
   return (
     <Carousel
@@ -47,7 +47,7 @@ const BannerCarousel = () => {
                 <div className="relative py-10 bg-red-500">
                   <div className="absolute left-8 -top-25">
                     <BannerProductCard
-                      thumbnail={prod.images[0]}
+                      thumbnail={prod.thumbnail}
                       productName={prod.name}
                       category={prod.category}
                       slug={prod.slug}
