@@ -1,6 +1,7 @@
 import { db } from "@/src/db/config";
-import { Product, products } from "@/src/db/schema";
-import { and, eq } from "drizzle-orm";
+import { Product, products, productVariants } from "@/src/db/schema";
+import { and, eq, inArray } from "drizzle-orm";
+
 
 export interface IFeaturedProductsData {
   featuredProducts: Product[];
@@ -10,15 +11,65 @@ export interface IFeaturedProductsData {
 export async function GET() {
   try {
     const featuredProducts = await db
-      .select()
+      .select({
+        productId: products.id,
+        name: products.name,
+        slug: products.slug,
+        descriptions: products.description,
+        thumbnail: products.thumbnail,
+        discount: products.discount,
+      })
       .from(products)
       .where(and(eq(products.isFeatured, true), eq(products.status, "active")));
+
+    if (featuredProducts.length === 0) {
+      return Response.json({
+        success: true,
+        data: {
+          featuredProducts,
+          totalFeaturedProducts: 0,
+        },
+      });
+    }
+
+    const arrayOfFeaturedProductIds = featuredProducts.map((p) => p.productId);
+
+    const featuredProductVarients = await db
+      .select({
+        productId: productVariants.productId,
+        weightValue: productVariants.weightValue,
+        weightUnit: productVariants.weightUnit,
+        price: productVariants.price,
+      })
+      .from(productVariants)
+      .where(inArray(productVariants.productId, arrayOfFeaturedProductIds));
+
+    const cheapestByProductId = new Map<
+      string,
+      (typeof featuredProductVarients)[0]
+    >();
+    for (const v of featuredProductVarients) {
+      const existing = cheapestByProductId.get(v.productId);
+      if (!existing || v.weightValue < existing.weightValue) {
+        cheapestByProductId.set(v.productId, v);
+      }
+    }
+
+    const result = featuredProducts.map((p) => {
+      const variant = cheapestByProductId.get(p.productId);
+      return {
+        ...p,
+        weightValue: variant?.weightValue ?? null,
+        weightUnit: variant?.weightUnit ?? null,
+        price: variant?.price ?? null,
+      };
+    });
 
     return Response.json(
       {
         success: true,
         data: {
-          featuredProducts,
+          featuredProducts: result,
           totalFeaturedProducts: featuredProducts.length,
         },
       },
