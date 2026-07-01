@@ -10,6 +10,7 @@ interface IOfferedProduct {
   weightValue: number | null;
   weightUnit: string | null;
   price: number | null;
+  category:string;
 }
 
 interface IOfferedProductApiResponse {

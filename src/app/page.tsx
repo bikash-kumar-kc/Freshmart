@@ -45,17 +45,18 @@ export default function Home() {
             <OfferedProducts />
           </Suspense>
 
-          {/* <OrganicProductCards types={"Popular Now"} />
-          <OrganicProductCards types={"Offers"} /> */}
+
 
           <Suspense fallback={<ProductsSuspenseFallback />}>
             <ProductsCategories />
           </Suspense>
-          <section>
+
+
+          {/* <section>
             <h2 className="text-xl font-semibold mb-4">
               Healthy Living Journal
             </h2>
-          </section>
+          </section> */}
         </main>
         <Suspense fallback={<p>loading...</p>}>
           <PaginationComponent />

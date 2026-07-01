@@ -19,7 +19,7 @@ const ProductsCategories = () => {
       <div className="w-full max-w-7xl m-auto ">
         <div className="w-full flex flex-col gap-5">
           <p className="text-gray-500 text-center">
-            products are being loading...
+            products are loading...
           </p>
         </div>
       </div>
@@ -47,12 +47,12 @@ const ProductsCategories = () => {
   }
 
   return (
-    <div className="w-full max-w-7xl m-auto ">
+    <div className="w-full max-w-7xl m-auto  ">
       <div className="w-full flex flex-col gap-5">
         {categoriesProducts?.catBundle?.map((c) => (
-          <div key={c.category}>
-            <h2>{c.category}</h2>
-            <div className="w-full flex flex-wrap flex-row gap-2 justify-between items-center space-y-2">
+          <div key={c.category} className="flex flex-col gap-2 mt-8">
+            <h2 className="font-semibold text-2xl ">{c.category}</h2>
+            <div className="w-full flex flex-wrap flex-row gap-4 justify-between items-center space-y-2">
               {c?.products.map((p) => (
                 <HoverRevealCard
                   key={p.productId}

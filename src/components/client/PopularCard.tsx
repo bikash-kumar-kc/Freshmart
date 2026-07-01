@@ -109,7 +109,7 @@ export function ProductCard({
             <span
               className="
               bg-[rgba(27,52,4,0.82)]
-              text-[#e02209]
+              text-[#ffffff]
               text-[10px]
               font-medium
               px-2.25

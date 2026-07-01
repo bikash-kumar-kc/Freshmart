@@ -1,4 +1,3 @@
-
 import { db } from "@/src/db/config";
 import { products, productVariants } from "@/src/db/schema";
 import { eq, inArray } from "drizzle-orm";
@@ -29,13 +28,13 @@ export interface IPopularProduct {
   weightValue: number | null;
   weightUnit: string | null;
   price: number | null;
+  category: string;
 }
 
 export async function GET() {
   try {
-   
     const popularProducts = await db
-      .select(productInformationRequired)
+      .select({ ...productInformationRequired, category: products.category })
       .from(products)
       .where(eq(products.isMostPopular, true));
 
@@ -52,7 +51,6 @@ export async function GET() {
       );
     }
 
-    
     const productIds = popularProducts.map((p) => p.id);
 
     const variantRows = await db
@@ -65,7 +63,6 @@ export async function GET() {
       .from(productVariants)
       .where(inArray(productVariants.productId, productIds));
 
-   
     const cheapestByProductId = new Map<string, (typeof variantRows)[0]>();
     for (const v of variantRows) {
       const existing = cheapestByProductId.get(v.productId);
@@ -74,7 +71,6 @@ export async function GET() {
       }
     }
 
-    
     const result: IPopularProduct[] = popularProducts.map((p) => {
       const variant = cheapestByProductId.get(p.id);
       return {

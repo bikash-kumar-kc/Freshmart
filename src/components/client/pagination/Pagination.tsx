@@ -21,7 +21,7 @@ const PaginationComponent = () => {
     return (
       <div className="w-full max-w-7xl m-auto">
         <div className="w-full flex justify-end items-center bg-gray-500">
-          <p>loading...</p>
+          {/* <p>loading...</p> */}
         </div>
       </div>
     );
@@ -38,12 +38,10 @@ const PaginationComponent = () => {
   const currentPage = Number(page ?? 1);
 
   return (
-    <div className="w-full max-w-7xl m-auto">
-      <div className="w-full flex justify-end flex-row items-cente">
-        <Pagination className="flex justify-end">
-          <PaginationContent>
-           
-
+    <div className="w-full max-w-7xl m-auto relative py-4">
+      <div className="w-full flex justify-end flex-row items-center mt-12  ">
+        <Pagination className="flex justify-center">
+          <PaginationContent className="flex gap-4">
             {/* Pages */}
             {Array.from({ length: totalPages }, (_, index) => {
               const page = index + 1;
@@ -57,6 +55,15 @@ const PaginationComponent = () => {
                 <PaginationItem key={page}>
                   <PaginationLink
                     isActive={page === (currentPage ? currentPage : 1)}
+                    className={`
+      h-10 w-10 rounded-sm border transition-all duration-200
+      flex items-center justify-center
+      ${
+        page === (currentPage ? currentPage : 1)
+          ? "bg-green-500 text-white shadow-md"
+          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100 hover:border-gray-400"
+      }
+    `}
                   >
                     <Link
                       href={{
@@ -69,6 +76,7 @@ const PaginationComponent = () => {
                         },
                       }}
                       scroll={false}
+                      className="w-full h-full flex items-center justify-center"
                     >
                       {page}
                     </Link>

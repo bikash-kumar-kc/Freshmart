@@ -2,6 +2,7 @@
 
 import { useGetPopularProducts } from "@/src/hooks/useGetPopularProducts";
 import { ProductCard } from "../PopularCard";
+import Link from "next/link";
 
 const PopularProducts = () => {
   const {
@@ -26,9 +27,7 @@ const PopularProducts = () => {
   }
 
   return (
-    <div
-      className=" w-full flex flex-col gap-6"
-    >
+    <div className=" w-full flex flex-col gap-6">
       <h2 className="text-3xl font-semibold ">Popular Now</h2>
       <div
         style={{
@@ -38,7 +37,9 @@ const PopularProducts = () => {
         }}
       >
         {popularProducts.map((p) => (
-          <ProductCard key={p.id} product={p} type="popular" />
+          <Link key={p.id} href={`/product/${p.category}/${p.slug}`}>
+            <ProductCard product={p} type="popular" />
+          </Link>
         ))}
       </div>
     </div>

@@ -25,6 +25,7 @@ export async function GET() {
       .select({
         ...productInformationRequired,
         discount: products.discount,
+        category: products.category,
       })
       .from(products)
       .where(and(eq(products.isOffered, true), eq(products.status, "active")))

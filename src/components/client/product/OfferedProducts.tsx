@@ -2,6 +2,7 @@
 
 import { useGetOfferedProducts } from "@/src/hooks/useGetOfferedProducts";
 import { ProductCard } from "../PopularCard";
+import Link from "next/link";
 
 const OfferedProductsComponent = () => {
   const {
@@ -27,12 +28,9 @@ const OfferedProductsComponent = () => {
 
   return (
     <div
-      style={{
-        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-      }}
-      className=" w-full flex flex-col gap-6"
+      className=" w-full flex flex-col gap-6 mt-8"
     >
-      <h2 className="text-4xl font-bold ">Offered Products</h2>
+      <h2 className="text-3xl font-semibold  ">Special Offers</h2>
       <div
         style={{
           display: "grid",
@@ -41,7 +39,9 @@ const OfferedProductsComponent = () => {
         }}
       >
         {offeredProducts.map((p) => (
+          <Link key={p.id} href={`/product/${p.category}/${p.slug}`}>
           <ProductCard key={p.id} product={p} type="offer" />
+          </Link>
         ))}
       </div>
     </div>

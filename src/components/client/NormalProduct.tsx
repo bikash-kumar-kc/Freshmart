@@ -20,9 +20,9 @@ export default function HoverRevealCard({
   const {slug} = CATEGORIES.find((c)=>c.dbName === cat) as {slug:string}
   return (
     <Link href={`/categories/${slug}`}>
-      <div className="group relative w-40 overflow-hidden rounded-x">
+      <div className="group relative w-60 overflow-hidden rounded-sm">
         {/* Image */}
-        <div className="relative h-40 w-full">
+        <div className="relative h-60 w-full">
           <Image
             src={'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80'}
             alt={name}
@@ -42,7 +42,7 @@ export default function HoverRevealCard({
           group-hover:translate-y-0
         "
         >
-          <h3 className="text-md font-semibold text-center text-gray-100">
+          <h3 className="text-md font-semibold text-center text-gray-100 line-clamp-1">
             {name}
           </h3>
         </div>
