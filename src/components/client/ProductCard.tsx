@@ -1,13 +1,13 @@
 import Image from "next/image";
 import { useState } from "react";
 
-interface IPRODUCTTYPE{
-    id:number,
-    name:string,
-    price:number,
-    unit:string,
-    image:string,
-    alt:string
+interface IPRODUCTTYPE {
+  id: number;
+  name: string;
+  price: number;
+  unit: string;
+  image: string;
+  alt: string;
 }
 
 const products = [
@@ -105,7 +105,7 @@ function CartIcon() {
   );
 }
 
-function HeartIcon({ filled }:{filled:boolean}) {
+function HeartIcon({ filled }: { filled: boolean }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -133,9 +133,11 @@ export function ProductCard({ product }: { product: IPRODUCTTYPE }) {
   }
 
   return (
-    <div className=" bg-white border border-black/10 rounded-md overflow-hidden flex flex-col
+    <div
+      className=" bg-white border border-black/10 rounded-md overflow-hidden flex flex-col
     transition-transform duration-200 ease-out
-    hover:scale-[1.02]">
+    hover:scale-[1.02]"
+    >
       {/* Image */}
       <div className="relative h-[200px] overflow-hidden">
         <Image
@@ -148,9 +150,7 @@ export function ProductCard({ product }: { product: IPRODUCTTYPE }) {
         {/* Wishlist */}
         <button
           onClick={() => setWished((w) => !w)}
-          aria-label={
-            wished ? "Remove from wishlist" : "Add to wishlist"
-          }
+          aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
           className="
             absolute top-2.5 right-2.5
             w-8 h-8
@@ -165,7 +165,7 @@ export function ProductCard({ product }: { product: IPRODUCTTYPE }) {
           <HeartIcon filled={wished} />
         </button>
 
-<div className="absolute left-1 top-2 flex flex-col items-end gap-1">
+        <div className="absolute left-1 top-2 flex flex-col items-end gap-1">
           <span
             className="
               bg-[rgba(27,52,4,0.82)]
@@ -178,9 +178,8 @@ export function ProductCard({ product }: { product: IPRODUCTTYPE }) {
               tracking-[0.3px]
             "
           >
-            Offer 
+            Offer
           </span>
-
         </div>
         {/* Overlay */}
         <div className="absolute bottom-2.5 right-2.5 flex flex-col items-end gap-1">
@@ -190,8 +189,8 @@ export function ProductCard({ product }: { product: IPRODUCTTYPE }) {
               text-[#C0DD97]
               text-[10px]
               font-medium
-              px-[9px]
-              py-[3px]
+              px-2.25
+              py-0.75
               rounded-full
               tracking-[0.3px]
             "
@@ -204,8 +203,8 @@ export function ProductCard({ product }: { product: IPRODUCTTYPE }) {
               bg-[rgba(27,52,4,0.6)]
               text-[#EAF3DE]
               text-[10px]
-              px-[9px]
-              py-[3px]
+              px-2.25
+              py-0.75
               rounded-full
             "
           >
@@ -215,20 +214,19 @@ export function ProductCard({ product }: { product: IPRODUCTTYPE }) {
       </div>
 
       {/* Card Body */}
-      <div className="px-[14px] py-3 flex items-center justify-between">
+      <div className="px-3.5 py-3 flex items-center justify-between">
         <div>
           <p className="m-0 text-sm font-medium text-[#1a1a1a]">
             {product.name}
           </p>
 
-         <div className="flex gap-2 justify-center text-center "> 
-            <p className="mt-[2px] mb-0 text-[13px] text-[#666]">
-           
-            ${product.price.toFixed(2)}
-          </p>
-          <p className=" mt-[2px] text-[13px] text-[#d11010] text-center line-through ">
-           $1.33
-          </p>
+          <div className="flex gap-2 justify-center text-center ">
+            <p className="mt-0.5 mb-0 text-[13px] text-[#666]">
+              ${product.price.toFixed(2)}
+            </p>
+            <p className=" mt-0.5 text-[13px] text-[#d11010] text-center line-through ">
+              $1.33
+            </p>
           </div>
         </div>
 
@@ -270,19 +268,17 @@ export function ProductCard({ product }: { product: IPRODUCTTYPE }) {
   );
 }
 
-
-
-export default function OrganicProductCards({types}:{types:string}) {
+export default function OrganicProductCards({ types }: { types: string }) {
   return (
     <div
       style={{
-       
-        fontFamily:
-          "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       }}
       className=" w-full flex flex-col gap-6"
     >
-        <h2 className="text-4xl font-bold ">{types==="Offers"?'Offers':"Popular Now"}</h2>
+      <h2 className="text-4xl font-bold ">
+        {types === "Offers" ? "Offers" : "Popular Now"}
+      </h2>
       <div
         style={{
           display: "grid",
@@ -291,7 +287,7 @@ export default function OrganicProductCards({types}:{types:string}) {
         }}
       >
         {products.map((p) => (
-          <ProductCard key={p.id } product={p} />
+          <ProductCard key={p.id} product={p} />
         ))}
       </div>
     </div>
