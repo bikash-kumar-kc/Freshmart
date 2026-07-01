@@ -14,7 +14,6 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({
-  thumbnail,
   productName,
   category,
   slug,
@@ -31,7 +30,9 @@ export default function ProductCard({
         {/* Image */}
         <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
           <Image
-            src={thumbnail}
+            src={
+              "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"
+            }
             alt={productName}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -62,7 +63,7 @@ export default function ProductCard({
 
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-base font-bold text-gray-900">
-              ${price?.toFixed(2) ?? '20.00'}
+              ${price?.toFixed(2) ?? "20.00"}
             </span>
             {hasDiscount && (
               <span className="text-xs text-gray-400 line-through">
