@@ -10,5 +10,7 @@ export const QUERY_KEYS ={
     FEATURED_PRODUCT:'getfeaturedproducts',
     CATEGORIES:'getcategories',
     PRODUCTSBYCATEGORIES:"getproductsbycategories",
-    PRODUCT_ON_SEARCH_TERM:"getproductonsearchterm"
+    PRODUCT_ON_SEARCH_TERM:"getproductonsearchterm",
+    POPULAR_PRODUCTS:"getPopularProducts",
+    OFFERED_PRODUCTS:"getOfferedProdcuts"
 }
