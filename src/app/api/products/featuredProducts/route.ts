@@ -1,10 +1,21 @@
 import { db } from "@/src/db/config";
-import { Product, products, productVariants } from "@/src/db/schema";
+import { products, productVariants } from "@/src/db/schema";
 import { and, eq, inArray } from "drizzle-orm";
 
-
+export interface IProduct {
+  weightValue: number | null;
+  weightUnit: string | null;
+  price: number | null;
+  productId: string;
+  name: string;
+  slug: string;
+  descriptions: string;
+  thumbnail: string;
+  discount: number | null;
+  isFeatured:boolean;
+}
 export interface IFeaturedProductsData {
-  featuredProducts: Product[];
+  featuredProducts: IProduct[];
   totalFeaturedProducts: number;
 }
 
@@ -18,6 +29,7 @@ export async function GET() {
         descriptions: products.description,
         thumbnail: products.thumbnail,
         discount: products.discount,
+        isFeatured:products.isFeatured,
       })
       .from(products)
       .where(and(eq(products.isFeatured, true), eq(products.status, "active")));
