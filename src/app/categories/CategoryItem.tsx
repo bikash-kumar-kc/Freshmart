@@ -14,7 +14,7 @@ export async function CategoryItem({
       <button
         className={`
         w-full flex items-center gap-3 px-3 py-2.5 rounded-sm text-left
-        transition-all duration-150 group
+        transition-all duration-150 group cursor-pointer
         ${
           isActive
             ? "bg-green-700 text-white"

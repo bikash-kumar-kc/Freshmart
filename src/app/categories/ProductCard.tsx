@@ -10,14 +10,16 @@ export function ProductCard({ product }: { product: ICategoryProducts }) {
 
   return (
     <Link
-      href={`/product/${product.slug}`}
+      href={`/product/${product.category}/${product.slug}`}
       className="group bg-white rounded-sm border border-gray-100
         overflow-hidden hover:border-green-200 hover:shadow-sm
         transition-all duration-200 flex flex-col"
     >
       <div className="relative aspect-4/3 bg-green-50 overflow-hidden">
         <Image
-          src={product.thumbnail}
+          src={
+            "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=800&q=80"
+          }
           alt={product.name}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

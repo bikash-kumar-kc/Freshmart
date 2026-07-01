@@ -1,42 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Home } from "lucide-react";
-import { eq, inArray } from "drizzle-orm";
-import { db } from "@/src/db/config";
-import { products, productVariants } from "@/src/db/schema";
 import { CategoryItem } from "../CategoryItem";
 import { CATEGORIES } from "../categories";
-import { ProductCard } from "../ProductCard";
-
-
-async function getProductsByCategory(dbName: string) {
-  const productRows = await db
-    .select()
-    .from(products)
-    .where(eq(products.category, dbName));
-
-  if (productRows.length === 0) return [];
-
-  const productIds = productRows.map((p) => p.id);
-  const variantRows = await db
-    .select()
-    .from(productVariants)
-    .where(inArray(productVariants.productId, productIds));
-
-  const variantsByProduct = new Map<string, typeof variantRows>();
-  for (const v of variantRows) {
-    const list = variantsByProduct.get(v.productId) ?? [];
-    list.push(v);
-    variantsByProduct.set(v.productId, list);
-  }
-
-  return productRows.map((p) => ({
-    ...p,
-    variants: variantsByProduct.get(p.id) ?? [],
-  }));
-}
-
-
+import { Suspense } from "react";
+import ProductPage from "./ProductPage";
+import CategoryProductSkeleton from "@/components/skeleton/CategoryProductSkeleton";
 
 export default async function page({
   params,
@@ -46,7 +15,6 @@ export default async function page({
   const { cat } = await params;
   const activeCategory = CATEGORIES.find((c) => c.slug === cat);
   if (!activeCategory) notFound();
-  const productList = await getProductsByCategory(activeCategory.dbName);
 
   return (
     <main className="bg-amber-50 min-h-screen">
@@ -57,7 +25,7 @@ export default async function page({
               {activeCategory.emoji} {activeCategory.label}
             </h1>
             <p className="text-xs text-gray-400 mt-0.5 px-10">
-              {productList.length} organic products
+              organic products
             </p>
           </div>
           <Link
@@ -81,7 +49,7 @@ export default async function page({
             >
               Categories
             </p>
-            <nav className="flex flex-col gap-4.5">
+            <nav className="flex flex-col gap-4.5 cursor-pointer">
               {CATEGORIES.map((cat) => (
                 <CategoryItem
                   key={cat.slug}
@@ -94,14 +62,14 @@ export default async function page({
 
           <div
             className="md:hidden flex gap-2 overflow-x-auto pb-2
-            -mx-4 px-4 mb-4 scrollbar-none w-full"
+            -mx-4 px-4 mb-4 scrollbar-none w-full cursor-pointer"
           >
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.slug}
                 className={`
                   shrink-0 flex items-center gap-1.5 px-3 py-2
-                  rounded-xl text-sm font-medium border transition-all
+                  rounded-sm text-sm font-medium border transition-all cursor-pointer
                   ${
                     cat.slug === activeCategory.slug
                       ? "bg-green-700 text-white border-green-700"
@@ -115,33 +83,11 @@ export default async function page({
             ))}
           </div>
 
-          
-          <div className="flex-1 min-w-0">
-            {productList.length === 0 ? (
-              <div
-                className="flex flex-col items-center justify-center
-                py-24 text-center"
-              >
-                <span className="text-4xl mb-3">🌱</span>
-                <p className="text-sm font-medium text-gray-500">
-                  No products in this category yet
-                </p>
-              </div>
-            ) : (
-              <div
-                className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4
-                gap-3 sm:gap-4"
-              >
-                {productList.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            )}
-          </div>
+          <Suspense fallback={<CategoryProductSkeleton />}>
+            <ProductPage cat={(activeCategory as { dbName: string }).dbName} />
+          </Suspense>
         </div>
       </div>
     </main>
   );
 }
-
-
