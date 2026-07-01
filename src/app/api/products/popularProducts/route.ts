@@ -1,7 +1,7 @@
-import { success } from "zod";
+// app/api/popularProducts/route.ts
 import { db } from "@/src/db/config";
-import { products } from "@/src/db/schema";
-import { eq } from "drizzle-orm";
+import { products, productVariants } from "@/src/db/schema";
+import { eq, inArray } from "drizzle-orm";
 
 export const REVALIDATE_TIME = 86400;
 
@@ -14,26 +14,89 @@ export const productInformationRequired = {
   isOffered: products.isOffered,
 };
 
+export interface IErrorTypes {
+  success: boolean;
+  message: string;
+}
+
+export interface IPopularProduct {
+  id: string;
+  slug: string;
+  thumbnail: string;
+  name: string;
+  description: string;
+  isOffered: boolean;
+  weightValue: number | null;
+  weightUnit: string | null;
+  price: number | null;
+}
+
 export async function GET() {
   try {
+    // ── 1. fetch popular products ──
     const popularProducts = await db
       .select(productInformationRequired)
       .from(products)
       .where(eq(products.isMostPopular, true));
 
+    if (popularProducts.length === 0) {
+      return Response.json(
+        {
+          success: true,
+          data: {
+            popularProducts: [],
+            totalPopularProducts: 0,
+          },
+        },
+        { status: 200 },
+      );
+    }
+
+    // ── 2. fetch variants for popular products ──
+    const productIds = popularProducts.map((p) => p.id);
+
+    const variantRows = await db
+      .select({
+        productId: productVariants.productId,
+        weightValue: productVariants.weightValue,
+        weightUnit: productVariants.weightUnit,
+        price: productVariants.price,
+      })
+      .from(productVariants)
+      .where(inArray(productVariants.productId, productIds));
+
+    // ── 3. pick cheapest variant per product ──
+    const cheapestByProductId = new Map<string, (typeof variantRows)[0]>();
+    for (const v of variantRows) {
+      const existing = cheapestByProductId.get(v.productId);
+      if (!existing || v.weightValue < existing.weightValue) {
+        cheapestByProductId.set(v.productId, v);
+      }
+    }
+
+    // ── 4. merge into flat product objects ──
+    const result: IPopularProduct[] = popularProducts.map((p) => {
+      const variant = cheapestByProductId.get(p.id);
+      return {
+        ...p,
+        weightValue: variant?.weightValue ?? null,
+        weightUnit: variant?.weightUnit ?? null,
+        price: variant?.price ?? null,
+      };
+    });
+
     return Response.json(
       {
         success: true,
         data: {
-          popularProducts,
-          totalPopularProducts: popularProducts.length,
+          popularProducts: result,
+          totalPopularProducts: result.length,
         },
       },
       { status: 200 },
     );
   } catch (error) {
     console.error("Failed to fetch popular products:", error);
-
     return Response.json(
       {
         success: false,
@@ -42,9 +105,4 @@ export async function GET() {
       { status: 500 },
     );
   }
-}
-
-export interface IErrorTypes {
-  success: boolean;
-  message: string;
 }
