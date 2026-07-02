@@ -54,6 +54,7 @@ export async function GET() {
         weightValue: productVariants.weightValue,
         weightUnit: productVariants.weightUnit,
         price: productVariants.price,
+        stock: productVariants.stock,
       })
       .from(productVariants)
       .where(inArray(productVariants.productId, arrayOfFeaturedProductIds));
@@ -65,7 +66,8 @@ export async function GET() {
     for (const v of featuredProductVarients) {
       const existing = cheapestByProductId.get(v.productId);
       if (!existing || v.weightValue < existing.weightValue) {
-        cheapestByProductId.set(v.productId, v);
+        const isOutOfStock = v.stock === 0;
+        if (!isOutOfStock) cheapestByProductId.set(v.productId, v);
       }
     }
 
