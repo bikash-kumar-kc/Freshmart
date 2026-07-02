@@ -10,10 +10,11 @@ const ImageComponent = ({isSignedIn=false}:{isSignedIn?:boolean}) => {
         alt="Woman carrying organic vegetable basket"
         fill
         className="w-full h-full object-cover brightness-50 group-hover:brightness-100 transition-all duration-300"
+        priority
       />
 
       {/* Gradient — fades out on hover along with brightness change */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent group-hover:from-black/20 transition-all duration-300" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent group-hover:from-black/20 transition-all duration-300" />
 
       {/* Tagline overlay */}
       <div className={`absolute bottom-10 ${isSignedIn ? 'left-10':'right-10'}  animate-fade-up`}>

@@ -60,12 +60,12 @@ export default function ProductCard({
             {productName}
           </h3>
 
-          <div className="mt-2 flex items-baseline gap-2">
+          <div className="mt-2 flex justify-between items-baseline gap-2">
             <span className="text-base font-bold text-gray-900">
               Rs {price?.toFixed(2) ?? "20.00"}
             </span>
 
-            <span>
+            <span className="text-[10px] text-gray-500">
               {weightValue}/{weightUnit}
             </span>
 

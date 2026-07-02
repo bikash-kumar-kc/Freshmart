@@ -22,7 +22,7 @@ export default function ImageSlider() {
           alt={`image-${current}`}
           fill
           className="object-cover rounded-sm"
-          priority={false}
+          priority={current === 0}
         />
       </div>
 
@@ -33,7 +33,9 @@ export default function ImageSlider() {
             key={index}
             onClick={() => setCurrent(index)}
             className={`h-2.5 w-2.5 rounded-full transition-all duration-200 ${
-              current === index ? "bg-green-600 scale-125" : "border border-green-300"
+              current === index
+                ? "bg-green-600 scale-125"
+                : "border border-green-300"
             }`}
           />
         ))}
