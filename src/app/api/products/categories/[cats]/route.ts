@@ -1,10 +1,8 @@
 import { db } from "@/src/db/config";
-import { products } from "@/src/db/schema";
+import { products, productVariants } from "@/src/db/schema";
 import { ICategoriesProductReponse } from "@/src/types/product.types/productsbycategories.types";
 import { manageApiResponse, manageError } from "@/src/utils/response";
-import { inArray } from "drizzle-orm";
-
-
+import { and, eq, gt, inArray } from "drizzle-orm";
 
 export async function GET(
   req: Request,
@@ -30,9 +28,16 @@ export async function GET(
         productName: products.name,
         thumbnail: products.thumbnail,
         categoryName: products.category,
+        stock:productVariants.stock
       })
       .from(products)
-      .where(inArray(products.category, categoriesArray));
+      .innerJoin(productVariants, eq(productVariants.productId, products.id))
+      .where(
+        and(
+          inArray(products.category, categoriesArray),
+          gt(productVariants.stock, 0),
+        ),
+      );
     // .limit(5);
 
     if (response.length === 0) {
@@ -69,8 +74,6 @@ export async function GET(
       filteredGroupProducts,
     );
 
-
-    
     return Response.json(
       {
         success: true,
