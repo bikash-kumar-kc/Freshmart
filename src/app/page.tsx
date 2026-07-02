@@ -1,4 +1,4 @@
-"use client";   //
+"use client"; //
 import Header from "../components/server/Header";
 import { SessionProvider } from "next-auth/react";
 import NotificationPanel from "../components/server/notificationPanel";
@@ -13,20 +13,21 @@ import ProductsSuspenseFallback from "../components/client/product/ProductsCateg
 import SpecialProductsSkeleton from "@/components/skeleton/SpecialProductSkeleton";
 import OfferedProducts from "../components/client/product/OfferedProducts";
 import PopularProducts from "../components/client/product/PopularProducts";
+import NotificationLayout from "../components/client/NotificationLayout";
 
 export default function Home() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const handleOpenNotificationPanel = useCallback(() => {
-    setIsOpen((prevs) => !prevs);
-  }, []);
+ 
 
   return (
     <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 ">
       <SessionProvider>
         {" "}
-        <Header handleNotificationPanelOpen={handleOpenNotificationPanel} />
-        <NotificationPanel isOpen={isOpen} />
+        {/* <Header handleNotificationPanelOpen={handleOpenNotificationPanel} />
+        <NotificationPanel
+          isOpen={isOpen}
+          onClose={handleCloseNotificationPanel}
+        /> */}
+        <NotificationLayout />
         <main className="w-full max-w-7xl mx-auto mt-10">
           {/* // banner */}
 
@@ -44,12 +45,9 @@ export default function Home() {
             <OfferedProducts />
           </Suspense>
 
-
-
           <Suspense fallback={<ProductsSuspenseFallback />}>
             <ProductsCategories />
           </Suspense>
-
 
           {/* <section>
             <h2 className="text-xl font-semibold mb-4">

@@ -26,7 +26,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
 
   const handleUnreadNotification = useCallback(async () => {
     try {
-      console.log("hejasef");
+      
       if (data?.user.id) {
         const { totalCount } = await countUnreadNotifications(data?.user.id);
         setCount(totalCount);
