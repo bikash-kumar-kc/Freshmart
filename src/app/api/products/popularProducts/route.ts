@@ -59,6 +59,7 @@ export async function GET() {
         weightValue: productVariants.weightValue,
         weightUnit: productVariants.weightUnit,
         price: productVariants.price,
+        stock: productVariants.stock,
       })
       .from(productVariants)
       .where(inArray(productVariants.productId, productIds));
@@ -67,7 +68,10 @@ export async function GET() {
     for (const v of variantRows) {
       const existing = cheapestByProductId.get(v.productId);
       if (!existing || v.weightValue < existing.weightValue) {
-        cheapestByProductId.set(v.productId, v);
+        const isOutOfStock = v.stock === 0;
+        if (!isOutOfStock) {
+          cheapestByProductId.set(v.productId, v);
+        }
       }
     }
 
@@ -78,6 +82,7 @@ export async function GET() {
         weightValue: variant?.weightValue ?? null,
         weightUnit: variant?.weightUnit ?? null,
         price: variant?.price ?? null,
+        isOutOfStock: variant?.stock === 0 ? true : false,
       };
     });
 
