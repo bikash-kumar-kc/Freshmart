@@ -1,9 +1,10 @@
 "use client";
 
-import { useAppDispatch } from "@/src/store/faviourites/hook";
+import { useAppDispatch, useAppSelector } from "@/src/store/faviourites/hook";
+import { selectIsFavorite } from "@/src/store/faviourites/selectors";
 import { addFavorite, removeFavorite } from "@/src/store/faviourites/slice";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IProductTypes {
   id: string;
@@ -74,11 +75,16 @@ export function ProductCard({
   const [added, setAdded] = useState(false);
 
   const dispatch = useAppDispatch();
+  const isFavorite = useAppSelector(selectIsFavorite(product.id));
 
   function handleCart() {
     setAdded(true);
     setTimeout(() => setAdded(false), 1200);
   }
+
+  useEffect(() => {
+    setWished(isFavorite);
+  }, [isFavorite]);
 
   const handleFavoriteToggle = ({
     productId,
@@ -95,7 +101,7 @@ export function ProductCard({
     if (wished) {
       dispatch(removeFavorite({ productId }));
       console.log(
-        `Favorite product added successfully ! productId:${productId}`,
+        `Favorite product removed successfully ! productId:${productId}`,
       );
     }
 
