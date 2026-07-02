@@ -33,19 +33,11 @@ export const authOptions: NextAuthOptions = {
         if (!user?.id) {
           return null;
         }
-
-        console.log("here...");
-
-        console.log(user.password);
-        console.log(password);
-
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
           return null;
         }
-
-
         return user;
       },
     }),

@@ -21,8 +21,12 @@ export const ImageGallery = ({
     setZoomPos({ x, y });
   };
 
-  const allImages = images.length > 0 ? images : ["/placeholder.jpg"];
-
+const spinachImages = [
+  "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80",
+  "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=600&q=80",
+  "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80",
+ 
+];
   return (
     <div className="flex flex-col gap-3">
 
@@ -35,7 +39,7 @@ export const ImageGallery = ({
         onMouseMove={handleMouseMove}
       >
         <Image
-          src={allImages[activeIdx]}
+          src={spinachImages[activeIdx]}
           alt={`${name} — image ${activeIdx + 1}`}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
@@ -59,12 +63,12 @@ export const ImageGallery = ({
       </div>
 
       {/* horizontal thumbnail strip */}
-      {allImages.length > 1 && (
+      {spinachImages.length > 1 && (
         <div
           className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin
           scrollbar-thumb-green-200"
         >
-          {allImages.map((img, i) => (
+          {spinachImages.map((img, i) => (
             <button
               key={i}
               onClick={() => setActiveIdx(i)}
