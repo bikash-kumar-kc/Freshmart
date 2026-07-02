@@ -7,24 +7,25 @@ type ProductCardProps = {
   image: string;
   name: string;
   cat: string;
+  productId:string;
 };
-
-
-
 
 export default function HoverRevealCard({
   image,
   name,
   cat,
+  productId,
 }: ProductCardProps) {
-  const {slug} = CATEGORIES.find((c)=>c.dbName === cat) as {slug:string}
+  const { slug } = CATEGORIES.find((c) => c.dbName === cat) as { slug: string };
   return (
-    <Link href={`/categories/${slug}`}>
+    <Link href={`/categories/${slug}/${productId}`}>
       <div className="group relative w-60 overflow-hidden rounded-sm">
         {/* Image */}
         <div className="relative h-60 w-full">
           <Image
-            src={'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80'}
+            src={
+              "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
+            }
             alt={name}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"

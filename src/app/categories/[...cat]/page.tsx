@@ -10,10 +10,11 @@ import CategoryProductSkeleton from "@/components/skeleton/CategoryProductSkelet
 export default async function page({
   params,
 }: {
-  params: Promise<{ cat: string }>;
+  params: Promise<{ cat: string[] }>;
 }) {
   const { cat } = await params;
-  const activeCategory = CATEGORIES.find((c) => c.slug === cat);
+  const [ca, productId] = cat;
+  const activeCategory = CATEGORIES.find((c) => c.slug === ca);
   if (!activeCategory) notFound();
 
   return (
@@ -84,7 +85,10 @@ export default async function page({
           </div>
 
           <Suspense fallback={<CategoryProductSkeleton />}>
-            <ProductPage cat={(activeCategory as { dbName: string }).dbName} />
+            <ProductPage
+              cat={(activeCategory as { dbName: string }).dbName}
+              productId={productId}
+            />
           </Suspense>
         </div>
       </div>
