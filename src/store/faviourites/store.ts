@@ -6,3 +6,6 @@ export const favoritesStore = configureStore({
     favorites: favoriteReducer,
   },
 });
+
+export type RootState = ReturnType<typeof favoritesStore.getState>;
+export type AppDispatch = typeof favoritesStore.dispatch;

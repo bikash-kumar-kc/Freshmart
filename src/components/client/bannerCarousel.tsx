@@ -30,7 +30,7 @@ const BannerCarousel = () => {
           return (
             <CarouselItem
               key={index}
-              className="basis-full w-300 h-125 rounded-2xl z-0"
+              className="basis-full w-300 h-125 rounded-2xl "
             >
               <div
                 className={` w-full h-full flex justify-center items-center rounded-2xl `}
@@ -45,7 +45,7 @@ const BannerCarousel = () => {
                 />
 
                 <div className="relative py-10 bg-red-500">
-                  <div className="absolute left-8 -top-25">
+                  <div className="absolute left-8 -top-25 z-50">
                     <BannerProductCard
                       thumbnail={""}
                       productName={prod.name}
