@@ -1,8 +1,6 @@
-"use client"; //
-import Header from "../components/server/Header";
+"use client";
 import { SessionProvider } from "next-auth/react";
-import NotificationPanel from "../components/server/notificationPanel";
-import { Suspense, useCallback, useState } from "react";
+import { Suspense } from "react";
 import ImageSlider from "../components/client/messageBanner";
 import Footer from "../components/server/Footer";
 import BannerCarouselSkeleton from "@/components/skeleton/BannerCarouselSkeleton";
@@ -16,21 +14,11 @@ import PopularProducts from "../components/client/product/PopularProducts";
 import NotificationLayout from "../components/client/NotificationLayout";
 
 export default function Home() {
- 
-
   return (
     <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 ">
       <SessionProvider>
-        {" "}
-        {/* <Header handleNotificationPanelOpen={handleOpenNotificationPanel} />
-        <NotificationPanel
-          isOpen={isOpen}
-          onClose={handleCloseNotificationPanel}
-        /> */}
         <NotificationLayout />
         <main className="w-full max-w-7xl mx-auto mt-10">
-          {/* // banner */}
-
           <Suspense fallback={<BannerCarouselSkeleton />}>
             <BannerCarousel />
           </Suspense>
@@ -48,12 +36,6 @@ export default function Home() {
           <Suspense fallback={<ProductsSuspenseFallback />}>
             <ProductsCategories />
           </Suspense>
-
-          {/* <section>
-            <h2 className="text-xl font-semibold mb-4">
-              Healthy Living Journal
-            </h2>
-          </section> */}
         </main>
         <Suspense fallback={<p>loading...</p>}>
           <PaginationComponent />

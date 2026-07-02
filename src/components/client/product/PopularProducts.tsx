@@ -12,7 +12,6 @@ const PopularProducts = () => {
     error,
   } = useGetPopularProducts();  // route calls
 
-  
 
   const popularProducts = popularProductsInfo?.popularProducts;
 
