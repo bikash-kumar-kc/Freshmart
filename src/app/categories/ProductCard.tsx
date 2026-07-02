@@ -3,7 +3,13 @@ import Link from "next/link";
 import { ICategoryProducts } from "@/src/types/product.types/categoryProduct.types";
 import { cheapestVariant } from "@/src/utils/calculateCheapest";
 
-export function ProductCard({ product }: { product: ICategoryProducts }) {
+export function ProductCard({
+  product,
+  specialId,
+}: {
+  product: ICategoryProducts;
+  specialId: string;
+}) {
   const variant = cheapestVariant(product.variants);
   const isOutOfStock =
     product.status === "out_of_stock" || !variant || variant.price === 0;
@@ -11,9 +17,9 @@ export function ProductCard({ product }: { product: ICategoryProducts }) {
   return (
     <Link
       href={`/product/${product.category}/${product.slug}`}
-      className="group bg-white rounded-sm border border-gray-100
+      className={`group bg-white rounded-sm border 
         overflow-hidden hover:border-green-200 hover:shadow-sm
-        transition-all duration-200 flex flex-col"
+        transition-all duration-200 flex flex-col ${specialId === product.id ? "border-purple-500" : "border-gray-100"}`}
     >
       <div className="relative aspect-4/3 bg-green-50 overflow-hidden">
         <Image
@@ -24,7 +30,7 @@ export function ProductCard({ product }: { product: ICategoryProducts }) {
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className={`object-cover transition-transform duration-300
-            group-hover:scale-105 ${isOutOfStock ? "opacity-60" : ""}`}
+            group-hover:scale-105 ${isOutOfStock ? "opacity-60" : ""} `}
         />
         <div className="absolute top-2 left-2 flex flex-col gap-1">
           {product.isOffered && (
