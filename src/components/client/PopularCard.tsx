@@ -1,5 +1,7 @@
 "use client";
 
+import { useAppDispatch } from "@/src/store/faviourites/hook";
+import { addFavorite, removeFavorite } from "@/src/store/faviourites/slice";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -14,6 +16,13 @@ interface IProductTypes {
   weightUnit: string | null;
   price: number | null;
   discount?: number | null;
+  category: string;
+}
+
+interface IFavoriteProduct {
+  productId: string;
+  slug: string;
+  category: string;
 }
 
 function CartIcon() {
@@ -64,10 +73,34 @@ export function ProductCard({
   const [wished, setWished] = useState(false);
   const [added, setAdded] = useState(false);
 
+  const dispatch = useAppDispatch();
+
   function handleCart() {
     setAdded(true);
     setTimeout(() => setAdded(false), 1200);
   }
+
+  const handleFavoriteToggle = ({
+    productId,
+    slug,
+    category,
+  }: IFavoriteProduct) => {
+    if (!wished) {
+      dispatch(addFavorite({ productId, slug, category }));
+      console.log(
+        `Favorite product added successfully ! productId:${productId}`,
+      );
+    }
+
+    if (wished) {
+      dispatch(removeFavorite({ productId }));
+      console.log(
+        `Favorite product added successfully ! productId:${productId}`,
+      );
+    }
+
+    setWished((prevs) => !prevs);
+  };
 
   return (
     <div
@@ -88,7 +121,13 @@ export function ProductCard({
 
         {/* Wishlist */}
         <button
-          onClick={() => setWished((w) => !w)}
+          onClick={(e:React.MouseEvent<HTMLButtonElement>) =>
+            handleFavoriteToggle({
+              productId: product.id,
+              slug: product.slug,
+              category: product.category,
+            })
+          }
           aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
           className="
             absolute top-2.5 right-2.5
@@ -165,8 +204,7 @@ export function ProductCard({
 
           <div className=" flex gap-2 items-end    ">
             <p className="mt-0.5 mb-0 px-1.5 text-[13px] text-[#666">
-              
-                {/* {product.discount
+              {/* {product.discount
                 ? (product.price as number) - product.discount
                 : product.price} */}
               Rs {(product.price as number).toFixed(2)}
