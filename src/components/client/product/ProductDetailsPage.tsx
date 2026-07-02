@@ -2,10 +2,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ShoppingCart, MapPin, ChevronDown } from "lucide-react";
-import { discountedPrice, formatWeight } from "./utilities/helper.fun";
+import {formatWeight } from "./utilities/helper.fun";
 import { ImageGallery } from "./utilities/image.gallary";
 import { FreshnessBadge } from "./utilities/FreshnessBadge";
-import { RelatedProductCard } from "./utilities/subProductCard";
+import {
+  calculateDiscountPercentage,
+  RelatedProductCard,
+} from "./utilities/subProductCard";
 import { GetProductResult } from "@/src/lib/server actions/product.server.action";
 import GoBackButton from "../buttons/GotoBackBtn";
 import { usePathname } from "next/navigation";
@@ -19,9 +22,9 @@ export default function ProductDetailPage({
   const [addedToCart, setAddedToCart] = useState(false);
   const [animate, setAnimate] = useState(false);
 
-  const finalPrice = product?.isOffered
-    ? discountedPrice(filteredVariantRow?.price, product.discount as number)
-    : filteredVariantRow?.price;
+  // const finalPrice = product?.isOffered
+  //   ? discountedPrice(filteredVariantRow?.price, product.discount as number)
+  //   : filteredVariantRow?.price;
 
   const isOutOfStock =
     product?.status === "inactive" || filteredVariantRow?.stock === 0;
@@ -58,7 +61,7 @@ export default function ProductDetailPage({
 
           <div className="flex flex-col  ">
             <h1
-              className="font-serif text-2xl sm:text-[28px] font-semibold
+              className="font-serif text-2xl sm:text-[28px] font-bold
               text-gray-900 leading-snug mb-1"
             >
               {product?.name}
@@ -80,10 +83,43 @@ export default function ProductDetailPage({
             )}
 
             <div className="bg-white rounded-sm border border-gray-100 p-4 mb-4">
-              <div className="flex items-end gap-3 mb-1">
-                <span className="text-3xl font-bold text-gray-900">
-                  ${finalPrice.toFixed(2)}
-                </span>
+              <div className="relative">
+                {product?.isOffered && (
+                  <span
+                    className="
+        absolute top-0 right-0
+        bg-orange-500 text-white text-xs font-bold
+        px-2 py-1 rounded-bl-lg
+        shadow-md
+      "
+                  >
+                    -
+                    {calculateDiscountPercentage(
+                      filteredVariantRow?.price as number,
+                      product?.discount as number,
+                    )}
+                    %
+                  </span>
+                )}
+
+                {product?.isMostPopular && (
+                  <span
+                    className="
+        absolute top-0 right-0
+        bg-orange-500 text-white text-xs font-bold
+        px-2 py-1 rounded-bl-lg
+        shadow-md
+      "
+                  >
+                    popular
+                  </span>
+                )}
+
+                <div className="flex items-end gap-3 mb-1">
+                  <span className="text-3xl font-bold text-gray-900">
+                    Rs {filteredVariantRow?.price?.toFixed(2)}
+                  </span>
+                </div>
               </div>
               <p className="text-xs text-gray-600">
                 Price per{" "}
@@ -116,7 +152,7 @@ export default function ProductDetailPage({
                 {addedToCart ? "Added ✓" : "Add to cart"}
               </button>
 
-              <button
+              {/* <button
                 disabled={isOutOfStock}
                 className={`
                   flex-1 flex items-center justify-center gap-2
@@ -130,7 +166,7 @@ export default function ProductDetailPage({
                 `}
               >
                 Buy now
-              </button>
+              </button> */}
             </div>
 
             <div

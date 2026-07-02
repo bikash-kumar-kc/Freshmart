@@ -1,9 +1,9 @@
 import { IRequiredFieldTypes } from "@/src/lib/server actions/product.server.action";
-import { discountedPrice, formatWeight } from "./helper.fun";
+import { formatWeight } from "./helper.fun";
 import Image from "next/image";
 import Link from "next/link";
 
-function calculateDiscountPercentage(
+export function calculateDiscountPercentage(
   price: number,
   discountAmount: number,
 ): number {
@@ -19,9 +19,7 @@ export const RelatedProductCard = ({
   product: IRequiredFieldTypes;
   isAnimate: boolean;
 }) => {
-  // const finalPrice = product.isOffered
-  //   ? discountedPrice(product?.price ?? 0, product.discount as number)
-  //   : (product?.price ?? 0);
+  
 
   const isOutOfStock = product.stock === 0;
 

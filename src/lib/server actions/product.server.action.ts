@@ -109,7 +109,10 @@ export async function getProductByCategorySlug(
       .from(productVariants)
       .where(eq(productVariants.productId, product.id));
 
-    const filteredVariantRow = variantRows[0];
+    const row1 = variantRows[0];
+    const row2 = variantRows[1];
+    const filteredVariantRow =
+      row1.weightValue < row2.weightValue ? row1 : row2; // todo improve it. . .
 
     const requiredFields = {
       id: products.id,
@@ -148,7 +151,15 @@ export async function getProductByCategorySlug(
       }
     }
 
-    return { product, relatedProducts, filteredVariantRow };
+    const requiredFieldsArray: IRequiredFieldTypes[] = Array.from(
+      cheapestByProductId.values(),
+    );
+
+    return {
+      product,
+      relatedProducts: requiredFieldsArray,
+      filteredVariantRow,
+    };
   } catch (err) {
     console.error("[getProductByCategorySlug] failed", err);
     return {
