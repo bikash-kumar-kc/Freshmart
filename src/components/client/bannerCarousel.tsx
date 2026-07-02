@@ -52,6 +52,8 @@ const BannerCarousel = () => {
                       category={prod.category}
                       slug={prod.slug}
                       isFeatured={prod.isFeatured}
+                      weightValue={prod.weightValue!}
+                      weightUnit={prod.weightUnit!}
                     />
                   </div>
                 </div>

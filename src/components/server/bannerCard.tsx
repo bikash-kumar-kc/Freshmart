@@ -10,6 +10,8 @@ type ProductCardProps = {
   price?: number;
   originalPrice?: number;
   isFeatured?: boolean;
+  weightValue:number;
+  weightUnit:string;
   onAddToCart?: (slug: string) => void;
 };
 
@@ -18,11 +20,12 @@ export default function ProductCard({
   category,
   slug,
   price,
-  originalPrice,
   isFeatured,
   onAddToCart,
+  weightValue,
+  weightUnit
 }: ProductCardProps) {
-  const hasDiscount = originalPrice && originalPrice > price!;
+  // const hasDiscount = originalPrice && originalPrice > price!;
 
   return (
     <div className="group w-53.75 overflow-hidden rounded-sm bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
@@ -44,16 +47,12 @@ export default function ProductCard({
             </span>
           )}
 
-          {hasDiscount && (
-            <span className="absolute right-3 top-3 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-semibold text-white">
-              -{Math.round(((originalPrice! - price!) / originalPrice!) * 100)}%
-            </span>
-          )}
+    
         </div>
 
         {/* Content */}
         <div className="p-4">
-          <span className="text-xs font-medium uppercase tracking-wide text-gray-500">
+          <span className="text-[12px] font-medium uppercase tracking text-green-800">
             {category}
           </span>
 
@@ -63,13 +62,14 @@ export default function ProductCard({
 
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-base font-bold text-gray-900">
-              ${price?.toFixed(2) ?? "20.00"}
+              Rs {price?.toFixed(2) ?? "20.00"}
             </span>
-            {hasDiscount && (
-              <span className="text-xs text-gray-400 line-through">
-                ${originalPrice!.toFixed(2)}
-              </span>
-            )}
+
+            <span>
+              {weightValue}/{weightUnit}
+            </span>
+
+           
           </div>
         </div>
       </Link>
@@ -81,7 +81,7 @@ export default function ProductCard({
             e.preventDefault();
             onAddToCart?.(slug);
           }}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800"
+          className="flex w-full items-center justify-center gap-2 rounded-sm bg-green-900 py-2.5 text-sm font-medium text-white transition-colors hover:bg-green-600"
         >
           <ShoppingCart size={16} />
           Add to cart

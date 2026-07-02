@@ -163,16 +163,16 @@ export function ProductCard({
             {product.name}
           </p>
 
-          <div className=" flex gap-2    ">
+          <div className=" flex gap-2 items-end    ">
             <p className="mt-0.5 mb-0 px-1.5 text-[13px] text-[#666">
-              Rs
-                {product.discount
+              
+                {/* {product.discount
                 ? (product.price as number) - product.discount
-                : product.price}
-              {/* Rs {(product.price as number).toFixed(2)} */}
+                : product.price} */}
+              Rs {(product.price as number).toFixed(2)}
             </p>
             {type === "offer" && (
-              <p className=" mt-0.5 text-[13px] text-[#d11010] text-center ">
+              <p className=" mt-0.5 text-[10px] text-[#d11010] text-center ">
                 save: {product.discount ? product.discount : ""}
               </p>
             )}
