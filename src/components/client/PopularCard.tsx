@@ -121,13 +121,15 @@ export function ProductCard({
 
         {/* Wishlist */}
         <button
-          onClick={(e:React.MouseEvent<HTMLButtonElement>) =>
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            e.preventDefault();
+            e.stopPropagation();
             handleFavoriteToggle({
               productId: product.id,
               slug: product.slug,
               category: product.category,
-            })
-          }
+            });
+          }}
           aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
           className="
             absolute top-2.5 right-2.5
@@ -219,7 +221,11 @@ export function ProductCard({
 
         {/* Cart */}
         <button
-          onClick={handleCart}
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleCart();
+          }}
           aria-label="Add to cart"
           className={`
             w-9 h-9
