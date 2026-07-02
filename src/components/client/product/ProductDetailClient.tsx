@@ -1,5 +1,4 @@
 "use client";
-
 import { use } from "react";
 import { notFound } from "next/navigation";
 import ProductDetailPage from "./ProductDetailsPage";
@@ -10,18 +9,16 @@ interface Props {
   productPromise: ReturnType<typeof getProductByCategorySlug>;
 }
 
-
-
 export default function ProductDetailClient({ productPromise }: Props) {
 
-  const { product, relatedProducts, variantRows } = use(productPromise);
+  const { product, relatedProducts, filteredVariantRow } = use(productPromise);
 
   if (!product?.id) notFound();
 
   return (
     <ProductDetailPage
       product={product}
-      variantRows={variantRows}
+      filteredVariantRow={filteredVariantRow}
       relatedProducts={relatedProducts}
     />
   );

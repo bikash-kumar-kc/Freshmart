@@ -10,7 +10,9 @@ const PopularProducts = () => {
     isLoading: popularProductsLoading,
     isError,
     error,
-  } = useGetPopularProducts();
+  } = useGetPopularProducts();  // route calls
+
+  
 
   const popularProducts = popularProductsInfo?.popularProducts;
 

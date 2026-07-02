@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ShoppingCart, MapPin, ChevronDown} from "lucide-react";
+import { ShoppingCart, MapPin, ChevronDown } from "lucide-react";
 import { discountedPrice, formatWeight } from "./utilities/helper.fun";
 import { ImageGallery } from "./utilities/image.gallary";
 import { FreshnessBadge } from "./utilities/FreshnessBadge";
@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
 
 export default function ProductDetailPage({
   product,
-  variantRows,
+  filteredVariantRow,
   relatedProducts,
 }: GetProductResult) {
   const pathname = usePathname();
@@ -20,11 +20,11 @@ export default function ProductDetailPage({
   const [animate, setAnimate] = useState(false);
 
   const finalPrice = product?.isOffered
-    ? discountedPrice(variantRows[0]?.price, product.discount as number)
-    : variantRows[0]?.price;
+    ? discountedPrice(filteredVariantRow?.price, product.discount as number)
+    : filteredVariantRow?.price;
 
   const isOutOfStock =
-    product?.status === "inactive" || variantRows[0]?.stock === 0;
+    product?.status === "inactive" || filteredVariantRow?.stock === 0;
 
   const handleAddToCart = () => {
     if (isOutOfStock) return;
@@ -88,8 +88,8 @@ export default function ProductDetailPage({
               <p className="text-xs text-gray-600">
                 Price per{" "}
                 {formatWeight(
-                  variantRows[0]?.weightValue,
-                  variantRows[0]?.weightUnit,
+                  filteredVariantRow?.weightValue,
+                  filteredVariantRow?.weightUnit,
                 )}{" "}
                 · Inclusive of all taxes
               </p>
@@ -167,7 +167,6 @@ export default function ProductDetailPage({
                 <RelatedProductCard
                   key={rp.id}
                   product={rp}
-                  variants={variantRows}
                   isAnimate={animate}
                 />
               ))}
