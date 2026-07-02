@@ -30,7 +30,7 @@ const BannerCarousel = () => {
           return (
             <CarouselItem
               key={index}
-              className="basis-full w-300 h-125 rounded-2xl"
+              className="basis-full w-300 h-125 rounded-2xl z-0"
             >
               <div
                 className={` w-full h-full flex justify-center items-center rounded-2xl `}
@@ -54,6 +54,7 @@ const BannerCarousel = () => {
                       isFeatured={prod.isFeatured}
                       weightValue={prod.weightValue!}
                       weightUnit={prod.weightUnit!}
+                      price={prod.price!}
                     />
                   </div>
                 </div>

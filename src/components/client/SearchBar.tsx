@@ -55,7 +55,7 @@ const SearchBar = () => {
       </form>
 
       {searchTerm.length > 0 && (
-        <div className="absolute z-20 top-14 left-0 w-full">
+        <div className="absolute z-80 top-14 left-0 w-full">
           <Suggestions suggestions={data ?? []} showLoading={isLoading} />
         </div>
       )}

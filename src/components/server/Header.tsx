@@ -66,7 +66,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   return (
     <div
       className="w-full px-4 py-3 flex items-center justify-between gap-8
-             bg-green-400 backdrop-blur-xl shadow-sm z-20
+             bg-green-400 backdrop-blur-xl shadow-sm z-80
              border-b border-white/20"
     >
      <Link href={"/"}>

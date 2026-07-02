@@ -10,8 +10,8 @@ type ProductCardProps = {
   price?: number;
   originalPrice?: number;
   isFeatured?: boolean;
-  weightValue:number;
-  weightUnit:string;
+  weightValue: number;
+  weightUnit: string;
   onAddToCart?: (slug: string) => void;
 };
 
@@ -23,13 +23,13 @@ export default function ProductCard({
   isFeatured,
   onAddToCart,
   weightValue,
-  weightUnit
+  weightUnit,
 }: ProductCardProps) {
   // const hasDiscount = originalPrice && originalPrice > price!;
 
   return (
     <div className="group w-53.75 overflow-hidden rounded-sm bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <Link href={`/products/${slug}`} className="block">
+      <Link href={`/product/${category}/${slug}`} className="block">
         {/* Image */}
         <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
           <Image
@@ -46,8 +46,6 @@ export default function ProductCard({
               Featured
             </span>
           )}
-
-    
         </div>
 
         {/* Content */}
@@ -68,8 +66,6 @@ export default function ProductCard({
             <span className="text-[10px] text-gray-500">
               {weightValue}/{weightUnit}
             </span>
-
-           
           </div>
         </div>
       </Link>
