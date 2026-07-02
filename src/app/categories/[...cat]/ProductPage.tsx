@@ -30,10 +30,23 @@ async function getProductsByCategory(dbName: string) {
   }));
 }
 
-const ProductPage = async ({cat}:{cat:string}) => {
+const ProductPage = async ({
+  cat,
+  productId,
+}: {
+  cat: string;
+  productId: string;
+}) => {
   if (!cat?.trim()) return;
 
   const productList = await getProductsByCategory(cat);
+
+  const displayedProduct = productList.find((p) => p.id === productId);
+
+  const orderedProducts = displayedProduct
+    ? [displayedProduct, ...productList.filter((p) => p.id !== productId)]
+    : productList;
+
   return (
     <div className="flex-1 min-w-0">
       {productList.length === 0 ? (
@@ -51,8 +64,12 @@ const ProductPage = async ({cat}:{cat:string}) => {
           className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4
                 gap-3 sm:gap-4"
         >
-          {productList.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {orderedProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              specialId={productId}
+            />
           ))}
         </div>
       )}
