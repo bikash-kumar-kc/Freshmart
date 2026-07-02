@@ -16,8 +16,6 @@ export default async function Page({
 
  const productPromise = getProductByCategorySlug(category,productName);
 
-
-  
   return (
     <Suspense fallback={<ProductDetailsSkeleton />}>
       <ProductDetailClient productPromise={productPromise} />

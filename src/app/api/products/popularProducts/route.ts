@@ -1,6 +1,6 @@
 import { db } from "@/src/db/config";
 import { products, productVariants } from "@/src/db/schema";
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
 export const REVALIDATE_TIME = 86400;
 
@@ -34,9 +34,15 @@ export interface IPopularProduct {
 export async function GET() {
   try {
     const popularProducts = await db
-      .select({ ...productInformationRequired, category: products.category })
+      .select({
+        ...productInformationRequired,
+        category: products.category,
+        isOffered: products.isOffered,
+      })
       .from(products)
-      .where(eq(products.isMostPopular, true));
+      .where(
+        and(eq(products.isMostPopular, true), eq(products.isOffered, false)),
+      );
 
     if (popularProducts.length === 0) {
       return Response.json(

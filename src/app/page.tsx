@@ -1,10 +1,9 @@
-"use client";
+"use client";   //
 import Header from "../components/server/Header";
 import { SessionProvider } from "next-auth/react";
 import NotificationPanel from "../components/server/notificationPanel";
 import { Suspense, useCallback, useState } from "react";
 import ImageSlider from "../components/client/messageBanner";
-import OrganicProductCards from "../components/client/ProductCard";
 import Footer from "../components/server/Footer";
 import BannerCarouselSkeleton from "@/components/skeleton/BannerCarouselSkeleton";
 import BannerCarousel from "../components/client/bannerCarousel";
