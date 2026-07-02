@@ -12,35 +12,38 @@ import SpecialProductsSkeleton from "@/components/skeleton/SpecialProductSkeleto
 import OfferedProducts from "../components/client/product/OfferedProducts";
 import PopularProducts from "../components/client/product/PopularProducts";
 import NotificationLayout from "../components/client/NotificationLayout";
+import ReduxProvider from "./providers/ReduxProvider";
 
 export default function Home() {
   return (
     <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 ">
       <SessionProvider>
-        <NotificationLayout />
-        <main className="w-full max-w-7xl mx-auto mt-10">
-          <Suspense fallback={<BannerCarouselSkeleton />}>
-            <BannerCarousel />
-          </Suspense>
+        <ReduxProvider>
+          <NotificationLayout />
+          <main className="w-full max-w-7xl mx-auto mt-10">
+            <Suspense fallback={<BannerCarouselSkeleton />}>
+              <BannerCarousel />
+            </Suspense>
 
-          <ImageSlider />
+            <ImageSlider />
 
-          <Suspense fallback={<SpecialProductsSkeleton />}>
-            <PopularProducts />
-          </Suspense>
+            <Suspense fallback={<SpecialProductsSkeleton />}>
+              <PopularProducts />
+            </Suspense>
 
-          <Suspense fallback={<SpecialProductsSkeleton />}>
-            <OfferedProducts />
-          </Suspense>
+            <Suspense fallback={<SpecialProductsSkeleton />}>
+              <OfferedProducts />
+            </Suspense>
 
-          <Suspense fallback={<ProductsSuspenseFallback />}>
-            <ProductsCategories />
+            <Suspense fallback={<ProductsSuspenseFallback />}>
+              <ProductsCategories />
+            </Suspense>
+          </main>
+          <Suspense fallback={<p>loading...</p>}>
+            <PaginationComponent />
           </Suspense>
-        </main>
-        <Suspense fallback={<p>loading...</p>}>
-          <PaginationComponent />
-        </Suspense>
-        <Footer />
+          <Footer />
+        </ReduxProvider>
       </SessionProvider>
     </div>
   );
