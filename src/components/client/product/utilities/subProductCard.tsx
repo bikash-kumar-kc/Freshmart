@@ -1,28 +1,29 @@
-import {
-  IPRODUCTRESPONSE,
-  IPRODUCTVARIENTS,
-} from "@/src/lib/server actions/product.server.action";
+import { IRequiredFieldTypes } from "@/src/lib/server actions/product.server.action";
 import { discountedPrice, formatWeight } from "./helper.fun";
 import Image from "next/image";
 import Link from "next/link";
 
+function calculateDiscountPercentage(
+  price: number,
+  discountAmount: number,
+): number {
+  if (price <= 0) return 0;
+
+  return Math.floor((discountAmount / price) * 100);
+}
+
 export const RelatedProductCard = ({
   product,
-  variants,
   isAnimate,
 }: {
-  product: IPRODUCTRESPONSE;
-  variants: IPRODUCTVARIENTS[];
+  product: IRequiredFieldTypes;
   isAnimate: boolean;
 }) => {
-  const cheapest = variants.reduce(
-    (min, v) => (v.price < min.price ? v : min),
-    variants[0],
-  );
+  // const finalPrice = product.isOffered
+  //   ? discountedPrice(product?.price ?? 0, product.discount as number)
+  //   : (product?.price ?? 0);
 
-  const finalPrice = product.isOffered
-    ? discountedPrice(cheapest?.price ?? 0, product.discount as number)
-    : (cheapest?.price ?? 0);
+  const isOutOfStock = product.stock === 0;
 
   return (
     <Link
@@ -35,14 +36,48 @@ export const RelatedProductCard = ({
         className={`relative aspect-4/3 bg-green-50 overflow-hidden ${isAnimate ? "animate-fade-up" : ""} `}
       >
         <Image
-          src={product.thumbnail}
+          src={
+            "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=800&q=80"
+          }
           alt={product.name}
           fill
-          sizes="(max-width: 640px) 50vw, 25vw"
-          className="object-cover group-hover:scale-105
-            transition-transform duration-300"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          className={`object-cover transition-transform duration-300
+                  group-hover:scale-105 ${isOutOfStock ? "opacity-60" : ""}`}
         />
+        <div className="absolute top-2 left-2 flex flex-col gap-1">
+          {product.isOffered && (
+            <span
+              className="bg-orange-500 text-white text-[10px] font-bold
+                    px-1.5 py-0.5 rounded-md leading-none"
+            >
+              -
+              {calculateDiscountPercentage(
+                product.price,
+                product?.discount as number,
+              )}
+              %
+            </span>
+          )}
+          {product.isMostPopular && (
+            <span
+              className="bg-amber-400 text-white text-[10px] font-bold
+                    px-1.5 py-0.5 rounded-md leading-none"
+            >
+              Popular
+            </span>
+          )}
+          {isOutOfStock && (
+            <span
+              className="bg-gray-500 text-white text-[10px] font-bold
+                    px-1.5 py-0.5 rounded-md leading-none"
+            >
+              Out of stock
+            </span>
+          )}
+        </div>
       </div>
+
       <div className="p-3">
         <p className="text-xs text-green-700 font-medium mb-0.5">
           {product.category}
@@ -55,13 +90,11 @@ export const RelatedProductCard = ({
         </p>
         <div className="flex items-center gap-2 mt-1.5">
           <span className="text-sm font-semibold text-gray-900">
-            ${finalPrice.toFixed(2)}
+            Rs {product.price.toFixed(2)}
           </span>
-          {cheapest && (
-            <span className="text-xs text-gray-400">
-              / {formatWeight(cheapest.weightValue, cheapest.weightUnit)}
-            </span>
-          )}
+          <span className="text-xs text-gray-400">
+            / {formatWeight(product.weightValue, product.weightUnit)}
+          </span>
         </div>
       </div>
     </Link>
