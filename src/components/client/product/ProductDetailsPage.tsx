@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ShoppingCart, MapPin, ChevronDown } from "lucide-react";
-import {formatWeight } from "./utilities/helper.fun";
+import { formatWeight } from "./utilities/helper.fun";
 import { ImageGallery } from "./utilities/image.gallary";
 import { FreshnessBadge } from "./utilities/FreshnessBadge";
 import {
@@ -13,6 +13,9 @@ import { GetProductResult } from "@/src/lib/server actions/product.server.action
 import GoBackButton from "../buttons/GotoBackBtn";
 import { usePathname } from "next/navigation";
 import ReduxProvider from "@/src/app/providers/ReduxProvider";
+import { useAppSelector } from "@/src/store/faviourites/hook";
+import { selectIsFavorite } from "@/src/store/faviourites/selectors";
+import { HeartIcon } from "../PopularCard";
 
 export default function ProductDetailPage({
   product,
@@ -36,6 +39,8 @@ export default function ProductDetailPage({
     setTimeout(() => setAddedToCart(false), 2500);
   };
 
+  
+
   useEffect(() => {
     const key = `visited:${pathname}`;
     const alreadySeen = sessionStorage.getItem(key);
@@ -57,6 +62,7 @@ export default function ProductDetailPage({
             <ImageGallery
               images={product?.images ?? []}
               name={product?.name as string}
+              id={product?.id as string}
             />
           </div>
 
@@ -102,6 +108,8 @@ export default function ProductDetailPage({
                     %
                   </span>
                 )}
+
+               
 
                 {product?.isMostPopular && (
                   <span
@@ -196,8 +204,8 @@ export default function ProductDetailPage({
                 <ChevronDown size={12} className="-rotate-90" />
               </Link>
             </div>
-            <ReduxProvider>
-              <div
+
+            <div
               className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4
               gap-4"
             >
@@ -209,7 +217,6 @@ export default function ProductDetailPage({
                 />
               ))}
             </div>
-            </ReduxProvider>
           </div>
         )}
 

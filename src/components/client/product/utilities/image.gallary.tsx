@@ -1,12 +1,17 @@
+import { useAppSelector } from "@/src/store/faviourites/hook";
+import { selectIsFavorite } from "@/src/store/faviourites/selectors";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { HeartIcon } from "../../PopularCard";
 
 export const ImageGallery = ({
   images,
   name,
+  id,
 }: {
   images: string[];
   name: string;
+  id:string;
 }) => {
   const [activeIdx, setActiveIdx] = useState(0);
   const [zoomed, setZoomed] = useState(false);
@@ -27,6 +32,7 @@ const spinachImages = [
   "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80",
  
 ];
+const isFavorite = useAppSelector(selectIsFavorite(id));
   return (
     <div className="flex flex-col gap-3">
 
@@ -50,6 +56,14 @@ const spinachImages = [
             transform: zoomed ? "scale(1.8)" : "scale(1)",
           }}
         />
+
+         {isFavorite && (
+                  <span
+                    className={`absolute top-0 right-1  text-white text-xs font-boldpx-2 py-1 rounded-bl-lgshadow-md`}
+                  >
+                    <HeartIcon filled={true} />
+                  </span>
+                )}
 
         {/* zoom hint */}
         {!zoomed && (

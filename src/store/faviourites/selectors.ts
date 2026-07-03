@@ -10,5 +10,8 @@ export const selectFavoriteCount = (state: RootState) => {
   return state.favorites.items.length;
 };
 
-export const selectIsFavorite = (productId: string) => (state: RootState) =>
-  state.favorites.items.some((f) => f.productId === productId);
+export const selectIsFavorite =
+  (productId: string | undefined) => (state: RootState) => {
+    if (!productId) return;
+    return state.favorites.items.some((f) => f.productId === productId);
+  };
