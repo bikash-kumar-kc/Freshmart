@@ -12,6 +12,7 @@ import {
 import { GetProductResult } from "@/src/lib/server actions/product.server.action";
 import GoBackButton from "../buttons/GotoBackBtn";
 import { usePathname } from "next/navigation";
+import ReduxProvider from "@/src/app/providers/ReduxProvider";
 
 export default function ProductDetailPage({
   product,
@@ -195,7 +196,8 @@ export default function ProductDetailPage({
                 <ChevronDown size={12} className="-rotate-90" />
               </Link>
             </div>
-            <div
+            <ReduxProvider>
+              <div
               className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4
               gap-4"
             >
@@ -207,6 +209,7 @@ export default function ProductDetailPage({
                 />
               ))}
             </div>
+            </ReduxProvider>
           </div>
         )}
 

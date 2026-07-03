@@ -1,7 +1,13 @@
+"use client";
 import { IRequiredFieldTypes } from "@/src/lib/server actions/product.server.action";
 import { formatWeight } from "./helper.fun";
 import Image from "next/image";
 import Link from "next/link";
+import { HeartIcon } from "../../PopularCard";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/src/store/faviourites/hook";
+import { selectIsFavorite } from "@/src/store/faviourites/selectors";
+import { addFavorite, IFavoriteProduct, removeFavorite } from "@/src/store/faviourites/slice";
 
 export function calculateDiscountPercentage(
   price: number,
@@ -19,9 +25,36 @@ export const RelatedProductCard = ({
   product: IRequiredFieldTypes;
   isAnimate: boolean;
 }) => {
-  
-
+  const [wished, setWished] = useState(false);
   const isOutOfStock = product.stock === 0;
+  const dispatch = useAppDispatch();
+  const isFavorite = useAppSelector(selectIsFavorite(product.id));
+
+  useEffect(() => {
+    setWished(isFavorite);
+  }, [isFavorite]);
+
+  const handleFavoriteToggle = ({
+    productId,
+    slug,
+    category,
+  }: IFavoriteProduct) => {
+    if (!wished) {
+      dispatch(addFavorite({ productId, slug, category }));
+      console.log(
+        `Favorite product added successfully ! productId:${productId}`,
+      );
+    }
+
+    if (wished) {
+      dispatch(removeFavorite({ productId }));
+      console.log(
+        `Favorite product removed successfully ! productId:${productId}`,
+      );
+    }
+
+    setWished((prevs) => !prevs);
+  };
 
   return (
     <Link
@@ -74,6 +107,30 @@ export const RelatedProductCard = ({
             </span>
           )}
         </div>
+        <button
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleFavoriteToggle({
+              productId: product.id,
+              slug: product.slug,
+              category: product.category,
+            });
+          }}
+          aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
+          className="
+            absolute top-2.5 right-2.5
+            w-8 h-8
+            rounded-full
+            bg-white/90
+            flex items-center justify-center
+            text-[#555]
+            cursor-pointer
+            p-0
+          "
+        >
+          <HeartIcon filled={wished} />
+        </button>
       </div>
 
       <div className="p-3">
