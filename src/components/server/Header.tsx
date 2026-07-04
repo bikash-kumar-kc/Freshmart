@@ -13,6 +13,8 @@ import {
   countUnreadNotifications,
   updateNotificationsStatus,
 } from "@/src/lib/server actions/notifications.server";
+import { useAppSelector } from "@/src/store/faviourites/hook";
+import { selectFavoriteCount } from "@/src/store/faviourites/selectors";
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
@@ -23,10 +25,10 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   console.log(data);
   const [count, setCount] = useState<number>(0);
   const changeNotificationRef = useRef<boolean | null>(null);
+  const favoriteItems = useAppSelector(selectFavoriteCount);
 
   const handleUnreadNotification = useCallback(async () => {
     try {
-      
       if (data?.user.id) {
         const { totalCount } = await countUnreadNotifications(data?.user.id);
         setCount(totalCount);
@@ -69,14 +71,14 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
              bg-green-400 backdrop-blur-xl shadow-sm z-80
              border-b border-white/20"
     >
-     <Link href={"/"}>
-      <div className="flex items-center gap-2 mb-1">
-        <span className="text-2xl ">🌿</span>
-        <span className="text-lg font-extrabold italic text-white tracking-wider">
-          FRESHMART
-        </span>
-      </div>
-</Link>
+      <Link href={"/"}>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-2xl ">🌿</span>
+          <span className="text-lg font-extrabold italic text-white tracking-wider">
+            FRESHMART
+          </span>
+        </div>
+      </Link>
       <div className="flex-1">
         <SearchBar />
       </div>
@@ -115,11 +117,18 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
           </div>
         </Link>
 
-        <div className="relative group">
-          <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
-            <Heart className="text-black group-hover:text-white transition-colors" />
-          </button>
-        </div>
+        <Link href={"/favorites"}>
+          <div className="relative group">
+            <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
+              <Heart className="text-black group-hover:text-white transition-colors" />
+            </button>
+            {favoriteItems ? favoriteItems > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                {favoriteItems}
+              </span>
+            ):""}
+          </div>
+        </Link>
 
         <div className="relative group">
           <Link href={"/orderstatus"}>
