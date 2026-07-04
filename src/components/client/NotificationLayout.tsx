@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import Header from "../server/Header";
 import NotificationPanel from "../server/notificationPanel";
 
+
 export default function NotificationLayout() {
   const [isOpen, setIsOpen] = useState(false);
+  
 
   const notificationRef = useRef<HTMLDivElement>(null);
 

@@ -12,10 +12,7 @@ import {
 import { GetProductResult } from "@/src/lib/server actions/product.server.action";
 import GoBackButton from "../buttons/GotoBackBtn";
 import { usePathname } from "next/navigation";
-import ReduxProvider from "@/src/app/providers/ReduxProvider";
-import { useAppSelector } from "@/src/store/faviourites/hook";
-import { selectIsFavorite } from "@/src/store/faviourites/selectors";
-import { HeartIcon } from "../PopularCard";
+
 
 export default function ProductDetailPage({
   product,
