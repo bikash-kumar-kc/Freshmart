@@ -68,15 +68,13 @@ export function ProductCard({
           {product.name}
         </p>
         {variant && (
-          <p className="text-[11px] text-gray-400 mb-2">
-            {/* From {product.variant.weightValue}{product?.variants[0].weightUnit} */}
-          </p>
-        )}
-        {variant && (
-          <div className="mt-auto">
+          <div className="mt-auto flex justify-between items-center">
             <span className="text-base font-bold text-gray-900">
               Rs. {variant.price}
             </span>
+             <p className="text-[11px] text-gray-400 mb-2">
+            {variant.weightValue}/{variant.weightUnit}
+          </p>
           </div>
         )}
       </div>
