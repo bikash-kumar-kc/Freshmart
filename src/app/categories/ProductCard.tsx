@@ -73,7 +73,7 @@ export function ProductCard({
               Rs. {variant.price}
             </span>
             <p className="text-[11px] text-gray-400">
-              {variant.weightValue}/{variant.weightUnit}
+              {variant.weightValue}{variant.weightUnit}
             </p>
           </div>
         )}

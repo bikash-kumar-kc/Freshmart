@@ -64,7 +64,7 @@ export default function ProductCard({
             </span>
 
             <span className="text-[10px] text-gray-500">
-              {weightValue}/{weightUnit}
+              {weightValue}{weightUnit}
             </span>
           </div>
         </div>

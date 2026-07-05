@@ -143,12 +143,12 @@ export const RelatedProductCard = ({
         >
           {product.name}
         </p>
-        <div className="flex items-center gap-2 mt-1.5">
+        <div className="flex items-center justify-between gap-2 mt-1.5">
           <span className="text-sm font-semibold text-gray-900">
             Rs {product.price.toFixed(2)}
           </span>
           <span className="text-xs text-gray-400">
-            / {formatWeight(product.weightValue, product.weightUnit)}
+             {formatWeight(product.weightValue, product.weightUnit)}
           </span>
         </div>
       </div>
