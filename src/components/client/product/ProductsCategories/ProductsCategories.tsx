@@ -53,9 +53,9 @@ const ProductsCategories = () => {
           <div key={c.category} className="flex flex-col gap-2 mt-8">
             <h2 className="font-semibold text-2xl ">{c.category}</h2>
             <div className="w-full flex flex-wrap flex-row gap-4 justify-between items-center space-y-2">
-              {c?.products.map((p) => (
+              {c?.products.map((p,index) => (
                 <HoverRevealCard
-                  key={p.productId}
+                  key={p.productId + index}
                   image={p.thumbnail}
                   name={p.productName}
                   cat={c.category}
