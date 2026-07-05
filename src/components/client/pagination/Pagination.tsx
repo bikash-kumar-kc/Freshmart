@@ -54,55 +54,29 @@ const PaginationComponent = () => {
               return (
                 <PaginationItem key={page}>
                   <PaginationLink
-                    isActive={page === (currentPage ? currentPage : 1)}
+                    href={{
+                      pathname: "/",
+                      query: {
+                        page,
+                        categories: pageCategories.join(","),
+                      },
+                    }}
+                    scroll={false}
+                    isActive={page === (currentPage ?? 1)}
                     className={`
-      h-10 w-10 rounded-sm border transition-all duration-200
-      flex items-center justify-center
-      ${
-        page === (currentPage ? currentPage : 1)
-          ? "bg-green-500 text-white shadow-md"
-          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100 hover:border-gray-400"
-      }
-    `}
+    h-10 w-10 rounded-sm border transition-all duration-200
+    ${
+      page === (currentPage ?? 1)
+        ? "bg-green-500 text-white shadow-md"
+        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100 hover:border-gray-400"
+    }
+  `}
                   >
-                    <Link
-                      href={{
-                        pathname: "/",
-                        query: {
-                          page,
-                          categories: pageCategories
-                            .map((c) => c.trim())
-                            .join(","),
-                        },
-                      }}
-                      scroll={false}
-                      className="w-full h-full flex items-center justify-center"
-                    >
-                      {page}
-                    </Link>
+                    {page}
                   </PaginationLink>
                 </PaginationItem>
               );
             })}
-
-            {/* Next */}
-            {/* {currentPage < totalPages && (
-              <PaginationItem>
-                <PaginationNext>
-                  <Link
-                    href={{
-                      pathname: "/products",
-                      query: {
-                        page: currentPage + 1,
-                        categories: categoriesInfo.categories
-                          .slice(currentPage * 2, currentPage * 2 + 2)
-                          .join(","),
-                      },
-                    }}
-                  />
-                </PaginationNext>
-              </PaginationItem>
-            )} */}
           </PaginationContent>
         </Pagination>
       </div>
