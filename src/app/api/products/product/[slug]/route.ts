@@ -46,11 +46,13 @@ export async function GET(
     const productVarient = await db
       .select({
         price: productVariants.price,
-        WeightValue:productVariants.weightValue,
+        weightValue:productVariants.weightValue,
         weightUnit: productVariants.weightUnit,
       })
       .from(productVariants)
       .where(eq(productVariants.productId, productId));
+
+
 
     if (!productVarient || productVarient.length === 0) {
       throw new Error("Failed to get product varients !");

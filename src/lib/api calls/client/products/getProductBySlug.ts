@@ -35,6 +35,9 @@ export const getProductBySlug = async ({
       throw new Error("Product not found !");
     }
 
+    console.log("From api call : ");
+    console.log(p)
+
     return {
       product: {
         id: p.id,
