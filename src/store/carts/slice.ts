@@ -1,0 +1,38 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+export const CART_LOCALSTORAGE_KEY = "cart";
+
+export interface ICartItem {
+  productId: string;
+  varient: {
+    weightUnit: string;
+    weightValue: number;
+    price: number;
+  };
+  isOffered: boolean;
+  discountAmount: number;
+}
+
+interface ICartItems {
+  cartItems: ICartItem[];
+}
+
+export const loadFromStorage = (): ICartItems => {
+  try {
+    if (typeof window === "undefined") return { cartItems: [] };
+    const rawCartItems = localStorage.getItem(CART_LOCALSTORAGE_KEY);
+    const parseCardItems = rawCartItems ? JSON.parse(rawCartItems) : [];
+    return {
+      cartItems: parseCardItems,
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message);
+    }
+    console.log("Failed to get cartItems from localStorage !");
+
+    return {
+      cartItems: [],
+    };
+  }
+};
