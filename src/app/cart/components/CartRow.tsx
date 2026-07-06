@@ -7,17 +7,10 @@ import Link from "next/link";
 import QuantityControl from "./QuantityControl";
 
 function CartRow({
-  item,
-  // onIncrease,
-  // onDecrease,
-  // onRemove,
-  // onChange,
+  item
 }: {
   item: ICartItem;
-  // onIncrease: () => void;
-  // onDecrease: () => void;
-  // onRemove: () => void;
-  // onChange: (value: number, id: string) => void;
+
 }) {
   const lineTotal = item.varient.price * item.quantity;
 
@@ -84,7 +77,7 @@ function CartRow({
             <h3>Quantity</h3>
             <QuantityControl
               value={item.quantity}
-              max={item.varient.stock}
+              maxStock={item.varient.stock}
               id={item.productId}
             />
           </div>
@@ -100,11 +93,11 @@ function CartRow({
           </button>
         </div>
 
-        {/* price + quantity row */}
+        
         <div className="flex items-center justify-end mt-3 flex-wrap gap-2">
           <div className="text-right">
             <p className="text-base font-bold text-gray-900">
-              ${lineTotal.toFixed(2)}
+              Rs: {lineTotal.toFixed(2)}
             </p>
           </div>
         </div>
