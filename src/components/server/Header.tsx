@@ -15,6 +15,7 @@ import {
 } from "@/src/lib/server actions/notifications.server";
 import { useAppSelector } from "@/src/store/hook";
 import { selectFavoriteCount } from "@/src/store/faviourites/selectors";
+import { totalItemsCart } from "@/src/store/carts/selectors";
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
@@ -26,6 +27,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const [count, setCount] = useState<number>(0);
   const changeNotificationRef = useRef<boolean | null>(null);
   const favoriteItems = useAppSelector(selectFavoriteCount);
+  const itemsInCart = useAppSelector(totalItemsCart);
 
   const handleUnreadNotification = useCallback(async () => {
     try {
@@ -111,9 +113,14 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
             </button>
 
             {/* Badge */}
-            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-              3
-            </span>
+
+            {itemsInCart && itemsInCart?.totalItemsCart > 0 ? (
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                {itemsInCart.totalItemsCart}
+              </span>
+            ) : (
+              ""
+            )}
           </div>
         </Link>
 
@@ -122,11 +129,13 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
             <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
               <Heart className="text-black group-hover:text-white transition-colors" />
             </button>
-            {favoriteItems ? favoriteItems > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                {favoriteItems}
-              </span>
-            ):""}
+            {favoriteItems
+              ? favoriteItems > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                    {favoriteItems}
+                  </span>
+                )
+              : ""}
           </div>
         </Link>
 
