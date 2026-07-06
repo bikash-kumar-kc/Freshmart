@@ -1,4 +1,5 @@
-"use server";
+
+"use server"
 
 import { db } from "@/src/db/config";
 import {
@@ -12,7 +13,6 @@ import { eq, and, ne } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import { randomUUID } from "node:crypto";
-import { success } from "zod";
 
 export interface IPRODUCTRESPONSE {
   id: string;
@@ -239,5 +239,97 @@ export async function createOrder({ userId, items }: ICreateOrderTypes) {
     };
   } catch (error) {
     throw error;
+  }
+}
+
+export async function updateQuantity({
+  orderId,
+  itemId,
+  userId,
+  value,
+}: {
+  orderId: string;
+  itemId: number;
+  userId: string;
+  value: number;
+}) {
+  if (!orderId || !itemId) {
+    throw new Error("OrderId or itemId is missing !");
+  }
+
+  const session = await getServerSession(authOptions);
+
+  if (session?.user.id !== userId) {
+    throw new Error("User is unauthenticated !");
+  }
+
+  const orderInfo = await db
+    .select({ orderId: orders.id, userId: orders.userId })
+    .from(orders)
+    .where(eq(orders.id, orderId))
+    .get();
+
+  if (!orderInfo) {
+    throw new Error("Such ordered not exist !");
+  }
+
+  if (orderInfo.userId !== userId) {
+    throw new Error("User is unauthorized");
+  }
+
+  const orderItemInfo = await db
+    .select({ itemId: orderItems.id, productId: orderItems.productId })
+    .from(orderItems)
+    .where(and(eq(orderItems.orderId, orderId), eq(orderItems.id, itemId)))
+    .get();
+
+  if (!orderItemInfo) {
+    throw new Error("Order item does not exist !");
+  }
+
+  const isValueValid = await isOutOfStock(orderItemInfo.productId, value);
+  if (!isValueValid) {
+    throw new Error("Out of stock !");
+  }
+
+  await db
+    .update(orderItems)
+    .set({ quantity: value })
+    .where(and(eq(orderItems.orderId, orderId), eq(orderItems.id, itemId)));
+
+  return {
+    success: true,
+    message: " Quantity added successfully !",
+  };
+}
+
+async function isOutOfStock(
+  productId: string,
+  value: number,
+): Promise<boolean> {
+  if (!productId || !value) {
+    return false;
+  }
+
+  const varients = await db
+    .select({
+      stock: productVariants.stock,
+      weightValue: productVariants.weightValue,
+    })
+    .from(productVariants)
+    .where(eq(productVariants.productId, productId));
+
+  if (varients.length === 0) {
+    return false;
+  }
+
+  const smallestVariant = varients.reduce((smallest, current) => {
+    return current.weightValue < smallest.weightValue ? current : smallest;
+  });
+
+  if (smallestVariant.stock > value) {
+    return false;
+  } else {
+    return true;
   }
 }
