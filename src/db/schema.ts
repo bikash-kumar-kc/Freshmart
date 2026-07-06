@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { real, integer, index } from "drizzle-orm/sqlite-core";
 import { text, sqliteTable } from "drizzle-orm/sqlite-core";
 import { NotificationType } from "../types/notificationTypes";
@@ -249,6 +249,117 @@ export const notfications = sqliteTable("notifications", {
     .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
 });
 
+export const orders = sqliteTable(
+  "orders",
+  {
+    id: text("id").primaryKey(),
+
+    isOrdered: integer("is_ordered", { mode: "boolean" })
+      .notNull()
+      .default(false),
+
+    isPayment: integer("is_payment", { mode: "boolean" })
+      .notNull()
+      .default(false),
+
+    isPaymentProcess: integer("is_payment_process", {
+      mode: "boolean",
+    })
+      .notNull()
+      .default(false),
+
+    orderStatus: text("order_status", {
+      enum: ["delivered", "ontheway", "failed", "pending", "packaging"],
+    }),
+
+    isDeliveredChargeApplied: integer(
+      "is_delivered_charge_applied",
+      {
+        mode: "boolean",
+      }
+    )
+      .notNull()
+      .default(false),
+
+    totalPriceAfterDiscount: integer("total_price_after_discount"),
+
+    totalSave: integer("total_save"),
+
+    totalPrice: integer("total_price"),
+
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (table) => [
+    index("orders_user_idx").on(table.userId),
+    index("orders_order_idx").on(table.id),
+  ]
+);
+
+
+export const orderItems = sqliteTable(
+  "order_items",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+
+    orderId: text("order_id")
+      .notNull()
+      .references(() => orders.id, {
+        onDelete: "cascade",
+      }),
+
+    productId: text("product_id")
+      .notNull()
+      .references(() => products.id, {
+        onDelete: "restrict",
+      }),
+
+    quantity: integer("quantity").notNull(),
+
+    weightValue: integer("weight_value").notNull(),
+
+    weightUnit: text("weight_unit", {
+      enum: ["g", "kg"],
+    }).notNull(),
+  },
+  (table) => [
+    index("order_items_order_idx").on(table.orderId),
+    index("order_items_product_idx").on(table.productId),
+  ]
+);
+
+
+export const ordersRelations = relations(orders, ({ one, many }) => ({
+  user: one(users, {
+    fields: [orders.userId],
+    references: [users.id],
+  }),
+
+  items: many(orderItems),
+}));
+
+export const orderItemsRelations = relations(orderItems, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderItems.orderId],
+    references: [orders.id],
+  }),
+
+  product: one(products, {
+    fields: [orderItems.productId],
+    references: [products.id],
+  }),
+}));
 // types...
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
