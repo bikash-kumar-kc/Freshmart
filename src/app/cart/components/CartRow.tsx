@@ -1,19 +1,15 @@
 "use client";
 import { calculateDiscountPercentage } from "@/src/components/client/product/utilities/subProductCard";
-import { ICartItem } from "@/src/store/carts/slice";
+import { ICartItem, removeCartItem } from "@/src/store/carts/slice";
 import { Leaf, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import QuantityControl from "./QuantityControl";
+import { useAppDispatch } from "@/src/store/hook";
 
-function CartRow({
-  item
-}: {
-  item: ICartItem;
-
-}) {
+function CartRow({ item }: { item: ICartItem }) {
   const lineTotal = item.varient.price * item.quantity;
-
+  const dispatch = useAppDispatch();
   return (
     <div
       className="flex items-start gap-4 py-5 border-b border-gray-100
@@ -84,7 +80,9 @@ function CartRow({
 
           {/* remove */}
           <button
-            // onClick={onRemove}
+            onClick={() =>
+              dispatch(removeCartItem({ productId: item.productId }))
+            }
             className="shrink-0 p-1.5 rounded-lg text-gray-300
               hover:text-red-500 hover:bg-red-50 transition-colors"
             aria-label="Remove item"
@@ -93,7 +91,6 @@ function CartRow({
           </button>
         </div>
 
-        
         <div className="flex items-center justify-end mt-3 flex-wrap gap-2">
           <div className="text-right">
             <p className="text-base font-bold text-gray-900">

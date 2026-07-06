@@ -18,7 +18,7 @@ function EmptyCart() {
         and fill your cart with freshness.
       </p>
       <Link
-        href="/products"
+        href="/"
         className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800
           text-white text-sm font-semibold px-6 py-3 rounded-2xl
           transition-colors"
