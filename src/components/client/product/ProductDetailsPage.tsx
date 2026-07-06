@@ -166,6 +166,7 @@ export default function ProductDetailPage({
                       weightUnit: filteredVariantRow.weightUnit,
                       weightValue: filteredVariantRow.weightValue,
                       price: filteredVariantRow.price,
+                      stock: filteredVariantRow.stock,
                     },
                     isOffered: product?.isOffered as boolean,
                     discountAmount: product?.discount as number,

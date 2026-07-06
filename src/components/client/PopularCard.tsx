@@ -25,6 +25,7 @@ interface IProductTypes {
   price: number | null;
   discount?: number | null;
   category: string;
+  stock:number;
 }
 
 interface IFavoriteProduct {
@@ -254,6 +255,7 @@ export function ProductCard({
                 weightUnit: product.weightUnit!,
                 weightValue: product.weightValue!,
                 price: product.price!,
+                stock:product.stock!
               },
               isOffered: product.isOffered!,
               discountAmount: product.discount!,
