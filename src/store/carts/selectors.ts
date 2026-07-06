@@ -41,12 +41,15 @@ export const totalCalculation = (state: RootState) => {
   if (!state) return;
 
   const totalPriceWithoutDiscount = state.carts.cartItems.reduce(
-    (totalPrice, i) => totalPrice + i.varient.price,
+    (totalPrice, i) => totalPrice + i.varient.price * i.quantity,
     0,
   );
 
   const totalDiscountAmount = state.carts.cartItems.reduce(
-    (totalDiscount, i) => totalDiscount + i.discountAmount,
+    (totalDiscount, i) => {
+      console.log(i.discountAmount);
+      return totalDiscount + (i.discountAmount ?? 0) * i.quantity;
+    },
     0,
   );
 
@@ -54,6 +57,9 @@ export const totalCalculation = (state: RootState) => {
     tpwod: totalPriceWithoutDiscount,
     tda: totalDiscountAmount,
     tpwd: totalPriceWithoutDiscount - totalDiscountAmount,
+    totalSaving:
+      totalPriceWithoutDiscount -
+      (totalPriceWithoutDiscount - totalDiscountAmount),
     isDeliveryCharged: totalPriceWithoutDiscount <= DELIVERYCHARGEDLIMIT,
   };
 };

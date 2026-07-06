@@ -13,6 +13,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import {
   getAllItemsFromCart,
+  totalCalculation,
   totalItemsCart,
 } from "@/src/store/carts/selectors";
 import EmptyCart from "./components/EmptyCart";
@@ -25,66 +26,8 @@ const FREE_DELIVERY_THRESHOLD = 30;
 export default function CartPage() {
   const totalCartProducts = useAppSelector(totalItemsCart);
   const allCartProducts = useAppSelector(getAllItemsFromCart);
+  const cartAmountSummary = useAppSelector(totalCalculation);
   const dispatch = useAppDispatch();
-
-  // const subtotal = items.reduce(
-  //   (sum, item) => sum + item.price * item.quantity,
-  //   0,
-  // );
-  // const originalSubtotal = items.reduce(
-  //   (sum, item) => sum + item.originalPrice * item.quantity,
-  //   0,
-  // );
-  // const totalSavings = originalSubtotal - subtotal;
-  // const couponDiscount = couponApplied ? subtotal * 0.1 : 0;
-  // const deliveryFee = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : 3.99;
-  // const total = subtotal - couponDiscount + deliveryFee;
-  // const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
-
-  // const increase = (id: string) => {
-  //   console.log("increased !");
-  //   setItems((prev) =>
-  //     prev.map((item) =>
-  //       item.id === id && item.quantity < item.stock
-  //         ? { ...item, quantity: item.quantity + 1 }
-  //         : item,
-  //     ),
-  //   );
-  // };
-
-  // const decrease = (id: string) => {
-  //   setItems((prev) =>
-  //     prev.map((item) =>
-  //       item.id === id && item.quantity > 1
-  //         ? { ...item, quantity: item.quantity - 1 }
-  //         : item,
-  //     ),
-  //   );
-  // };
-
-  // const changeQuantity = (amount: number, id: string) => {
-  //   console.log("here");
-  //   setItems((prevs) => {
-  //     return prevs.map((item) =>
-  //       item.id === id ? { ...item, quantity: amount } : item,
-  //     );
-  //   });
-  // };
-
-  // const remove = (id: string) => {
-  //   setItems((prev) => prev.filter((item) => item.id !== id));
-  // };
-
-  // const handleCheckout = async () => {
-  //   // wire to your create-session route
-  //   // const checkoutItems = items.map(i => ({
-  //   //   productId: i.productId,
-  //   //   variantId: i.variantId,
-  //   //   quantity: i.quantity,
-  //   // }));
-  //   // await redirectToCheckout(checkoutItems);
-  //   alert("Wire to /api/checkout/create-session");
-  // };
 
   const handleClearAll = () => {
     dispatch(clearCartItems());
@@ -138,7 +81,6 @@ export default function CartPage() {
         </div>
 
         <div className="flex flex-col relative lg:flex-row gap-6 items-start">
-          {/* ── LEFT: cart items ── */}
           <div className="flex-1 min-w-0 w-full">
             <div className="bg-white rounded-[8px] border border-gray-100 px-5">
               {allCartProducts?.items.map((item) => (
@@ -190,50 +132,66 @@ export default function CartPage() {
 
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">
-                    {/* Subtotal ({totalItems} items) */}
-                  </span>
+                  {totalCartProducts && (
+                    <span className="text-gray-500">
+                      Subtotal (
+                      {totalCartProducts?.totalItemsCart === 1
+                        ? totalCartProducts?.totalItemsCart + " item"
+                        : totalCartProducts?.totalItemsCart + " items"}{" "}
+                      )
+                    </span>
+                  )}
                   <span className="font-medium text-gray-900">
-                    {/* ${subtotal.toFixed(2)} */}
+                    {cartAmountSummary?.tpwod}
                   </span>
                 </div>
 
-                {/* {totalSavings > 0 && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-green-600">Product savings</span>
-                    <span className="font-medium text-green-600">
-                      -${totalSavings.toFixed(2)}
-                    </span>
-                  </div>
-                )} */}
+                {cartAmountSummary?.totalSaving
+                  ? cartAmountSummary?.totalSaving > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-green-600">Total savings</span>
+                        <span className="font-medium text-green-600">
+                          Rs {cartAmountSummary.totalSaving.toFixed(2)}
+                        </span>
+                      </div>
+                    )
+                  : ""}
 
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Delivery</span>
-                  {/* <span
-                    className={`font-medium ${
-                      deliveryFee === 0 ? "text-green-600" : "text-gray-900"
-                    }`}
-                  >
-                    {deliveryFee === 0 ? "Free" : `$${deliveryFee.toFixed(2)}`}
-                  </span> */}
+                  <span className="text-gray-500">Delivery Charge</span>
+                  {cartAmountSummary && (
+                    <span
+                      className={`font-medium ${
+                        !cartAmountSummary?.isDeliveryCharged
+                          ? "text-green-600"
+                          : "text-gray-900"
+                      }`}
+                    >
+                      {cartAmountSummary.isDeliveryCharged ? 100 : "Free"}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              <div className="border-t border-gray-100 pt-4 mb-4">
-                <div className="flex justify-between">
-                  <span className="text-base font-bold text-gray-900">
-                    Total
-                  </span>
-                  <div className="text-right">
-                    <span className="text-xl font-bold text-gray-900">
-                      {/* ${total.toFixed(2)} */} something
+              {cartAmountSummary && (
+                <div className="border-t border-gray-100 pt-4 mb-4">
+                  <div className="flex justify-between">
+                    <span className="text-base font-bold text-gray-900">
+                      Total
                     </span>
-                    <p className="text-[10px] text-gray-400 mt-0.5">
-                      Taxes included
-                    </p>
+                    <div className="text-right">
+                      <span className="text-xl font-bold text-gray-900">
+                       Rs {cartAmountSummary?.isDeliveryCharged
+                          ? (cartAmountSummary.tpwd as number) + 100
+                          : cartAmountSummary.tpwd}
+                      </span>
+                      <p className="text-[10px] text-gray-400 mt-0.5">
+                        Taxes included
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
               <button
                 // onClick={handleCheckout}
                 className="w-full flex items-center justify-center gap-2
