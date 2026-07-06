@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-
 export const CART_LOCALSTORAGE_KEY = "cart";
+export const DEBOUNCE_TIME = 300;
 
 export interface ICartItem {
   productId: string;
@@ -24,6 +24,8 @@ interface IUpdateTypes {
   type: "increment" | "decrement" | "onchange";
   value?: number;
 }
+
+let globalTimer: ReturnType<typeof setTimeout>;
 
 export const loadFromStorage = (): ICartItems => {
   try {
@@ -120,7 +122,14 @@ const cartSlice = createSlice({
           }
         }
 
-        saveToLocalStorage({ cartItems: state.cartItems });
+        if(globalTimer){
+          clearTimeout(globalTimer)
+        }
+
+        globalTimer = setTimeout(() => {
+          saveToLocalStorage({ cartItems: state.cartItems });
+        }, DEBOUNCE_TIME);
+        
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.log(error.message);
