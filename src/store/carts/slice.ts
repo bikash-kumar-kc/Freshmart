@@ -128,5 +128,11 @@ const cartSlice = createSlice({
         console.log("Failed to update cartItems !");
       }
     },
+
+    // clear cart ...
+    clearCartItems: (state) => {
+      state.cartItems = [];
+      saveToLocalStorage({ cartItems: state.cartItems });
+    },
   },
 });
