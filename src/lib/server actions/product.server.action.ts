@@ -1,8 +1,18 @@
 "use server";
 
 import { db } from "@/src/db/config";
-import { products, productVariants } from "@/src/db/schema";
+import {
+  IOrderItem,
+  orderItems,
+  orders,
+  products,
+  productVariants,
+} from "@/src/db/schema";
 import { eq, and, ne } from "drizzle-orm";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth";
+import { randomUUID } from "node:crypto";
+import { success } from "zod";
 
 export interface IPRODUCTRESPONSE {
   id: string;
@@ -173,5 +183,61 @@ export async function getProductByCategorySlug(
         stock: 0,
       },
     };
+  }
+}
+
+type ItemTypes = Omit<IOrderItem, "id">;
+
+export interface ICreateOrderTypes {
+  userId: string;
+  items: ItemTypes[];
+}
+
+export async function createOrder({ userId, items }: ICreateOrderTypes) {
+  try {
+    if (!userId) {
+      throw new Error("User Id is missing !");
+    }
+    const data = await getServerSession(authOptions);
+    if (!data || data?.user.id !== userId) {
+      throw new Error("User is unauthenticated !");
+    }
+
+    if (items.length === 0) {
+      throw new Error("No product items !");
+    }
+
+    let itemsAddedIds: { itemId: number }[] = [];
+
+    await db.transaction(async (tx) => {
+      const [order] = await tx
+        .insert(orders)
+        .values({
+          id: randomUUID(),
+          userId,
+        })
+        .returning({
+          orderedId: orders.id,
+        });
+
+      itemsAddedIds = await tx
+        .insert(orderItems)
+        .values(
+          items.map((item) => ({
+            ...item,
+            orderId: order.orderedId,
+          })),
+        )
+        .returning({
+          itemId: orderItems.id,
+        });
+    });
+
+    return {
+      success: true,
+      totalItemsInserted: itemsAddedIds.length,
+    };
+  } catch (error) {
+    throw error;
   }
 }
