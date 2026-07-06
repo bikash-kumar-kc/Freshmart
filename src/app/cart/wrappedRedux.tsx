@@ -1,9 +1,14 @@
-"use client"
+"use client";
 import React from "react";
 import ReduxProvider from "../providers/ReduxProvider";
+import { SessionProvider } from "next-auth/react";
 
 const WrappedRedux = ({ children }: { children: React.ReactNode }) => {
-  return <ReduxProvider>{children}</ReduxProvider>;
+  return (
+    <SessionProvider>
+      <ReduxProvider>{children}</ReduxProvider>
+    </SessionProvider>
+  );
 };
 
 export default WrappedRedux;

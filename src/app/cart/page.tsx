@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   Leaf,
-  Tag,
   ChevronRight,
   Truck,
   Shield,
@@ -20,18 +19,34 @@ import EmptyCart from "./components/EmptyCart";
 import CartRow from "./components/CartRow";
 import { clearCartItems } from "@/src/store/carts/slice";
 import { toast } from "react-toastify";
-
-const FREE_DELIVERY_THRESHOLD = 30;
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
+  // state...
   const totalCartProducts = useAppSelector(totalItemsCart);
   const allCartProducts = useAppSelector(getAllItemsFromCart);
   const cartAmountSummary = useAppSelector(totalCalculation);
   const dispatch = useAppDispatch();
 
+  // router
+  const router = useRouter();
+
+  // user session...
+
+  const { data: session, status } = useSession();
   const handleClearAll = () => {
     dispatch(clearCartItems());
     toast.success("Cart Clear successfully.");
+  };
+
+  const handleCheckout = () => {
+    if (status === "authenticated") {
+      toast.info("User is logged in");
+    } else {
+      router.push("/auth/login");
+      toast.info("Please, logged in before payment processed!");
+    }
   };
 
   if (allCartProducts?.totalItems === 0) {
@@ -181,7 +196,8 @@ export default function CartPage() {
                     </span>
                     <div className="text-right">
                       <span className="text-xl font-bold text-gray-900">
-                       Rs {cartAmountSummary?.isDeliveryCharged
+                        Rs{" "}
+                        {cartAmountSummary?.isDeliveryCharged
                           ? (cartAmountSummary.tpwd as number) + 100
                           : cartAmountSummary.tpwd}
                       </span>
@@ -193,10 +209,10 @@ export default function CartPage() {
                 </div>
               )}
               <button
-                // onClick={handleCheckout}
+                onClick={handleCheckout}
                 className="w-full flex items-center justify-center gap-2
                   bg-[#C8742A] hover:bg-[#A85E1C] text-white font-bold
-                  text-sm py-4 rounded-2xl transition-all duration-200
+                  text-sm py-4 rounded-sm transition-all duration-200
                   shadow-md hover:shadow-lg"
               >
                 Proceed to checkout
