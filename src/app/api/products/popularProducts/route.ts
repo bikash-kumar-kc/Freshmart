@@ -29,6 +29,7 @@ export interface IPopularProduct {
   weightUnit: string | null;
   price: number | null;
   category: string;
+  stock: number;
 }
 
 export async function GET() {
@@ -89,6 +90,7 @@ export async function GET() {
         weightUnit: variant?.weightUnit ?? null,
         price: variant?.price ?? null,
         isOutOfStock: variant?.stock === 0 ? true : false,
+        stock: variant?.stock as number,
       };
     });
 
