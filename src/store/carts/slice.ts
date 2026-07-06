@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const CART_LOCALSTORAGE_KEY = "cart";
 export const DEBOUNCE_TIME = 300;
+let globalTimer: ReturnType<typeof setTimeout>;
 
 export interface ICartItem {
   productId: string;
@@ -9,6 +10,7 @@ export interface ICartItem {
     weightUnit: string;
     weightValue: number;
     price: number;
+    stock: number;
   };
   isOffered: boolean;
   discountAmount: number;
@@ -17,6 +19,7 @@ export interface ICartItem {
   category: string;
   productName: string;
   slug: string;
+  
 }
 
 interface ICartItems {
@@ -29,7 +32,7 @@ interface IUpdateTypes {
   value?: number;
 }
 
-let globalTimer: ReturnType<typeof setTimeout>;
+
 
 export const loadFromStorage = (): ICartItems => {
   try {
@@ -53,6 +56,7 @@ export const loadFromStorage = (): ICartItems => {
 
 export const saveToLocalStorage = ({ cartItems }: ICartItems) => {
   try {
+    console.log("saved to local storage")
     const parsedCartItems = JSON.stringify(
       cartItems.length === 0 ? [] : cartItems,
     );
@@ -99,40 +103,49 @@ const cartSlice = createSlice({
 
     // update item/s to cart...
     updateCartItem: (state, actions: PayloadAction<IUpdateTypes>) => {
+
+      console.log("here at update cart item")
       try {
         if (!actions.payload.productId || !actions.payload.type) return;
-        switch (actions.type) {
-          case "increment": {
+        
+        switch (actions.payload.type) {
+          case 'increment': {
+            console.log("here at increment")
             state.cartItems = state.cartItems.map((c) =>
               c.productId === actions.payload.productId
-                ? { ...c, quantity: c.quantity++ }
+                ? { ...c, quantity: c.quantity+1 }
                 : c,
             );
+            break;
           }
-          case "decrement": {
+          case 'decrement': {
             state.cartItems = state.cartItems.map((c) =>
               c.productId === actions.payload.productId
-                ? { ...c, quantity: c.quantity-- }
+                ? { ...c, quantity: c.quantity -1 }
                 : c,
             );
+            break;
           }
-          case "onchange": {
+          case 'onchange': {
             if (!actions.payload.value) return;
             state.cartItems = state.cartItems.map((c) =>
               c.productId === actions.payload.productId
                 ? { ...c, quantity: actions.payload.value! }
                 : c,
             );
+            break;
           }
         }
 
-        if (globalTimer) {
-          clearTimeout(globalTimer);
-        }
+        // if (globalTimer) {
+        //   clearTimeout(globalTimer);
+        // }
 
-        globalTimer = setTimeout(() => {
+        // globalTimer = setTimeout(() => {
           saveToLocalStorage({ cartItems: state.cartItems });
-        }, DEBOUNCE_TIME);
+        // }, DEBOUNCE_TIME);
+
+
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.log(error.message);
