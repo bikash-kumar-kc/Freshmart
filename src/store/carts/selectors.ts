@@ -8,10 +8,33 @@ export const totalItemsCart = (state: RootState) => {
   };
 };
 
+export const getAllItemsFromCart = (state: RootState) => {
+  if (!state) {
+    return;
+  }
+
+  return {
+    items: state.carts.cartItems,
+    totalItems: state.carts.cartItems.length,
+  };
+};
+
 export const isProductInCart =
   (productId: string | undefined) => (state: RootState) => {
     if (!productId) return;
     return state.carts.cartItems.some((i) => i.productId === productId);
+  };
+
+export const productQuantity =
+  (productId: string | undefined) => (state: RootState) => {
+    if (!productId) return;
+    const product = state.carts.cartItems.filter(
+      (i) => i.productId === productId,
+    );
+    return {
+      productId: product[0].productId,
+      quantity: product[0].quantity,
+    };
   };
 
 export const totalCalculation = (state: RootState) => {
@@ -34,5 +57,3 @@ export const totalCalculation = (state: RootState) => {
     isDeliveryCharged: totalPriceWithoutDiscount <= DELIVERYCHARGEDLIMIT,
   };
 };
-
-
