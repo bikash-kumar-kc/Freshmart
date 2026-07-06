@@ -49,3 +49,26 @@ export const saveToLocalStorage = ({ cartItems }: ICartItems) => {
     }
   }
 };
+
+const initialState = {
+  ...loadFromStorage(),
+};
+
+const cartSlice = createSlice({
+  name: "cart",
+  initialState,
+  reducers: {
+    // add item/s to cart...
+    addCartItem: (state, actions: PayloadAction<ICartItem>) => {
+      if (!actions.payload.productId) return;
+      if (
+        state.cartItems.some((i) => i.productId === actions.payload.productId)
+      )
+        return;
+      state.cartItems.push(actions.payload);
+      saveToLocalStorage({ cartItems: state.cartItems });
+    },
+
+    
+  },
+});
