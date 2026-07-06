@@ -16,6 +16,7 @@ export interface IOfferedProduct {
   weightValue: number | null;
   weightUnit: string | null;
   price: number | null;
+  stock: number | null;
 }
 
 export async function GET() {
@@ -71,7 +72,8 @@ export async function GET() {
         weightValue: variant?.weightValue ?? null,
         weightUnit: variant?.weightUnit ?? null,
         price: variant?.price ?? null,
-        isOutOfStock:variant?.stock === 0 ? true : false
+        isOutOfStock: variant?.stock === 0 ? true : false,
+        stock: variant?.stock ?? null,
       };
     });
 
