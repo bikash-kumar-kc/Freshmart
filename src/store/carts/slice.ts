@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { stat } from "fs";
 
 export const CART_LOCALSTORAGE_KEY = "cart";
 
@@ -11,10 +12,17 @@ export interface ICartItem {
   };
   isOffered: boolean;
   discountAmount: number;
+  quantity: number;
 }
 
 interface ICartItems {
   cartItems: ICartItem[];
+}
+
+interface IUpdateTypes {
+  productId: string;
+  type: "increment" | "decrement" | "onchange";
+  value?: number;
 }
 
 export const loadFromStorage = (): ICartItems => {
@@ -82,6 +90,43 @@ const cartSlice = createSlice({
         saveToLocalStorage({ cartItems: state.cartItems });
       }
     },
-    
+
+    // update item/s to cart...
+    updateCartItem: (state, actions: PayloadAction<IUpdateTypes>) => {
+      try {
+        if (!actions.payload.productId || !actions.payload.type) return;
+        switch (actions.type) {
+          case "increment": {
+            state.cartItems = state.cartItems.map((c) =>
+              c.productId === actions.payload.productId
+                ? { ...c, quantity: c.quantity++ }
+                : c,
+            );
+          }
+          case "decrement": {
+            state.cartItems = state.cartItems.map((c) =>
+              c.productId === actions.payload.productId
+                ? { ...c, quantity: c.quantity-- }
+                : c,
+            );
+          }
+          case "onchange": {
+            if (!actions.payload.value) return;
+            state.cartItems = state.cartItems.map((c) =>
+              c.productId === actions.payload.productId
+                ? { ...c, quantity: actions.payload.value! }
+                : c,
+            );
+          }
+        }
+
+        saveToLocalStorage({ cartItems: state.cartItems });
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+        console.log("Failed to update cartItems !");
+      }
+    },
   },
 });
