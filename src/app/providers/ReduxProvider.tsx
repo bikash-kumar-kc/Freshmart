@@ -1,7 +1,7 @@
 "use client";
 
 import { Provider } from "react-redux";
-import { favoritesStore } from "@/src/store/faviourites/store";
+import { favoritesStore } from "@/src/store/store";
 
 export default function ReduxProvider({
   children,
