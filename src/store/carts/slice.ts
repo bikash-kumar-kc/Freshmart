@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { stat } from "fs";
+
 
 export const CART_LOCALSTORAGE_KEY = "cart";
 
@@ -140,4 +140,4 @@ const cartSlice = createSlice({
 export const { addCartItem, removeCartItem, updateCartItem, clearCartItems } =
   cartSlice.actions;
 
-export default cartSlice;
+export default cartSlice.reducer;

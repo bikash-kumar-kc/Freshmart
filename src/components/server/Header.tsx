@@ -13,7 +13,7 @@ import {
   countUnreadNotifications,
   updateNotificationsStatus,
 } from "@/src/lib/server actions/notifications.server";
-import { useAppSelector } from "@/src/store/faviourites/hook";
+import { useAppSelector } from "@/src/store/hook";
 import { selectFavoriteCount } from "@/src/store/faviourites/selectors";
 
 interface IStateHandler {

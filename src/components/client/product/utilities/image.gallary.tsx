@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/src/store/faviourites/hook";
+import { useAppSelector } from "@/src/store/hook";
 import { selectIsFavorite } from "@/src/store/faviourites/selectors";
 import Image from "next/image";
 import { useRef, useState } from "react";

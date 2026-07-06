@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { HeartIcon } from "../../PopularCard";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/src/store/faviourites/hook";
+import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { selectIsFavorite } from "@/src/store/faviourites/selectors";
 import { addFavorite, IFavoriteProduct, removeFavorite } from "@/src/store/faviourites/slice";
 

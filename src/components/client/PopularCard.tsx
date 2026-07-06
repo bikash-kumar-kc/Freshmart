@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "@/src/store/faviourites/hook";
+import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { selectIsFavorite } from "@/src/store/faviourites/selectors";
 import { addFavorite, removeFavorite } from "@/src/store/faviourites/slice";
 import Image from "next/image";

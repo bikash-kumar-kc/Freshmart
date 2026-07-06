@@ -16,7 +16,7 @@ import {
   deleteNotification,
   markedNotification,
 } from "@/src/lib/server actions/notifications.server";
-import { useAppSelector } from "@/src/store/faviourites/hook";
+import { useAppSelector } from "@/src/store/hook";
 
 type NotificationPanelProps = {
   isOpen: boolean;

@@ -1,5 +1,5 @@
 "use client";
-import { useAppDispatch, useAppSelector } from "@/src/store/faviourites/hook";
+import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { selectFavorites } from "@/src/store/faviourites/selectors";
 import { IFavoriteProductData } from "./types/favorite.type";
 import { useEffect, useState } from "react";
