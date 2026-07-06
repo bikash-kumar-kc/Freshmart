@@ -36,3 +36,16 @@ export const loadFromStorage = (): ICartItems => {
     };
   }
 };
+
+export const saveToLocalStorage = ({ cartItems }: ICartItems) => {
+  try {
+    const parsedCartItems = JSON.stringify(
+      cartItems.length === 0 ? [] : cartItems,
+    );
+    localStorage.setItem(CART_LOCALSTORAGE_KEY, parsedCartItems);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message);
+    }
+  }
+};
