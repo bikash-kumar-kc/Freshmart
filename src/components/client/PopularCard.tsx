@@ -5,6 +5,13 @@ import { selectIsFavorite } from "@/src/store/faviourites/selectors";
 import { addFavorite, removeFavorite } from "@/src/store/faviourites/slice";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { isProductInCart } from "@/src/store/carts/selectors";
+import {
+  addCartItem,
+  ICartItem,
+  removeCartItem,
+} from "@/src/store/carts/slice";
+import { toast } from "react-toastify";
 
 interface IProductTypes {
   id: string;
@@ -76,15 +83,29 @@ export function ProductCard({
 
   const dispatch = useAppDispatch();
   const isFavorite = useAppSelector(selectIsFavorite(product.id));
+  const isProductOnCart = useAppSelector(isProductInCart(product.id));
 
-  function handleCart() {
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1200);
+  function handleCart(data: ICartItem) {
+    if (!data.productId) return;
+
+    if (!added) {
+      dispatch(addCartItem(data));
+      setAdded(true);
+      toast.success("To update the quantity, visit cart section ");
+    } else {
+      dispatch(removeCartItem({ productId: data.productId }));
+      setAdded(false);
+      toast.success("Product removed from cart successfully !");
+    }
   }
 
   useEffect(() => {
     setWished(isFavorite);
   }, [isFavorite]);
+
+  useEffect(() => {
+    setAdded(isProductOnCart);
+  }, [isProductOnCart]);
 
   const handleFavoriteToggle = ({
     productId,
@@ -212,7 +233,6 @@ export function ProductCard({
 
           <div className=" flex gap-2 items-end    ">
             <p className="mt-0.5 mb-0 px-1.5 text-[13px] text-[#666">
-            
               Rs {(product.price as number).toFixed(2)}
             </p>
             {type === "offer" && (
@@ -228,7 +248,18 @@ export function ProductCard({
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             e.stopPropagation();
-            handleCart();
+            const requiredDataToAddedOnCart: ICartItem = {
+              productId: product.id,
+              varient: {
+                weightUnit: product.weightUnit!,
+                weightValue: product.weightValue!,
+                price: product.price!,
+              },
+              isOffered: product.isOffered!,
+              discountAmount: product.discount!,
+              quantity: 1,
+            };
+            handleCart(requiredDataToAddedOnCart);
           }}
           aria-label="Add to cart"
           className={`
