@@ -16,6 +16,7 @@ interface IPopularProducts {
   weightUnit: string;
   price: number | null;
   category:string;
+  stock:number;
 }
 
 interface IPopularProductsData {
