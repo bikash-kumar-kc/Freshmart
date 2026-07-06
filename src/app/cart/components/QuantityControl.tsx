@@ -1,30 +1,67 @@
+import { productQuantity } from "@/src/store/carts/selectors";
+import { updateCartItem } from "@/src/store/carts/slice";
+import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 
 function QuantityControl({
   value,
-  // onIncrease,
-  // onDecrease,
-  // quantityChange,
-  max,
-  // id,
+  maxStock,
+  id,
 }: {
   value: number;
-  max: number;
+  maxStock: number;
   id: string;
 }) {
-  const [amount, setAmount] = useState(value);
+  const [quantity, setQuantity] = useState(String(value ?? 1));
+  const dispatch = useAppDispatch();
+  const quantityInfo = useAppSelector(productQuantity(id));
+  console.log("quantityInfo");
+  console.log(quantityInfo);
 
-  const handleIncrement = () => {};
-  const handleDecrement = () => {};
-  const handleChange = () => {};
+  const handleIncrement = (productId: string) => {
+    if (!productId) return;
+    if (quantityInfo?.productId === id) {
+      const isStockAvailable = quantityInfo.quantity < maxStock;
+      if (isStockAvailable) {
+        dispatch(updateCartItem({ productId: productId, type: "increment" }));
+        setQuantity((prevs) => String(Number(prevs) + 1));
+      }
+    }
+  };
+
+  const handleDecrement = (productId: string) => {
+    if (!productId) return;
+    if (quantityInfo?.productId === id) {
+      dispatch(updateCartItem({ productId: productId, type: "decrement" }));
+      setQuantity((prevs) => String(Number(prevs) - 1));
+    }
+  };
+  const handleChange = (productId: string, value: number) => {
+    if (!productId) return;
+
+    if (quantityInfo?.productId === id) {
+      const isValueMoreThanStock = value > maxStock;
+      console.log("isValueMoreThanStock", isValueMoreThanStock);
+      if (isValueMoreThanStock) return;
+
+      dispatch(
+        updateCartItem({
+          productId,
+          type: "onchange",
+          value,
+        }),
+      );
+    }
+  };
 
   return (
     <div className="flex items-center gap-0 h-8">
       <button
-        onClick={() => {
-          // onDecrease();
-          setAmount((prevs) => (prevs === 0 ? 0 : prevs - 1));
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleDecrement(id);
         }}
         className="w-8 h-8 flex items-center justify-center rounded-l-lg
           border border-gray-200 bg-white text-gray-500 hover:bg-green-50
@@ -40,25 +77,50 @@ function QuantityControl({
       >
         <input
           type="number"
-          value={amount}
+          value={quantity}
+          max={maxStock}
           onChange={(e) => {
-            if (Number(e.target.value) < 1) return;
-            setAmount(Number(e.target.value));
-            // quantityChange(Number(e.target.value), id);
+            const value = e.target.value;
+            const refinedValue = Math.max(1, Math.min(Number(value), maxStock));
+            setQuantity(String(refinedValue));
+
+            const numberValue = Number(value);
+
+            if (!Number.isNaN(numberValue)) {
+              handleChange(id, numberValue);
+            }
           }}
-          className=" w-9 py-1.5 text-center"
+          onBlur={() => {
+            let value = Number(quantity);
+
+            if (Number.isNaN(value) || value < 1) {
+              value = 1;
+            }
+
+            setQuantity(String(value));
+
+            dispatch(
+              updateCartItem({
+                productId: id,
+                type: "onchange",
+                value,
+              }),
+            );
+          }}
+          className="w-9 py-1.5 text-center"
         />
       </div>
       <button
-        onClick={() => {
-          // onIncrease();
-          setAmount((prevs) => prevs + 1);
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleIncrement(id);
         }}
         className="w-8 h-8 flex items-center justify-center rounded-r-lg
           border border-gray-200 bg-white text-gray-500 hover:bg-green-50
           hover:border-green-300 hover:text-green-700 transition-colors
           disabled:opacity-40 disabled:cursor-not-allowed"
-        disabled={value >= max}
+        disabled={value >= maxStock}
       >
         <Plus size={12} />
       </button>
