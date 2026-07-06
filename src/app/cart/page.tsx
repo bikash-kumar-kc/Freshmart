@@ -22,6 +22,8 @@ const FREE_DELIVERY_THRESHOLD = 30;
 export default function CartPage() {
   const totalCartProducts = useAppSelector(totalItemsCart);
   const allCartProducts = useAppSelector(getAllItemsFromCart);
+  console.log('allCartProducts')
+  console.log(allCartProducts)
 
   // const subtotal = items.reduce(
   //   (sum, item) => sum + item.price * item.quantity,

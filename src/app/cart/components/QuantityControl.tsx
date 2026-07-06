@@ -1,6 +1,7 @@
 import { productQuantity } from "@/src/store/carts/selectors";
 import { updateCartItem } from "@/src/store/carts/slice";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
+import { ConsoleLogWriter } from "drizzle-orm";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 
@@ -37,6 +38,8 @@ function QuantityControl({
       setQuantity((prevs) => String(Number(prevs) - 1));
     }
   };
+
+
   const handleChange = (productId: string, value: number) => {
     if (!productId) return;
 
