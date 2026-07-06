@@ -69,6 +69,19 @@ const cartSlice = createSlice({
       saveToLocalStorage({ cartItems: state.cartItems });
     },
 
+    // remove item/s to cart...
+    removeCartItem: (state, actions: PayloadAction<{ productId: string }>) => {
+      if (!actions.payload.productId) return;
+      const isExist = state.cartItems.some(
+        (i) => i.productId === actions.payload.productId,
+      );
+      if (isExist) {
+        state.cartItems = state.cartItems.filter(
+          (c) => c.productId !== actions.payload.productId,
+        );
+        saveToLocalStorage({ cartItems: state.cartItems });
+      }
+    },
     
   },
 });
