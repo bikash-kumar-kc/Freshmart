@@ -7,7 +7,12 @@ import { HeartIcon } from "../../PopularCard";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { selectIsFavorite } from "@/src/store/faviourites/selectors";
-import { addFavorite, IFavoriteProduct, removeFavorite } from "@/src/store/faviourites/slice";
+import {
+  addFavorite,
+  IFavoriteProduct,
+  removeFavorite,
+} from "@/src/store/faviourites/slice";
+import { isProductInCart } from "@/src/store/carts/selectors";
 
 export function calculateDiscountPercentage(
   price: number,
@@ -34,6 +39,7 @@ export const RelatedProductCard = ({
     setWished(isFavorite);
   }, [isFavorite]);
 
+  
   const handleFavoriteToggle = ({
     productId,
     slug,
@@ -148,7 +154,7 @@ export const RelatedProductCard = ({
             Rs {product.price.toFixed(2)}
           </span>
           <span className="text-xs text-gray-400">
-             {formatWeight(product.weightValue, product.weightUnit)}
+            {formatWeight(product.weightValue, product.weightUnit)}
           </span>
         </div>
       </div>

@@ -12,7 +12,14 @@ import {
 import { GetProductResult } from "@/src/lib/server actions/product.server.action";
 import GoBackButton from "../buttons/GotoBackBtn";
 import { usePathname } from "next/navigation";
-
+import {
+  addCartItem,
+  ICartItem,
+  removeCartItem,
+} from "@/src/store/carts/slice";
+import { useAppDispatch, useAppSelector } from "@/src/store/hook";
+import { isProductInCart } from "@/src/store/carts/selectors";
+import { toast } from "react-toastify";
 
 export default function ProductDetailPage({
   product,
@@ -23,20 +30,26 @@ export default function ProductDetailPage({
   const [addedToCart, setAddedToCart] = useState(false);
   const [animate, setAnimate] = useState(false);
 
-  // const finalPrice = product?.isOffered
-  //   ? discountedPrice(filteredVariantRow?.price, product.discount as number)
-  //   : filteredVariantRow?.price;
+  const dispatch = useAppDispatch();
+  const isProductOnCart = useAppSelector(isProductInCart(product?.id));
+
 
   const isOutOfStock =
     product?.status === "inactive" || filteredVariantRow?.stock === 0;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (data: ICartItem) => {
     if (isOutOfStock) return;
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2500);
+    if (!data.productId) return;
+    if (!addedToCart) {
+      dispatch(addCartItem(data));
+      setAddedToCart(true);
+      toast.success("To update the quantity, visit cart section ");
+    } else {
+      dispatch(removeCartItem({ productId: data.productId }));
+      setAddedToCart(false);
+      toast.success("Product removed from cart successfully !");
+    }
   };
-
-  
 
   useEffect(() => {
     const key = `visited:${pathname}`;
@@ -47,6 +60,13 @@ export default function ProductDetailPage({
       sessionStorage.setItem(key, "1");
     }
   }, [pathname]);
+
+  useEffect(() => {
+    if (!isProductOnCart) {
+      return;
+    }
+    setAddedToCart(isProductOnCart);
+  }, [isProductOnCart]);
 
   return (
     <main className="flex flex-col bg-[#F5F9F0] min-h-screen">
@@ -106,8 +126,6 @@ export default function ProductDetailPage({
                   </span>
                 )}
 
-               
-
                 {product?.isMostPopular && (
                   <span
                     className="
@@ -139,7 +157,24 @@ export default function ProductDetailPage({
 
             <div className="flex flex-col sm:flex-row gap-3 mb-5">
               <button
-                onClick={handleAddToCart}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  const requiredDataToAddedOnCart: ICartItem = {
+                    productId: product?.id as string,
+                    varient: {
+                      weightUnit: filteredVariantRow.weightUnit,
+                      weightValue: filteredVariantRow.weightValue,
+                      price: filteredVariantRow.price,
+                    },
+                    isOffered: product?.isOffered as boolean,
+                    discountAmount: product?.discount as number,
+                    quantity: 1,
+                  };
+
+                  handleAddToCart(requiredDataToAddedOnCart);
+                }}
                 disabled={isOutOfStock}
                 className={`
                   flex-1 flex items-center justify-center gap-2
