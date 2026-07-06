@@ -258,6 +258,10 @@ export function ProductCard({
               isOffered: product.isOffered!,
               discountAmount: product.discount!,
               quantity: 1,
+              category: product.category,
+              thumbnail: product.thumbnail,
+              productName: product.name,
+              slug: product.slug,
             };
             handleCart(requiredDataToAddedOnCart);
           }}

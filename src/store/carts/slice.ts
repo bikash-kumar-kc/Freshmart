@@ -13,6 +13,10 @@ export interface ICartItem {
   isOffered: boolean;
   discountAmount: number;
   quantity: number;
+  thumbnail: string;
+  category: string;
+  productName: string;
+  slug: string;
 }
 
 interface ICartItems {
@@ -122,14 +126,13 @@ const cartSlice = createSlice({
           }
         }
 
-        if(globalTimer){
-          clearTimeout(globalTimer)
+        if (globalTimer) {
+          clearTimeout(globalTimer);
         }
 
         globalTimer = setTimeout(() => {
           saveToLocalStorage({ cartItems: state.cartItems });
         }, DEBOUNCE_TIME);
-        
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.log(error.message);

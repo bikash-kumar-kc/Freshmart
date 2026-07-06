@@ -33,7 +33,6 @@ export default function ProductDetailPage({
   const dispatch = useAppDispatch();
   const isProductOnCart = useAppSelector(isProductInCart(product?.id));
 
-
   const isOutOfStock =
     product?.status === "inactive" || filteredVariantRow?.stock === 0;
 
@@ -171,6 +170,10 @@ export default function ProductDetailPage({
                     isOffered: product?.isOffered as boolean,
                     discountAmount: product?.discount as number,
                     quantity: 1,
+                    category: product?.category as string,
+                    thumbnail: product?.thumbnail as string,
+                    productName: product?.name as string,
+                    slug: product?.slug as string,
                   };
 
                   handleAddToCart(requiredDataToAddedOnCart);
