@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { IFavoriteProductData } from "./types/favorite.type";
 import Image from "next/image";
-import { HeartIcon } from "@/src/components/client/PopularCard";
 import { formatWeight } from "@/src/components/client/product/utilities/helper.fun";
 import { Trash2 } from "lucide-react";
 

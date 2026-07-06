@@ -56,6 +56,7 @@ const BannerCarousel = () => {
                       weightUnit={prod.weightUnit!}
                       price={prod.price!}
                       productId={prod.productId}
+                      stock={prod.stock}
                     />
                   </div>
                 </div>

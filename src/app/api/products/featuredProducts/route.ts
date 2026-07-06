@@ -14,6 +14,7 @@ export interface IProduct {
   discount: number | null;
   isFeatured: boolean;
   category: string;
+  stock:number
 }
 export interface IFeaturedProductsData {
   featuredProducts: IProduct[];
@@ -78,6 +79,7 @@ export async function GET() {
         weightValue: variant?.weightValue ?? null,
         weightUnit: variant?.weightUnit ?? null,
         price: variant?.price ?? null,
+        stock: variant?.stock ?? null,
       };
     });
 

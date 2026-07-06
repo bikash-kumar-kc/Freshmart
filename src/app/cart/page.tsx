@@ -88,7 +88,7 @@ export default function CartPage() {
 
   const handleClearAll = () => {
     dispatch(clearCartItems());
-    toast.success("Cart Clear successfully.")
+    toast.success("Cart Clear successfully.");
   };
 
   if (allCartProducts?.totalItems === 0) {
@@ -262,7 +262,7 @@ export default function CartPage() {
             </div>
 
             <Link
-              href="/products"
+              href="/"
               className="mt-4 flex items-center justify-center gap-1.5
                 text-sm text-green-700 hover:text-green-900 font-medium
                 transition-colors"

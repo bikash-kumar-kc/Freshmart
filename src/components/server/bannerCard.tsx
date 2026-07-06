@@ -21,6 +21,7 @@ type ProductCardProps = {
   isFeatured?: boolean;
   weightValue: number;
   weightUnit: string;
+  stock: number;
 };
 
 export default function ProductCard({
@@ -33,6 +34,7 @@ export default function ProductCard({
   weightValue,
   weightUnit,
   thumbnail,
+  stock,
 }: ProductCardProps) {
   const [addedToCart, setAddedToCart] = useState(false);
 
@@ -108,6 +110,7 @@ export default function ProductCard({
                 weightUnit: weightUnit,
                 weightValue: weightValue,
                 price: price!,
+                stock: stock,
               },
               isOffered: false,
               discountAmount: 0,
