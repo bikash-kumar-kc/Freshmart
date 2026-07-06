@@ -8,22 +8,24 @@ import {
   Truck,
   Shield,
   RotateCcw,
+  Trash2,
 } from "lucide-react";
-import { useAppSelector } from "@/src/store/hook";
+import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import {
   getAllItemsFromCart,
   totalItemsCart,
 } from "@/src/store/carts/selectors";
 import EmptyCart from "./components/EmptyCart";
 import CartRow from "./components/CartRow";
+import { clearCartItems } from "@/src/store/carts/slice";
+import { toast } from "react-toastify";
 
 const FREE_DELIVERY_THRESHOLD = 30;
 
 export default function CartPage() {
   const totalCartProducts = useAppSelector(totalItemsCart);
   const allCartProducts = useAppSelector(getAllItemsFromCart);
-  console.log('allCartProducts')
-  console.log(allCartProducts)
+  const dispatch = useAppDispatch();
 
   // const subtotal = items.reduce(
   //   (sum, item) => sum + item.price * item.quantity,
@@ -84,6 +86,11 @@ export default function CartPage() {
   //   alert("Wire to /api/checkout/create-session");
   // };
 
+  const handleClearAll = () => {
+    dispatch(clearCartItems());
+    toast.success("Cart Clear successfully.")
+  };
+
   if (allCartProducts?.totalItems === 0) {
     return (
       <main className="bg-[#F5F9F0] min-h-screen">
@@ -115,13 +122,19 @@ export default function CartPage() {
               ""
             )}
           </div>
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 text-sm font-medium
-              text-green-700 hover:text-green-900 transition-colors"
-          >
-            ← Continue shopping
-          </Link>
+          {totalCartProducts
+            ? totalCartProducts?.totalItemsCart > 0 && (
+                <button
+                  onClick={handleClearAll}
+                  className="flex items-center gap-1.5 text-sm font-medium
+                text-red-500 hover:text-red-700 px-3 py-2 rounded-sm
+                hover:bg-red-50 transition-colors"
+                >
+                  <Trash2 size={14} />
+                  Clear all
+                </button>
+              )
+            : ""}
         </div>
 
         <div className="flex flex-col relative lg:flex-row gap-6 items-start">
@@ -129,16 +142,7 @@ export default function CartPage() {
           <div className="flex-1 min-w-0 w-full">
             <div className="bg-white rounded-[8px] border border-gray-100 px-5">
               {allCartProducts?.items.map((item) => (
-                <CartRow
-                  key={item.productId}
-                  item={item}
-                  // onIncrease={() => increase(item.productId)}
-                  // onDecrease={() => decrease(item.productId)}
-                  // onRemove={() => remove(item.productId)}
-                  // onChange={(value: number, id: string) =>
-                  //   changeQuantity(value, id)
-                  // }
-                />
+                <CartRow key={item.productId} item={item} />
               ))}
             </div>
 
