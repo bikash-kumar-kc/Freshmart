@@ -383,3 +383,6 @@ export type ProductVariant = typeof productVariants.$inferSelect;
 export type NewProductVariant = typeof productVariants.$inferInsert;
 
 export type NotificationTypes = typeof notfications.$inferSelect;
+
+export type OrdersTypes = typeof orders.$inferSelect;
+export type OrderItem = typeof orderItems.$inferSelect;
