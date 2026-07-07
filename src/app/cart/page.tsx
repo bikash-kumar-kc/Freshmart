@@ -21,11 +21,9 @@ import { clearCartItems } from "@/src/store/carts/slice";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { IOrderItem } from "@/src/db/schema";
-import {
-  createOrder,
-  ItemTypes,
-} from "@/src/lib/server actions/product.server.action";
+import { createOrder } from "@/src/lib/server actions/product.server.action";
+import { useState } from "react";
+import LocationDialog from "./components/AddressDialog";
 
 export default function CartPage() {
   // state...
@@ -38,11 +36,17 @@ export default function CartPage() {
   const router = useRouter();
 
   // user session...
-
   const { data: session, status } = useSession();
   const handleClearAll = () => {
     dispatch(clearCartItems());
     toast.success("Cart Clear successfully.");
+  };
+
+  // state for dialog box to open close
+  const [open, setOpen] = useState(false);
+
+  const handleToggleOpen = () => {
+    setOpen((prevs) => !prevs);
   };
 
   const handleCheckout = async (type: "save_cart" | "process_checkout") => {
@@ -83,6 +87,8 @@ export default function CartPage() {
         toast.success(
           `For total: ${orderCreatedInfo.totalItemsInserted} products ordered created successfully`,
         );
+
+        handleToggleOpen();
       } catch (error: unknown) {
         if (error instanceof Error) {
           toast.error(error.message);
@@ -258,7 +264,7 @@ export default function CartPage() {
               )}
               <div className="flex flex-wrap gap-2">
                 <button
-                  onClick={handleCheckout}
+                  onClick={() => handleToggleOpen()}
                   className="w-full flex items-center justify-center gap-2
                   bg-[#C8742A] hover:bg-[#A85E1C] text-white font-bold
                   text-sm py-4 rounded-sm transition-all duration-200
@@ -306,6 +312,12 @@ export default function CartPage() {
             </Link>
           </div>
         </div>
+
+        <LocationDialog
+          toggleDialog={handleToggleOpen}
+          dialogStatus={open}
+          handleCheckOut={(data) => handleCheckout(data)}
+        />
       </div>
     </main>
   );
