@@ -361,6 +361,16 @@ export const productsRelations = relations(products, ({ many }) => ({
   variants: many(productVariants),
 }));
 
+export const productVariantsRelations = relations(
+  productVariants,
+  ({ one }) => ({
+    product: one(products, {
+      fields: [productVariants.productId],
+      references: [products.id],
+    }),
+  }),
+);
+
 // types...
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
