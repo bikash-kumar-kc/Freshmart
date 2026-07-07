@@ -113,6 +113,7 @@ export const productVariants = sqliteTable(
 
     price: real("price").notNull(),
     stock: integer("stock").notNull().default(0),
+    reservedStock: integer("reserved_stock").notNull().default(0),
 
     createdAt: text("created_at")
       .notNull()
@@ -272,12 +273,9 @@ export const orders = sqliteTable(
       enum: ["delivered", "ontheway", "failed", "pending", "packaging"],
     }),
 
-    isDeliveredChargeApplied: integer(
-      "is_delivered_charge_applied",
-      {
-        mode: "boolean",
-      }
-    )
+    isDeliveredChargeApplied: integer("is_delivered_charge_applied", {
+      mode: "boolean",
+    })
       .notNull()
       .default(false),
 
@@ -304,9 +302,8 @@ export const orders = sqliteTable(
   (table) => [
     index("orders_user_idx").on(table.userId),
     index("orders_order_idx").on(table.id),
-  ]
+  ],
 );
-
 
 export const orderItems = sqliteTable(
   "order_items",
@@ -330,15 +327,14 @@ export const orderItems = sqliteTable(
     weightValue: integer("weight_value").notNull(),
 
     weightUnit: text("weight_unit", {
-      enum: ["g", "kg","l","ml"],
+      enum: ["g", "kg", "l", "ml"],
     }).notNull(),
   },
   (table) => [
     index("order_items_order_idx").on(table.orderId),
     index("order_items_product_idx").on(table.productId),
-  ]
+  ],
 );
-
 
 export const ordersRelations = relations(orders, ({ one, many }) => ({
   user: one(users, {
@@ -364,7 +360,6 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
 export const productsRelations = relations(products, ({ many }) => ({
   variants: many(productVariants),
 }));
-
 
 // types...
 export type User = typeof users.$inferSelect;

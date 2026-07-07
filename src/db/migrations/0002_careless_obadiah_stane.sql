@@ -1,0 +1,1 @@
+ALTER TABLE `product_variants` ADD `reserved_stock` integer DEFAULT 0 NOT NULL;
