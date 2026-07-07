@@ -69,10 +69,12 @@ export default function CartPage() {
         });
 
         const userId = session.user.id!;
-
+        const orderType: "checkout" | "save" =
+          type === "save_cart" ? "save" : "checkout";
         const requiredDataToOrder = {
           userId: userId,
           items: requiredItems,
+          type: orderType,
         };
 
         const orderCreatedInfo: {
