@@ -114,14 +114,4 @@ export async function POST(req: NextRequest) {
     console.error("[create-session]", err);
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
-
-  return Response.json(
-    {
-      success: true,
-      data: {
-        message: "Payment successful ",
-      },
-    },
-    { status: 200 },
-  );
 }
