@@ -1,9 +1,8 @@
-
-"use server"
+"use server";
 
 import { db } from "@/src/db/config";
 import {
-  OrderItem as IOrderItem,
+  IOrderItem,
   orderItems,
   orders,
   products,
@@ -193,6 +192,7 @@ export interface ICreateOrderTypes {
   items: ItemTypes[];
 }
 
+// create order ...
 export async function createOrder({ userId, items }: ICreateOrderTypes) {
   try {
     if (!userId) {
@@ -241,7 +241,7 @@ export async function createOrder({ userId, items }: ICreateOrderTypes) {
     throw error;
   }
 }
-
+// update quantity...
 export async function updateQuantity({
   orderId,
   itemId,
@@ -302,8 +302,8 @@ export async function updateQuantity({
     message: " Quantity added successfully !",
   };
 }
-
-async function isOutOfStock(
+// check whether the product is out of stock...
+export async function isOutOfStock(
   productId: string,
   value: number,
 ): Promise<boolean> {
@@ -332,4 +332,88 @@ async function isOutOfStock(
   } else {
     return true;
   }
-};
+}
+// remove item
+export async function removeItem({
+  orderId,
+  itemId,
+  userId,
+}: {
+  orderId: string;
+  itemId: number;
+  userId: string;
+}) {
+  if (!orderId || !itemId) {
+    throw new Error("OrderId or itemId is missing !");
+  }
+
+  const session = await getServerSession(authOptions);
+
+  if (session?.user.id !== userId) {
+    throw new Error("User is unauthenticated !");
+  }
+
+  const orderInfo = await db
+    .select({ orderId: orders.id, userId: orders.userId })
+    .from(orders)
+    .where(eq(orders.id, orderId))
+    .get();
+
+  if (!orderInfo) {
+    throw new Error("Such ordered not exist !");
+  }
+
+  if (orderInfo.userId !== userId) {
+    throw new Error("User is unauthorized");
+  }
+
+  await db
+    .delete(orderItems)
+    .where(and(eq(orderItems.orderId, orderId), eq(orderItems.id, itemId)));
+
+  return {
+    success: true,
+    message: "Deleted Successfully !",
+  };
+}
+// remove order
+export async function removeOrder({
+  userId,
+  orderId,
+}: {
+  userId: string;
+  orderId: string;
+}) {
+  if (!orderId) {
+    throw new Error("OrderId or itemId is missing !");
+  }
+
+  const session = await getServerSession(authOptions);
+
+  if (session?.user.id !== userId) {
+    throw new Error("User is unauthenticated !");
+  }
+
+  const orderInfo = await db
+    .select({ orderId: orders.id, userId: orders.userId })
+    .from(orders)
+    .where(eq(orders.id, orderId))
+    .get();
+
+  if (!orderInfo) {
+    throw new Error("Such ordered not exist !");
+  }
+
+  if (orderInfo.userId !== userId) {
+    throw new Error("User is unauthorized");
+  }
+
+  await db
+    .delete(orders)
+    .where(and(eq(orders.userId, userId), eq(orders.id, orderId)));
+
+  return {
+    success: true,
+    message: "Order deleted successfully!",
+  };
+}
