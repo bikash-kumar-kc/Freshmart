@@ -8,7 +8,7 @@ import {
   products,
   productVariants,
 } from "@/src/db/schema";
-import { eq, and, ne } from "drizzle-orm";
+import { eq, and, ne, sql } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import { randomUUID } from "node:crypto";
@@ -190,36 +190,138 @@ export type ItemTypes = Omit<IOrderItem, "id" | "orderId">;
 export interface ICreateOrderTypes {
   userId: string;
   items: ItemTypes[];
+  type: "checkout" | "save";
 }
 
 // create order ...
-export async function createOrder({ userId, items }: ICreateOrderTypes) {
+// export async function createOrder({ userId, items,type }: ICreateOrderTypes) {
+//   try {
+//     if (!userId) {
+//       throw new Error("User Id is missing !");
+//     }
+//     const data = await getServerSession(authOptions);
+//     if (!data || data?.user.id !== userId) {
+//       throw new Error("User is unauthenticated !");
+//     }
+
+//     if (items.length === 0) {
+//       throw new Error("No product items !");
+//     }
+
+//     let itemsAddedIds: { itemId: number }[] = [];
+
+//     await db.transaction(async (tx) => {
+//       const [order] = await tx
+//         .insert(orders)
+//         .values({
+//           id: randomUUID(),
+//           userId,
+//         })
+//         .returning({
+//           orderedId: orders.id,
+//         });
+
+//       itemsAddedIds = await tx
+//         .insert(orderItems)
+//         .values(
+//           items.map((item) => ({
+//             ...item,
+//             orderId: order.orderedId,
+//           })),
+//         )
+//         .returning({
+//           itemId: orderItems.id,
+//         });
+//     });
+
+//     return {
+//       success: true,
+//       totalItemsInserted: itemsAddedIds.length,
+//     };
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
+export async function createOrder({ userId, items, type }: ICreateOrderTypes) {
   try {
     if (!userId) {
-      throw new Error("User Id is missing !");
+      throw new Error("User Id is missing!");
     }
+
     const data = await getServerSession(authOptions);
     if (!data || data?.user.id !== userId) {
-      throw new Error("User is unauthenticated !");
+      throw new Error("User is unauthenticated!");
     }
 
     if (items.length === 0) {
-      throw new Error("No product items !");
+      throw new Error("No product items!");
     }
 
     let itemsAddedIds: { itemId: number }[] = [];
+    let orderId = "";
 
     await db.transaction(async (tx) => {
+      // ── 1. if checkout — validate + reserve stock before anything ──
+      if (type === "checkout") {
+        for (const item of items) {
+          const variant = await tx
+            .select({
+              stock: productVariants.stock,
+              reservedStock: productVariants.reservedStock,
+            })
+            .from(productVariants)
+            .where(
+              and(
+                eq(productVariants.productId, item.productId),
+                eq(productVariants.weightValue, item.weightValue),
+                eq(productVariants.weightUnit, item.weightUnit),
+              ),
+            )
+            .get();
+
+          if (!variant) {
+            throw new Error(`Variant not found for product ${item.productId}`);
+          }
+
+          const availableStock = variant.stock - variant.reservedStock;
+
+          if (availableStock < item.quantity) {
+            throw new Error(
+              `Insufficient stock for product ${item.productId}. ` +
+                `Requested: ${item.quantity}, Available: ${availableStock}`,
+            );
+          }
+
+          // reserve stock
+          await tx
+            .update(productVariants)
+            .set({
+              reservedStock: sql`${productVariants.reservedStock} + ${item.quantity}`,
+            })
+            .where(
+              and(
+                eq(productVariants.productId, item.productId),
+                eq(productVariants.weightValue, item.weightValue),
+                eq(productVariants.weightUnit, item.weightUnit),
+              ),
+            );
+        }
+      }
+
+      // ── 2. create order ──────────────────────────────────────────
       const [order] = await tx
         .insert(orders)
         .values({
           id: randomUUID(),
           userId,
+          isPaymentProcess: type === "checkout",
         })
-        .returning({
-          orderedId: orders.id,
-        });
+        .returning({ orderedId: orders.id });
 
+      orderId = order.orderedId;
+
+      // ── 3. insert order items ────────────────────────────────────
       itemsAddedIds = await tx
         .insert(orderItems)
         .values(
@@ -228,19 +330,20 @@ export async function createOrder({ userId, items }: ICreateOrderTypes) {
             orderId: order.orderedId,
           })),
         )
-        .returning({
-          itemId: orderItems.id,
-        });
+        .returning({ itemId: orderItems.id });
     });
 
     return {
       success: true,
+      orderId,
+      type,
       totalItemsInserted: itemsAddedIds.length,
     };
   } catch (error) {
     throw error;
   }
 }
+
 // update quantity...
 export async function updateQuantity({
   orderId,
