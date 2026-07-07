@@ -4,6 +4,7 @@ import { db } from "@/src/db/config";
 import { orders, orderItems, productVariants, products } from "@/src/db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import { getStripeClient } from "@/src/stripe";
+import { createNotification } from "@/src/lib/server actions/notifications.server";
 // import { createNotification } from "@/src/lib/notifications";
 
 export async function POST(req: Request) {
@@ -136,16 +137,18 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
   });
 
   // notifications — outside transaction, non-critical
-//   await createNotification({
-//     userId,
-//     type: "payment_success",
-//     actionUrl: `/order/status/${orderId}`,
-//   });
-//   await createNotification({
-//     userId,
-//     type: "order_placed",
-//     actionUrl: `/order/status/${orderId}`,
-//   });
+  await createNotification({
+    userId,
+    type: "payment_success",
+    title: "Payment success",
+    content: `Payment Successed.`,
+  });
+  await createNotification({
+    userId,
+    type: "payment_failed",
+    title: "Payment Failed",
+    content: `Failed to Payment . OrderedId:${orderId}`,
+  });
 
   console.log("[webhook] payment success", { orderId, userId });
 }
@@ -195,11 +198,12 @@ async function handlePaymentExpired(session: Stripe.Checkout.Session) {
   });
 
   if (userId) {
-    // await createNotification({
-    //   userId,
-    //   type: "payment_failed",
-    //   actionUrl: `/cart`,
-    // });
+    await createNotification({
+      userId,
+      type: "payment_failed",
+      title: "Payment Failed",
+      content: `Failed to Payment . OrderedId:${orderId}`,
+    });
   }
 
   console.log("[webhook] session expired, reservation released", { orderId });
@@ -250,11 +254,12 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
   });
 
   if (userId) {
-    // await createNotification({
-    //   userId,
-    //   type: "payment_failed",
-    //   actionUrl: `/cart`,
-    // });
+    await createNotification({
+      userId,
+      type: "payment_failed",
+      title: "Payment Failed",
+      content: `Failed to Payment . OrderedId:${orderId}`,
+    });
   }
 
   console.log("[webhook] payment failed, reservation released", { orderId });
