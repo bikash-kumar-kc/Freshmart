@@ -3,7 +3,7 @@
 
 import { db } from "@/src/db/config";
 import {
-  IOrderItem,
+  OrderItem as IOrderItem,
   orderItems,
   orders,
   products,
@@ -332,4 +332,4 @@ async function isOutOfStock(
   } else {
     return true;
   }
-}
+};
