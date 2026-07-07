@@ -5,6 +5,9 @@ import { notfications, NotificationTypes } from "@/src/db/schema";
 import { authOptions } from "@/src/lib/auth";
 import { and, count, eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
+import { NotificationType } from "@/src/types/notificationTypes";
+import { randomUUID } from "node:crypto";
+
 
 interface IUnreadNotificationTypes {
   totalCount: number;
@@ -208,5 +211,52 @@ export const deleteNotifications = async (userId: string) => {
       console.log(error.message);
     }
     throw error;
+  }
+};
+
+export const createNotification = async ({
+  userId,
+  type,
+  content,
+  title,
+}: {
+  userId: string;
+  type: NotificationType;
+  content: string;
+  title: string;
+}) => {
+  try {
+    if (!userId?.trim() || !type?.trim()) {
+      console.log("userId is required !");
+      return;
+    }
+
+    const session = await getServerSession(authOptions);
+    if (!session || session?.user.id !== userId) {
+      console.log("User is not authenticated");
+      return;
+    }
+
+    await db
+      .insert(notfications)
+      .values({
+        id: randomUUID(),
+        userId: userId,
+        type,
+        title,
+        content,
+      })
+      .returning({ id: notfications.id });
+
+    return {
+      success: true,
+      message: "Notification created successfully",
+    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message);
+      return;
+    }
+    console.log("Failed to create notification !");
   }
 };
