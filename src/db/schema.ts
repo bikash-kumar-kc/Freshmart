@@ -330,7 +330,7 @@ export const orderItems = sqliteTable(
     weightValue: integer("weight_value").notNull(),
 
     weightUnit: text("weight_unit", {
-      enum: ["g", "kg"],
+      enum: ["g", "kg","l","ml"],
     }).notNull(),
   },
   (table) => [

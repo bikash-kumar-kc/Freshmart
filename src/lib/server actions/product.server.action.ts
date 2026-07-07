@@ -185,7 +185,7 @@ export async function getProductByCategorySlug(
   }
 }
 
-type ItemTypes = Omit<IOrderItem, "id">;
+export type ItemTypes = Omit<IOrderItem, "id" | "orderId">;
 
 export interface ICreateOrderTypes {
   userId: string;

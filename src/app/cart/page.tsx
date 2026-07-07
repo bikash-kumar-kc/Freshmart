@@ -21,6 +21,11 @@ import { clearCartItems } from "@/src/store/carts/slice";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { IOrderItem } from "@/src/db/schema";
+import {
+  createOrder,
+  ItemTypes,
+} from "@/src/lib/server actions/product.server.action";
 
 export default function CartPage() {
   // state...
@@ -40,9 +45,52 @@ export default function CartPage() {
     toast.success("Cart Clear successfully.");
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async (type: "save_cart" | "process_checkout") => {
     if (status === "authenticated") {
-      toast.info("User is logged in");
+      try {
+        if (!allCartProducts) return;
+        toast.info("User is logged in");
+        const requiredItems: {
+          productId: string;
+          weightValue: number;
+          weightUnit: "g" | "kg" | "ml" | "l";
+          quantity: number;
+        }[] = allCartProducts.items.map((i) => {
+          return {
+            productId: i.productId,
+            weightValue: i.varient.weightValue,
+            weightUnit: i.varient.weightUnit as "g" | "kg" | "ml" | "l",
+            quantity: i.quantity,
+          };
+        });
+
+        const userId = session.user.id!;
+
+        const requiredDataToOrder = {
+          userId: userId,
+          items: requiredItems,
+        };
+
+        const orderCreatedInfo: {
+          success: boolean;
+          totalItemsInserted: number;
+        } = await createOrder(requiredDataToOrder);
+
+        if (type === "save_cart") {
+          toast.success("Cart saved successfully !");
+          return;
+        }
+        toast.success(
+          `For total: ${orderCreatedInfo.totalItemsInserted} products ordered created successfully`,
+        );
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+          return;
+        }
+
+        toast.error("Failed to create ordered !");
+      }
     } else {
       router.push("/auth/login?redirect=/cart");
       toast.info("Please, logged in before payment processed!");
@@ -208,16 +256,27 @@ export default function CartPage() {
                   </div>
                 </div>
               )}
-              <button
-                onClick={handleCheckout}
-                className="w-full flex items-center justify-center gap-2
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={handleCheckout}
+                  className="w-full flex items-center justify-center gap-2
                   bg-[#C8742A] hover:bg-[#A85E1C] text-white font-bold
                   text-sm py-4 rounded-sm transition-all duration-200
                   shadow-md hover:shadow-lg"
-              >
-                Proceed to checkout
-                <ArrowRight size={16} />
-              </button>
+                >
+                  Proceed to checkout
+                  <ArrowRight size={16} />
+                </button>
+                <button
+                  onClick={() => handleCheckout("save_cart")}
+                  className="w-full flex items-center justify-center gap-2
+                  bg-[#2ac83a] hover:bg-[#1ca83d] text-white font-bold
+                  text-sm py-4 rounded-sm transition-all duration-200
+                  shadow-md hover:shadow-lg"
+                >
+                  Save Cart
+                </button>
+              </div>
 
               <div className="flex items-center justify-center gap-1.5 mt-4">
                 {["Visa", "MC", "Stripe", "GPay"].map((p) => (
