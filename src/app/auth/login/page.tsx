@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getLocally } from "@/src/lib/localstorage";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
@@ -24,23 +24,25 @@ export type ISESSIONTYPES = z.infer<typeof schemaForSession>;
 
 const Page = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   const [loading, setLoading] = useState(false);
   const [localAuth, setLocalAuth] = useState<{
-  email: string;
-  password: string;
-} | null>(null);
+    email: string;
+    password: string;
+  } | null>(null);
 
-useEffect(() => {
-  const auth = getLocally("auth") as {email:string,password:string};
+  useEffect(() => {
+    const auth = getLocally("auth") as { email: string; password: string };
 
-  if (auth) {
-    setLocalAuth(auth);
-  }
-}, []);
+    if (auth) {
+      setLocalAuth(auth);
+    }
+  }, []);
 
-const localEmail = localAuth?.email ?? "kcbikash886@gmail.com";
-const localPassword = localAuth?.password ?? "123456789";
+  const localEmail = localAuth?.email ?? "kcbikash886@gmail.com";
+  const localPassword = localAuth?.password ?? "123456789";
   const {
     register,
     handleSubmit,
@@ -65,20 +67,26 @@ const localPassword = localAuth?.password ?? "123456789";
           : result?.error,
       );
       setLoading(false);
+      if(redirect){
+        router.push("/auth/register?redirect=/cart");
+        return;
+      }
       router.push("/auth/register");
       return;
     }
 
     setLoading(false);
 
+    if (redirect) {
+      router.push(`${redirect}`);
+      return;
+    }
     router.push("/");
   };
 
   return (
     <>
-    
       <div className="w-full lg:w-[40%] flex flex-col justify-center px-8 sm:px-12 bg-amber-50">
-
         <div className="mb-10 flex flex-col items-center">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl">🌿</span>

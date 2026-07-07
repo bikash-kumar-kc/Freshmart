@@ -44,7 +44,7 @@ export default function CartPage() {
     if (status === "authenticated") {
       toast.info("User is logged in");
     } else {
-      router.push("/auth/login");
+      router.push("/auth/login?redirect=/cart");
       toast.info("Please, logged in before payment processed!");
     }
   };

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getLocally, saveLocally } from "@/src/lib/localstorage";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
@@ -31,6 +31,9 @@ export type IREGISTERTYPES = z.infer<typeof schemaForRegister>;
 const Page = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   const [localAuth, setLocalAuth] = useState<{
     email: string;
@@ -70,6 +73,10 @@ const Page = () => {
         type: "auth",
         data: { auth: { email: data.email, password: data.password } },
       });
+      if (redirect) {
+        router.push(`/auth/login/?redirect=${redirect}`);
+        return;
+      }
       router.push("/auth/login");
       reset();
     } catch (error: unknown) {
