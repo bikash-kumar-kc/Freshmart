@@ -194,54 +194,6 @@ export interface ICreateOrderTypes {
 }
 
 // create order ...
-// export async function createOrder({ userId, items,type }: ICreateOrderTypes) {
-//   try {
-//     if (!userId) {
-//       throw new Error("User Id is missing !");
-//     }
-//     const data = await getServerSession(authOptions);
-//     if (!data || data?.user.id !== userId) {
-//       throw new Error("User is unauthenticated !");
-//     }
-
-//     if (items.length === 0) {
-//       throw new Error("No product items !");
-//     }
-
-//     let itemsAddedIds: { itemId: number }[] = [];
-
-//     await db.transaction(async (tx) => {
-//       const [order] = await tx
-//         .insert(orders)
-//         .values({
-//           id: randomUUID(),
-//           userId,
-//         })
-//         .returning({
-//           orderedId: orders.id,
-//         });
-
-//       itemsAddedIds = await tx
-//         .insert(orderItems)
-//         .values(
-//           items.map((item) => ({
-//             ...item,
-//             orderId: order.orderedId,
-//           })),
-//         )
-//         .returning({
-//           itemId: orderItems.id,
-//         });
-//     });
-
-//     return {
-//       success: true,
-//       totalItemsInserted: itemsAddedIds.length,
-//     };
-//   } catch (error) {
-//     throw error;
-//   }
-// }
 
 export async function createOrder({ userId, items, type }: ICreateOrderTypes) {
   try {
@@ -262,7 +214,7 @@ export async function createOrder({ userId, items, type }: ICreateOrderTypes) {
     let orderId = "";
 
     await db.transaction(async (tx) => {
-      // ── 1. if checkout — validate + reserve stock before anything ──
+      // validate the stock first and if available then reserved the stock...
       if (type === "checkout") {
         for (const item of items) {
           const variant = await tx
@@ -309,7 +261,7 @@ export async function createOrder({ userId, items, type }: ICreateOrderTypes) {
         }
       }
 
-      // ── 2. create order ──────────────────────────────────────────
+      //create order ...
       const [order] = await tx
         .insert(orders)
         .values({
@@ -321,7 +273,7 @@ export async function createOrder({ userId, items, type }: ICreateOrderTypes) {
 
       orderId = order.orderedId;
 
-      // ── 3. insert order items ────────────────────────────────────
+      //insert order items ...
       itemsAddedIds = await tx
         .insert(orderItems)
         .values(
@@ -342,7 +294,7 @@ export async function createOrder({ userId, items, type }: ICreateOrderTypes) {
   } catch (error) {
     throw error;
   }
-}
+};
 
 // update quantity...
 export async function updateQuantity({
@@ -405,6 +357,7 @@ export async function updateQuantity({
     message: " Quantity added successfully !",
   };
 }
+
 // check whether the product is out of stock...
 export async function isOutOfStock(
   productId: string,
@@ -479,6 +432,7 @@ export async function removeItem({
     message: "Deleted Successfully !",
   };
 }
+
 // remove order
 export async function removeOrder({
   userId,
