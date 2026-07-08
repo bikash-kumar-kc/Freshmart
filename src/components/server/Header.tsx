@@ -73,9 +73,6 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   useEffect(() => {
     const syncCart = async () => {
       const result = await userUnfinishedCart();
-      console.log("result")
-      console.log(result)
-
       if (result.success) {
         dispatch(
           setCart({

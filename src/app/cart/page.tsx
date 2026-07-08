@@ -58,6 +58,7 @@ export default function CartPage() {
         });
       }
       dispatch(clearCartItems());
+    
       toast.success("Cart Clear successfully.");
     } catch (error) {
       if (error instanceof Error)

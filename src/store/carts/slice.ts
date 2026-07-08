@@ -35,7 +35,7 @@ interface IUpdateTypes {
 interface ISetCartType {
   type: "localstorage" | "db";
   orderId: string;
-  cartItems:ICartItem[] ;
+  cartItems: ICartItem[];
 }
 
 // export const loadCart = async () => {
@@ -185,6 +185,8 @@ const cartSlice = createSlice({
 
     // clear cart ...
     clearCartItems: (state) => {
+      state.type = "localstorage";
+      state.orderId = "";
       state.cartItems.cartItems = [];
       saveToLocalStorage({ cartItems: state.cartItems.cartItems });
     },
