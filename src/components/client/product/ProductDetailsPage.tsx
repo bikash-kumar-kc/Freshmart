@@ -18,7 +18,10 @@ import {
   removeCartItem,
 } from "@/src/store/carts/slice";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
-import { isProductInCart } from "@/src/store/carts/selectors";
+import {
+  isAllowedToAddedInCart,
+  isProductInCart,
+} from "@/src/store/carts/selectors";
 import { toast } from "react-toastify";
 
 export default function ProductDetailPage({
@@ -32,6 +35,7 @@ export default function ProductDetailPage({
 
   const dispatch = useAppDispatch();
   const isProductOnCart = useAppSelector(isProductInCart(product?.id));
+  const isAllowed = useAppSelector(isAllowedToAddedInCart);
 
   const isOutOfStock =
     product?.status === "inactive" || filteredVariantRow?.stock === 0;
@@ -160,6 +164,13 @@ export default function ProductDetailPage({
                   e.preventDefault();
                   e.stopPropagation();
 
+                  if (isAllowed) {
+                    toast.info(
+                      "Your cart is saved , please checkout before creating new cart",
+                    );
+                    return;
+                  }
+
                   const requiredDataToAddedOnCart: ICartItem = {
                     productId: product?.id as string,
                     varient: {
@@ -179,7 +190,7 @@ export default function ProductDetailPage({
 
                   handleAddToCart(requiredDataToAddedOnCart);
                 }}
-                disabled={isOutOfStock}
+                // disabled={isOutOfStock || (isAllowed ? isAllowed : false)}
                 className={`
                   flex-1 flex items-center justify-center gap-2
                   py-3.5 px-5 rounded-sm font-semibold text-sm

@@ -5,7 +5,10 @@ import { selectIsFavorite } from "@/src/store/faviourites/selectors";
 import { addFavorite, removeFavorite } from "@/src/store/faviourites/slice";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { isProductInCart } from "@/src/store/carts/selectors";
+import {
+  isAllowedToAddedInCart,
+  isProductInCart,
+} from "@/src/store/carts/selectors";
 import {
   addCartItem,
   ICartItem,
@@ -25,7 +28,7 @@ interface IProductTypes {
   price: number | null;
   discount?: number | null;
   category: string;
-  stock:number;
+  stock: number;
 }
 
 interface IFavoriteProduct {
@@ -85,6 +88,7 @@ export function ProductCard({
   const dispatch = useAppDispatch();
   const isFavorite = useAppSelector(selectIsFavorite(product.id));
   const isProductOnCart = useAppSelector(isProductInCart(product.id));
+  const isAllowed = useAppSelector(isAllowedToAddedInCart);
 
   function handleCart(data: ICartItem) {
     if (!data.productId) return;
@@ -249,13 +253,20 @@ export function ProductCard({
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             e.stopPropagation();
+
+            if (isAllowed) {
+              toast.info(
+                "Your cart is saved , please checkout before creating new cart",
+              );
+              return;
+            }
             const requiredDataToAddedOnCart: ICartItem = {
               productId: product.id,
               varient: {
                 weightUnit: product.weightUnit!,
                 weightValue: product.weightValue!,
                 price: product.price!,
-                stock:product.stock!
+                stock: product.stock!,
               },
               isOffered: product.isOffered!,
               discountAmount: product.discount!,
@@ -278,6 +289,7 @@ export function ProductCard({
             transition-colors duration-200
             ${added ? "bg-[#27500A]" : "bg-[#3B6D11]"}
           `}
+          // disabled={isAllowed ? isAllowed : false}
         >
           {added ? (
             <svg

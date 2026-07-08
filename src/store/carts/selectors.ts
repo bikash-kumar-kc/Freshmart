@@ -47,6 +47,11 @@ export const statusOfCart = (state: RootState) => {
   };
 };
 
+export const isAllowedToAddedInCart = (state: RootState) => {
+  if (!state) return;
+  return state.carts.orderId && state.carts.type === "db";
+};
+
 export const totalCalculation = (state: RootState) => {
   if (!state) return;
 

@@ -1,5 +1,7 @@
 "use client";
 import { CATEGORIES } from "@/src/app/categories/categories";
+import { isAllowedToAddedInCart } from "@/src/store/carts/selectors";
+import { useAppSelector } from "@/src/store/hook";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -17,6 +19,7 @@ export default function HoverRevealCard({
   productId,
 }: ProductCardProps) {
   const { slug } = CATEGORIES.find((c) => c.dbName === cat) as { slug: string };
+  
   return (
     <Link href={`/categories/${slug}/${productId}`}>
       <div className="group relative w-60 overflow-hidden rounded-sm">

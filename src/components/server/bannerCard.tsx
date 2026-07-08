@@ -8,7 +8,8 @@ import {
   removeCartItem,
 } from "@/src/store/carts/slice";
 import { toast } from "react-toastify";
-import { useAppDispatch } from "@/src/store/hook";
+import { useAppDispatch, useAppSelector } from "@/src/store/hook";
+import { isAllowedToAddedInCart } from "@/src/store/carts/selectors";
 
 type ProductCardProps = {
   productId: string;
@@ -39,6 +40,7 @@ export default function ProductCard({
   const [addedToCart, setAddedToCart] = useState(false);
 
   const dispatch = useAppDispatch();
+  const isAllowed = useAppSelector(isAllowedToAddedInCart);
 
   function handleCart(data: ICartItem) {
     if (!data.productId) return;
@@ -104,6 +106,13 @@ export default function ProductCard({
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             e.stopPropagation();
+
+            if (isAllowed) {
+              toast.info(
+                "Your cart is saved , please checkout before creating new cart",
+              );
+              return;
+            }
             const requiredDataToAddedOnCart: ICartItem = {
               productId: productId,
               varient: {
@@ -123,6 +132,7 @@ export default function ProductCard({
             handleCart(requiredDataToAddedOnCart);
           }}
           className="flex w-full items-center justify-center gap-2 rounded-sm bg-green-900 py-2.5 text-sm font-medium text-white transition-colors hover:bg-green-600"
+          // disabled={isAllowed ? isAllowed : false}
         >
           <ShoppingCart size={16} />
           {addedToCart ? "Added to cart" : "Add to cart"}

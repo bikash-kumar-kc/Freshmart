@@ -12,7 +12,7 @@ import {
   IFavoriteProduct,
   removeFavorite,
 } from "@/src/store/faviourites/slice";
-import { isProductInCart } from "@/src/store/carts/selectors";
+// import { isProductInCart } from "@/src/store/carts/selectors";
 
 export function calculateDiscountPercentage(
   price: number,
