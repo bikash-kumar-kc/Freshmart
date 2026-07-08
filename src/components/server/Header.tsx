@@ -13,9 +13,11 @@ import {
   countUnreadNotifications,
   updateNotificationsStatus,
 } from "@/src/lib/server actions/notifications.server";
-import { useAppSelector } from "@/src/store/hook";
+import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { selectFavoriteCount } from "@/src/store/faviourites/selectors";
 import { totalItemsCart } from "@/src/store/carts/selectors";
+import { userUnfinishedCart } from "@/src/lib/server actions/loadcart.server.action";
+import { setCart } from "@/src/store/carts/slice";
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
@@ -28,6 +30,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const changeNotificationRef = useRef<boolean | null>(null);
   const favoriteItems = useAppSelector(selectFavoriteCount);
   const itemsInCart = useAppSelector(totalItemsCart);
+  const dispatch = useAppDispatch();
 
   const handleUnreadNotification = useCallback(async () => {
     try {
@@ -66,6 +69,24 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   useEffect(() => {
     handleUnreadNotification();
   }, [handleUnreadNotification]);
+
+  useEffect(() => {
+    const syncCart = async () => {
+      const result = await userUnfinishedCart();
+
+      if (result.success) {
+        dispatch(
+          setCart({
+            type: "db",
+            orderId: result.orderId,
+            cartItems: result.cartItems,
+          }),
+        );
+      }
+    };
+
+    syncCart();
+  }, [dispatch]);
 
   return (
     <div
