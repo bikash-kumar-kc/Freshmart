@@ -22,7 +22,9 @@ export const getAllItemsFromCart = (state: RootState) => {
 export const isProductInCart =
   (productId: string | undefined) => (state: RootState) => {
     if (!productId) return;
-    return state.carts.cartItems.cartItems.some((i) => i.productId === productId);
+    return state.carts.cartItems.cartItems.some(
+      (i) => i.productId === productId,
+    );
   };
 
 export const productQuantity =
@@ -36,6 +38,14 @@ export const productQuantity =
       quantity: product[0].quantity,
     };
   };
+
+export const statusOfCart = (state: RootState) => {
+  if (!state) return;
+  return {
+    type: state.carts.type,
+    orderId: state.carts.orderId,
+  };
+};
 
 export const totalCalculation = (state: RootState) => {
   if (!state) return;
