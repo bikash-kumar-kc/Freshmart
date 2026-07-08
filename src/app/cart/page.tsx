@@ -79,8 +79,6 @@ export default function CartPage() {
 
         if (type === "save_cart") {
           setSaveCartLoading((prevs) => !prevs);
-        } else {
-          setCheckOutLoading((prevs) => !prevs);
         }
 
         if (isFromDb) {
@@ -380,9 +378,9 @@ export default function CartPage() {
                   shadow-md hover:shadow-lg"
                 >
                   {checkOutLoading
-                    ? "Payment processing"
+                    ? "Payment processing..."
                     : "Proceed to checkout"}
-                  <ArrowRight size={16} />
+                  {checkOutLoading ? "" : <ArrowRight size={16} />}
                 </button>
                 {!isFromDb && (
                   <button
@@ -430,6 +428,7 @@ export default function CartPage() {
           toggleDialog={handleToggleOpen}
           dialogStatus={open}
           handleCheckOut={(data) => handleCheckout(data)}
+          handleCheckLoading={() => setCheckOutLoading((prevs) => !prevs)}
         />
       </div>
     </main>

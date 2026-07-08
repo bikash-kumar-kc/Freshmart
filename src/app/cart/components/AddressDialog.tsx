@@ -19,12 +19,14 @@ interface LocationDialogProps {
   toggleDialog: () => void;
   dialogStatus: boolean;
   handleCheckOut: (type: "save_cart" | "process_checkout") => void;
+  handleCheckLoading: () => void;
 }
 
 export default function LocationDialog({
   toggleDialog,
   dialogStatus,
   handleCheckOut,
+  handleCheckLoading,
 }: LocationDialogProps) {
   //   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<LocationData>({
@@ -58,6 +60,7 @@ export default function LocationDialog({
 
   const handleProceed = () => {
     if (!validate()) return;
+    handleCheckLoading();
     handleCheckOut("process_checkout");
     toggleDialog();
   };
