@@ -126,6 +126,7 @@ export default function CartPage() {
 
         if (orderCreatedInfo.type === "save") {
           toast.success("Cart saved successfully !");
+          router.push("/")
           return;
         }
 
