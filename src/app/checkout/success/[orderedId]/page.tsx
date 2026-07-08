@@ -1,53 +1,32 @@
-import { redirect } from "next/navigation";
-import Stripe from "stripe";
+"use client";
+import { clearCartItems } from "@/src/store/carts/slice";
+import { useAppDispatch } from "@/src/store/hook";
 import Link from "next/link";
-import { getStripeClient } from "@/src/stripe";
-import { orderHistory } from "@/src/db/schema";
-import { db } from "@/src/db/config";
-import { eq } from "drizzle-orm";
+import { useParams } from "next/navigation";
+import { useEffect, useRef } from "react";
 
-interface Props {
-  searchParams: { session_id?: string };
-}
+const Page = () => {
+  const params = useParams<{ orderedId: string }>();
+  const orderId = params.orderedId;
+  const useEffectCalledRef = useRef<boolean | null>(null);
+  const dispatch = useAppDispatch();
 
-export default async function SuccessPage({ searchParams }: Props) {
-  const sessionId = searchParams.session_id;
+  useEffect(() => {
+    if (!useEffectCalledRef.current)
+      if (orderId) {
+        dispatch(clearCartItems());
+        useEffectCalledRef.current = true;
+      }
+  }, [orderId, dispatch]);
 
-  if (!sessionId) redirect("/");
-
-  const stripe: Stripe | undefined = getStripeClient();
-
-  if (!stripe) {
-    redirect("/");
-  }
-
-  let session: Stripe.Checkout.Session;
-  try {
-    session = await stripe.checkout.sessions.retrieve(sessionId);
-  } catch {
-    redirect("/");
-  }
-
-  if (session.payment_status !== "paid") {
-    redirect("/checkout/cancel");
-  }
-
-  const total = session.amount_total
-    ? (session.amount_total / 100).toFixed(2)
-    : "0.00";
-
-  const paymentIntentId = session.payment_intent as string;
-
-  let order: { id: string } | undefined;
-  try {
-    order = await db
-      .select({ id: orderHistory.id })
-      .from(orderHistory)
-      .where(eq(orderHistory.stripePaymentId, paymentIntentId))
-      .get();
-  } catch {
-    console.error("Failed to get order !");
-    order = undefined;
+  if (!orderId) {
+    return (
+      <div className="w-full max-w-7xl m-auto bg-amber-50">
+        <div className="w-full min-h-screen flex justify-center items-center">
+          <p className="text-gray-500">OrderId not found !</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -72,8 +51,7 @@ export default async function SuccessPage({ searchParams }: Props) {
 
         <h1 className="text-2xl font-semibold text-gray-900">Order placed!</h1>
         <p className="text-gray-500">
-          Your payment of{" "}
-          <span className="font-medium text-gray-900">${total}</span> was
+          Your payment was
           successful. Your order is being processed.
         </p>
 
@@ -82,7 +60,7 @@ export default async function SuccessPage({ searchParams }: Props) {
           You will find your order in Order History shortly.
         </p>
 
-        {order ? (
+        {orderId ? (
           <div className="flex gap-3 mt-2">
             <Link
               href="/orders"
@@ -101,7 +79,7 @@ export default async function SuccessPage({ searchParams }: Props) {
           <div>
             <p>Your order is processing...</p>
             <Link
-              href="/orders"
+              href="/orderstatus"
               className="px-4 py-2 bg-orange-400 text-white text-sm rounded-lg hover:bg-orange-300 transition"
             >
               Visit to order history
@@ -115,4 +93,6 @@ export default async function SuccessPage({ searchParams }: Props) {
       </div>
     </main>
   );
-}
+};
+
+export default Page;
