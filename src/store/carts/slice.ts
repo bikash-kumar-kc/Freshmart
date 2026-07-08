@@ -91,7 +91,7 @@ export const saveToLocalStorage = ({ cartItems }: ICartItems) => {
 };
 
 const initialState = {
-  type: "localstorage" as const,
+  type: "localstorage" as "localstorage" | "db",
   orderId: "",
   cartItems: { ...loadFromStorage() },
 };

@@ -5,11 +5,14 @@ import { Leaf, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import QuantityControl from "./QuantityControl";
-import { useAppDispatch } from "@/src/store/hook";
+import { useAppDispatch, useAppSelector } from "@/src/store/hook";
+import { statusOfCart } from "@/src/store/carts/selectors";
 
 function CartRow({ item }: { item: ICartItem }) {
   const lineTotal = item.varient.price * item.quantity;
   const dispatch = useAppDispatch();
+  const statusCart = useAppSelector(statusOfCart);
+  const isFromDb = statusCart ? statusCart.type === "db" : false;
   return (
     <div
       className="flex items-start gap-4 py-5 border-b border-gray-100
@@ -86,6 +89,7 @@ function CartRow({ item }: { item: ICartItem }) {
             className="shrink-0 p-1.5 rounded-lg text-gray-300
               hover:text-red-500 hover:bg-red-50 transition-colors"
             aria-label="Remove item"
+            disabled={isFromDb}
           >
             <Trash2 size={14} />
           </button>

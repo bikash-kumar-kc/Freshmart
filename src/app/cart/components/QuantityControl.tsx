@@ -1,4 +1,4 @@
-import { productQuantity } from "@/src/store/carts/selectors";
+import { productQuantity, statusOfCart } from "@/src/store/carts/selectors";
 import { updateCartItem } from "@/src/store/carts/slice";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { ConsoleLogWriter } from "drizzle-orm";
@@ -16,9 +16,8 @@ function QuantityControl({
 }) {
   const [quantity, setQuantity] = useState(String(value ?? 1));
   const dispatch = useAppDispatch();
+  const statusCart = useAppSelector(statusOfCart);
   const quantityInfo = useAppSelector(productQuantity(id));
-  console.log("quantityInfo");
-  console.log(quantityInfo);
 
   const handleIncrement = (productId: string) => {
     if (!productId) return;
@@ -39,7 +38,6 @@ function QuantityControl({
     }
   };
 
-
   const handleChange = (productId: string, value: number) => {
     if (!productId) return;
 
@@ -58,6 +56,8 @@ function QuantityControl({
     }
   };
 
+  const isFromDb = statusCart ? statusCart.type === "db" : false;
+
   return (
     <div className="flex items-center gap-0 h-8">
       <button
@@ -70,7 +70,7 @@ function QuantityControl({
           border border-gray-200 bg-white text-gray-500 hover:bg-green-50
           hover:border-green-300 hover:text-green-700 transition-colors
           disabled:opacity-40 disabled:cursor-not-allowed"
-        disabled={value <= 1}
+        disabled={value <= 1 || isFromDb}
       >
         <Minus size={12} />
       </button>
@@ -110,6 +110,7 @@ function QuantityControl({
               }),
             );
           }}
+          disabled={isFromDb}
           className="w-9 py-1.5 text-center"
         />
       </div>
@@ -123,7 +124,7 @@ function QuantityControl({
           border border-gray-200 bg-white text-gray-500 hover:bg-green-50
           hover:border-green-300 hover:text-green-700 transition-colors
           disabled:opacity-40 disabled:cursor-not-allowed"
-        disabled={value >= maxStock}
+        disabled={value >= maxStock || isFromDb}
       >
         <Plus size={12} />
       </button>
