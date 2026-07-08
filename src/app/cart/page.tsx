@@ -12,6 +12,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import {
   getAllItemsFromCart,
+  statusOfCart,
   totalCalculation,
   totalItemsCart,
 } from "@/src/store/carts/selectors";
@@ -31,6 +32,7 @@ export default function CartPage() {
   const totalCartProducts = useAppSelector(totalItemsCart);
   const allCartProducts = useAppSelector(getAllItemsFromCart);
   const cartAmountSummary = useAppSelector(totalCalculation);
+  const statusCart = useAppSelector(statusOfCart);
   const dispatch = useAppDispatch();
 
   // router
@@ -141,14 +143,26 @@ export default function CartPage() {
               Your cart
             </h1>
 
-            {totalCartProducts ? (
-              <p className="text-sm text-gray-500 mt-0.5">
-                {totalCartProducts.totalItemsCart}{" "}
-                {totalCartProducts.totalItemsCart === 1 ? "item" : "items"}
-              </p>
-            ) : (
-              ""
-            )}
+            <div className="flex  gap-2 justify-center items-center mt-0.5">
+              {totalCartProducts ? (
+                <p className="text-sm text-gray-500 ">
+                  {totalCartProducts.totalItemsCart}{" "}
+                  {totalCartProducts.totalItemsCart === 1 ? "item" : "items"}
+                </p>
+              ) : (
+                ""
+              )}
+
+              {statusCart && (
+                <span
+                  className="inline-flex items-center gap-1 text-[10px] mt-1
+              font-medium text-black-700 bg-yellow-100 rounded-md px-2 py-0.5
+              "
+                >
+                  {statusCart.type}
+                </span>
+              )}
+            </div>
           </div>
           {totalCartProducts
             ? totalCartProducts?.totalItemsCart > 0 && (
