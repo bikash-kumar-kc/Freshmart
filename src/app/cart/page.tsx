@@ -58,7 +58,7 @@ export default function CartPage() {
         });
       }
       dispatch(clearCartItems());
-    
+
       toast.success("Cart Clear successfully.");
     } catch (error) {
       if (error instanceof Error)
@@ -154,11 +154,19 @@ export default function CartPage() {
         }
 
         // payment process :
-
         const paymentProcessInfo = await paymentInitiator({
           userId: userId,
           ordereId: orderCreatedInfo.orderId,
         });
+
+        if (!paymentProcessInfo.success) {
+          toast.error(
+            paymentProcessInfo.reason === "amount_too_small"
+              ? "Amount must be greater than Rs: 200"
+              : "issue in payment",
+          );
+          return;
+        }
 
         toast.success(
           `For total: ${orderCreatedInfo.totalItemsInserted} products ordered created successfully`,

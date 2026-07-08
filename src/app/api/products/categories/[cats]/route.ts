@@ -11,7 +11,6 @@ export async function GET(
   const { cats } = await params;
 
   try {
-    console.log("cats: ", cats);
     if (!cats?.trim()) {
       throw new Error("Categories are required !");
     }
@@ -20,7 +19,6 @@ export async function GET(
     const categoriesArray = catArray.map((c) =>
       c.includes("&") ? c.split("&").join("&") : c,
     );
-    console.log("categoriesArray", categoriesArray);
     const response: ICategoriesProductReponse[] = await db
       .select({
         productId: products.id,
@@ -55,7 +53,7 @@ export async function GET(
       );
     }
 
-    console.log("response", response);
+    // console.log("response", response);
 
     const groupedProducts = Object.entries(
       Object.groupBy(response, (product) => product.categoryName),

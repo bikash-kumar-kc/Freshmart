@@ -95,8 +95,6 @@ export const userUnfinishedCart = async () => {
         )
         .get();
 
-      console.log("productInfo : ");
-      console.log(productInfo);
 
       return {
         ...productInfo,

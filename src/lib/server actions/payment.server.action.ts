@@ -28,7 +28,7 @@ interface IOutOfStockItem {
 type PaymentInitiatorResult =
   | { success: true; url: string }
   | { success: false; reason: "out_of_stock"; items: IOutOfStockItem[] }
-  | { success: false; reason: "error"; message: string };
+  | { success: false; reason: "error" | "amount_too_small"; message: string };
 
 export const paymentInitiator = async ({
   userId,
@@ -188,7 +188,7 @@ export const paymentInitiator = async ({
         };
       });
 
-      // metadata for stripe webhook to update the ordered...
+    // metadata for stripe webhook to update the ordered...
     const metadata: Record<string, string> = {
       orderId: ordereId,
       userId,
@@ -198,21 +198,42 @@ export const paymentInitiator = async ({
     };
 
     //create Stripe checkout session ────
-    const checkoutSession = await stripeClient.checkout.sessions.create({
-      mode: "payment",
-      line_items: lineItems,
-      metadata,
-      success_url: `${process.env.NEXT_PUBLIC_API_URL}checkout/success/${ordereId}?session_id={CHECKOUT_SESSION_ID}`,  // page to show when payment successed...
-      cancel_url: `${process.env.NEXT_PUBLIC_API_URL}checkout/cancel?payment=cancelled&orderId=${ordereId}`,  // page to show when payment failed...
-
-      // show order summary on Stripe page
-      payment_intent_data: {
+    let checkoutSession;
+    try {
+      checkoutSession = await stripeClient.checkout.sessions.create({
+        mode: "payment",
+        line_items: lineItems,
         metadata,
-        description: `FreshMart order #${ordereId}`,
-      },
-    });
+        success_url: `${process.env.NEXT_PUBLIC_API_URL}checkout/success/${ordereId}?session_id={CHECKOUT_SESSION_ID}`, // page to show when payment successed...
+        cancel_url: `${process.env.NEXT_PUBLIC_API_URL}checkout/cancel?payment=cancelled&orderId=${ordereId}`, // page to show when payment failed...
 
-    if (!checkoutSession.url) {
+        // show order summary on Stripe page
+        payment_intent_data: {
+          metadata,
+          description: `FreshMart order #${ordereId}`,
+        },
+      });
+    } catch (err) {
+      console.log("got an error");
+      if (
+        err instanceof Stripe.errors.StripeInvalidRequestError &&
+        err.code === "amount_too_small"
+      ) {
+        return {
+          success: false,
+          reason: "amount_too_small",
+          message: "The order total is below Stripe's minimum charge amount.",
+        };
+      }
+
+      return {
+        success: false,
+        reason: "error",
+        message: "Failed to create checkout session !",
+      };
+    }
+
+    if (!checkoutSession?.url) {
       return {
         success: false,
         reason: "error",

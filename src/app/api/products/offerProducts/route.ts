@@ -40,7 +40,7 @@ export async function GET() {
       );
     }
 
-    // ── 2. fetch cheapest variant per product ──
+    // fetch cheapest variant per product ──
     const productIds = offeredProducts.map((p) => p.id);
 
     const variantRows = await db
@@ -54,7 +54,7 @@ export async function GET() {
       .from(productVariants)
       .where(inArray(productVariants.productId, productIds));
 
-    // ── 3. pick cheapest variant per product ──
+    //pick cheapest variant per product ──
     const cheapestByProductId = new Map<string, (typeof variantRows)[0]>();
     for (const v of variantRows) {
       const existing = cheapestByProductId.get(v.productId);
