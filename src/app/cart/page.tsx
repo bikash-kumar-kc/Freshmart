@@ -22,7 +22,10 @@ import { clearCartItems } from "@/src/store/carts/slice";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { createOrder } from "@/src/lib/server actions/product.server.action";
+import {
+  clearSavedOrder,
+  createOrder,
+} from "@/src/lib/server actions/product.server.action";
 import { useEffect, useRef, useState } from "react";
 import LocationDialog from "./components/AddressDialog";
 import { paymentInitiator } from "@/src/lib/server actions/payment.server.action";
@@ -38,14 +41,28 @@ export default function CartPage() {
 
   const isFromDb = statusCart?.type === "db";
 
+  const [checkOutLoading, setCheckOutLoading] = useState<boolean>(false);
+  const [saveCartLoading, setSaveCartLoading] = useState<boolean>(false);
+
   // router
   const router = useRouter();
 
   // user session...
   const { data: session, status } = useSession();
-  const handleClearAll = () => {
-    dispatch(clearCartItems());
-    toast.success("Cart Clear successfully.");
+  const handleClearAll = async () => {
+    try {
+      if (isFromDb) {
+        await clearSavedOrder({
+          userId: session?.user.id as string,
+          orderId: statusCart.orderId,
+        });
+      }
+      dispatch(clearCartItems());
+      toast.success("Cart Clear successfully.");
+    } catch (error) {
+      if (error instanceof Error)
+        toast.error(error.message ? error.message : "Failed to clear cart !");
+    }
   };
 
   // state for dialog box to open close
@@ -59,6 +76,12 @@ export default function CartPage() {
     if (status === "authenticated") {
       try {
         if (!allCartProducts?.items.cartItems) return;
+
+        if (type === "save_cart") {
+          setSaveCartLoading((prevs) => !prevs);
+        } else {
+          setCheckOutLoading((prevs) => !prevs);
+        }
 
         if (isFromDb) {
           await createOrder({
@@ -91,9 +114,9 @@ export default function CartPage() {
           if (paymentProcessInfo.success) {
             window.location.href = paymentProcessInfo.url;
           }
-
           return;
         }
+
         const requiredItems: {
           productId: string;
           weightValue: number;
@@ -109,6 +132,7 @@ export default function CartPage() {
         });
 
         const userId = session.user.id!;
+
         const orderType: "checkout" | "save" =
           type === "save_cart" ? "save" : "checkout";
         const requiredDataToOrder = {
@@ -126,7 +150,7 @@ export default function CartPage() {
 
         if (orderCreatedInfo.type === "save") {
           toast.success("Cart saved successfully !");
-          router.push("/")
+          router.push("/");
           return;
         }
 
@@ -155,6 +179,12 @@ export default function CartPage() {
         }
 
         toast.error("Failed to create ordered !");
+      } finally {
+        if (type === "save_cart") {
+          setSaveCartLoading((prevs) => !prevs);
+        } else {
+          setCheckOutLoading((prevs) => !prevs);
+        }
       }
     } else {
       router.push("/auth/login?redirect=/cart");
@@ -163,12 +193,12 @@ export default function CartPage() {
   };
 
   useEffect(() => {
-    if (!alreadyNotify.current)
+    if (!alreadyNotify.current && allCartProducts?.totalItems != 0)
       if (isFromDb) {
         toast.info("This is your save cart. Please, processed for payment !");
         alreadyNotify.current = true;
       }
-  }, [isFromDb]);
+  }, [isFromDb, allCartProducts?.totalItems]);
 
   if (allCartProducts?.totalItems === 0) {
     return (
@@ -349,7 +379,9 @@ export default function CartPage() {
                   text-sm py-4 rounded-sm transition-all duration-200
                   shadow-md hover:shadow-lg"
                 >
-                  Proceed to checkout
+                  {checkOutLoading
+                    ? "Payment processing"
+                    : "Proceed to checkout"}
                   <ArrowRight size={16} />
                 </button>
                 {!isFromDb && (
@@ -360,7 +392,7 @@ export default function CartPage() {
                   text-sm py-4 rounded-sm transition-all duration-200
                   shadow-md hover:shadow-lg"
                   >
-                    Save Cart
+                    {saveCartLoading ? "saving cart..." : "Save Cart"}
                   </button>
                 )}
               </div>

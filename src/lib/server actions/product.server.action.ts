@@ -12,6 +12,7 @@ import { eq, and, ne, sql } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import { randomUUID } from "node:crypto";
+import { success } from "zod";
 
 export interface IPRODUCTRESPONSE {
   id: string;
@@ -492,3 +493,39 @@ export async function removeOrder({
     message: "Order deleted successfully!",
   };
 }
+
+export const clearSavedOrder = async ({
+  userId,
+  orderId,
+}: {
+  userId: string;
+  orderId: string;
+}) => {
+  if (!userId?.trim() || !orderId?.trim()) {
+    throw new Error("UserId | OrderId is required!");
+  }
+
+  const session = await getServerSession(authOptions);
+
+  if (session?.user.id !== userId) {
+    throw new Error("User is unauthenticated !");
+  }
+
+  const isExist = await db
+    .select({ orderId: orders.id })
+    .from(orders)
+    .where(and(eq(orders.id, orderId), eq(orders.userId, userId)))
+    .get();
+
+  if (!isExist?.orderId) {
+    throw new Error("Order does not exist !");
+  }
+
+  await db
+    .delete(orders)
+    .where(and(eq(orders.id, orderId), eq(orders.userId, userId)));
+
+  return {
+    success: true,
+  };
+};
