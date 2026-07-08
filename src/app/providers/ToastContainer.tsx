@@ -10,7 +10,17 @@ const ToastContainerProvider = ({
   return (
     <div>
       {children}
-      <ToastContainer />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="black"
+        icon={false}
+      />
     </div>
   );
 };

@@ -175,3 +175,39 @@
     transform: translateX(100%);
   }
 }
+
+
+.Toastify__toast {
+  min-height: 32px !important;
+  padding: 6px 10px !important;
+}
+
+.Toastify__toast-body {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+
+.Toastify__toast--success {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.Toastify__toast--error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+.Toastify__toast--warning {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+.Toastify__toast--info {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #3b82f6;
+}
