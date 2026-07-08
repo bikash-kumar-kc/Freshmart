@@ -194,6 +194,10 @@ export interface ICreateOrderTypes {
   type: "checkout" | "save";
   isFromDb?: boolean;
   orderIdFromDb?: string;
+  totalPrice: number;
+  totalDiscount: number;
+  isDiscountCharge: boolean;
+  totalPriceAfterDiscount: number;
 }
 
 // create order ...
@@ -204,6 +208,10 @@ export async function createOrder({
   type,
   isFromDb,
   orderIdFromDb,
+  totalPrice,
+  totalDiscount,
+  isDiscountCharge,
+  totalPriceAfterDiscount,
 }: ICreateOrderTypes) {
   try {
     if (!userId) {
@@ -287,6 +295,10 @@ export async function createOrder({
           id: randomUUID(),
           userId,
           isPaymentProcess: type === "checkout",
+          totalPrice: totalPrice!,
+          totalSave: totalDiscount!,
+          isDeliveredChargeApplied: !!isDiscountCharge!,
+          totalPriceAfterDiscount: totalPriceAfterDiscount!,
         })
         .returning({ orderedId: orders.id });
 
@@ -408,6 +420,7 @@ export async function isOutOfStock(
     return true;
   }
 }
+
 // remove item
 export async function removeItem({
   orderId,
