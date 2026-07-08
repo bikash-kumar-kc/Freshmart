@@ -53,14 +53,14 @@ export default function CartPage() {
   const handleCheckout = async (type: "save_cart" | "process_checkout") => {
     if (status === "authenticated") {
       try {
-        if (!allCartProducts) return;
+        if (!allCartProducts?.items.cartItems) return;
         toast.info("User is logged in");
         const requiredItems: {
           productId: string;
           weightValue: number;
           weightUnit: "g" | "kg" | "ml" | "l";
           quantity: number;
-        }[] = allCartProducts.items.map((i) => {
+        }[] = allCartProducts.items.cartItems.map((i) => {
           return {
             productId: i.productId,
             weightValue: i.varient.weightValue,
@@ -168,7 +168,7 @@ export default function CartPage() {
         <div className="flex flex-col relative lg:flex-row gap-6 items-start">
           <div className="flex-1 min-w-0 w-full">
             <div className="bg-white rounded-[8px] border border-gray-100 px-5">
-              {allCartProducts?.items.map((item) => (
+              {allCartProducts?.items.cartItems.map((item) => (
                 <CartRow key={item.productId} item={item} />
               ))}
             </div>
