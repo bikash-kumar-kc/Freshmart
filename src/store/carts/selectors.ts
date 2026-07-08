@@ -4,7 +4,7 @@ export const DELIVERYCHARGEDLIMIT = 500;
 export const totalItemsCart = (state: RootState) => {
   if (!state) return;
   return {
-    totalItemsCart: state.carts.cartItems.length,
+    totalItemsCart: state.carts.cartItems.cartItems.length,
   };
 };
 
@@ -15,20 +15,20 @@ export const getAllItemsFromCart = (state: RootState) => {
 
   return {
     items: state.carts.cartItems,
-    totalItems: state.carts.cartItems.length,
+    totalItems: state.carts.cartItems.cartItems.length,
   };
 };
 
 export const isProductInCart =
   (productId: string | undefined) => (state: RootState) => {
     if (!productId) return;
-    return state.carts.cartItems.some((i) => i.productId === productId);
+    return state.carts.cartItems.cartItems.some((i) => i.productId === productId);
   };
 
 export const productQuantity =
   (productId: string | undefined) => (state: RootState) => {
     if (!productId) return;
-    const product = state.carts.cartItems.filter(
+    const product = state.carts.cartItems.cartItems.filter(
       (i) => i.productId === productId,
     );
     return {
@@ -40,12 +40,12 @@ export const productQuantity =
 export const totalCalculation = (state: RootState) => {
   if (!state) return;
 
-  const totalPriceWithoutDiscount = state.carts.cartItems.reduce(
+  const totalPriceWithoutDiscount = state.carts.cartItems.cartItems.reduce(
     (totalPrice, i) => totalPrice + i.varient.price * i.quantity,
     0,
   );
 
-  const totalDiscountAmount = state.carts.cartItems.reduce(
+  const totalDiscountAmount = state.carts.cartItems.cartItems.reduce(
     (totalDiscount, i) => {
       console.log(i.discountAmount);
       return totalDiscount + (i.discountAmount ?? 0) * i.quantity;
