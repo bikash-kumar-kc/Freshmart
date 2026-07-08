@@ -1,4 +1,4 @@
-import { userUnfinishedCart } from "@/src/lib/server actions/loadcart.server.action";
+// import { userUnfinishedCart } from "@/src/lib/server actions/loadcart.server.action";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const CART_LOCALSTORAGE_KEY = "cart";
@@ -30,6 +30,12 @@ interface IUpdateTypes {
   productId: string;
   type: "increment" | "decrement" | "onchange";
   value?: number;
+}
+
+interface ISetCartType {
+  type: "localstorage" | "db";
+  orderId: string;
+  cartItems:ICartItem[] ;
 }
 
 // export const loadCart = async () => {
@@ -184,9 +190,10 @@ const cartSlice = createSlice({
     },
 
     // set cart from db ...
-    setCart: (state, action) => {
-      state.type = action.payload.type;
-      state.cartItems.cartItems = action.payload.cartItems;
+    setCart: (state, actions: PayloadAction<ISetCartType>) => {
+      state.type = actions.payload.type;
+      state.orderId = actions.payload.orderId;
+      state.cartItems.cartItems = actions.payload.cartItems;
     },
   },
 });

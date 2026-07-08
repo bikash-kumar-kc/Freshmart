@@ -191,11 +191,19 @@ export interface ICreateOrderTypes {
   userId: string;
   items: ItemTypes[];
   type: "checkout" | "save";
+  isFromDb?: boolean;
+  orderIdFromDb?: string;
 }
 
 // create order ...
 
-export async function createOrder({ userId, items, type }: ICreateOrderTypes) {
+export async function createOrder({
+  userId,
+  items,
+  type,
+  isFromDb,
+  orderIdFromDb,
+}: ICreateOrderTypes) {
   try {
     if (!userId) {
       throw new Error("User Id is missing!");
@@ -206,8 +214,8 @@ export async function createOrder({ userId, items, type }: ICreateOrderTypes) {
       throw new Error("User is unauthenticated!");
     }
 
-    if (items.length === 0) {
-      throw new Error("No product items!");
+    if (!isFromDb) {
+      if (items.length === 0) throw new Error("No product items!");
     }
 
     let itemsAddedIds: { itemId: number }[] = [];
@@ -261,6 +269,16 @@ export async function createOrder({ userId, items, type }: ICreateOrderTypes) {
         }
       }
 
+      if (isFromDb) {
+        return {
+          success: true,
+          orderId: orderIdFromDb,
+          type,
+
+          message: "Reserved stock !",
+        };
+      }
+
       //create order ...
       const [order] = await tx
         .insert(orders)
@@ -294,7 +312,7 @@ export async function createOrder({ userId, items, type }: ICreateOrderTypes) {
   } catch (error) {
     throw error;
   }
-};
+}
 
 // update quantity...
 export async function updateQuantity({
