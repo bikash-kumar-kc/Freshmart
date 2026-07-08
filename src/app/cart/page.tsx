@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { createOrder } from "@/src/lib/server actions/product.server.action";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LocationDialog from "./components/AddressDialog";
 import { paymentInitiator } from "@/src/lib/server actions/payment.server.action";
 
@@ -34,6 +34,9 @@ export default function CartPage() {
   const cartAmountSummary = useAppSelector(totalCalculation);
   const statusCart = useAppSelector(statusOfCart);
   const dispatch = useAppDispatch();
+  const alreadyNotify = useRef<boolean | null>(null);
+
+  const isFromDb = statusCart?.type === "db";
 
   // router
   const router = useRouter();
@@ -56,7 +59,41 @@ export default function CartPage() {
     if (status === "authenticated") {
       try {
         if (!allCartProducts?.items.cartItems) return;
-        toast.info("User is logged in");
+
+        if (isFromDb) {
+          await createOrder({
+            userId: session.user.id!,
+            type: "checkout",
+            isFromDb: isFromDb,
+            items: allCartProducts.items.cartItems.map((i) => {
+              return {
+                productId: i.productId,
+                weightValue: i.varient.weightValue,
+                weightUnit: i.varient.weightUnit as "g" | "kg" | "ml" | "l",
+                quantity: i.quantity,
+              };
+            }),
+          });
+
+          toast.info("Stock reserved for save cart !");
+
+          // payment process...
+          const paymentProcessInfo = await paymentInitiator({
+            userId: session.user.id!,
+            ordereId: statusCart.orderId,
+          });
+
+          if (!paymentProcessInfo.success) {
+            toast.error(paymentProcessInfo.reason);
+            return;
+          }
+
+          if (paymentProcessInfo.success) {
+            window.location.href = paymentProcessInfo.url;
+          }
+
+          return;
+        }
         const requiredItems: {
           productId: string;
           weightValue: number;
@@ -99,14 +136,17 @@ export default function CartPage() {
           ordereId: orderCreatedInfo.orderId,
         });
 
-        console.log("paymentProcessInfo");
-        console.log(paymentProcessInfo);
-
         toast.success(
           `For total: ${orderCreatedInfo.totalItemsInserted} products ordered created successfully`,
         );
 
-        handleToggleOpen();
+        if (paymentProcessInfo.success) {
+          window.location.href = paymentProcessInfo.url;
+        }
+
+        // dispatch(clearCartItems()); // clear the store if payment successed
+
+        // handleToggleOpen();
       } catch (error: unknown) {
         if (error instanceof Error) {
           toast.error(error.message);
@@ -120,6 +160,14 @@ export default function CartPage() {
       toast.info("Please, logged in before payment processed!");
     }
   };
+
+  useEffect(() => {
+    if (!alreadyNotify.current)
+      if (isFromDb) {
+        toast.info("This is your save cart. Please, processed for payment !");
+        alreadyNotify.current = true;
+      }
+  }, [isFromDb]);
 
   if (allCartProducts?.totalItems === 0) {
     return (
@@ -303,15 +351,17 @@ export default function CartPage() {
                   Proceed to checkout
                   <ArrowRight size={16} />
                 </button>
-                <button
-                  onClick={() => handleCheckout("save_cart")}
-                  className="w-full flex items-center justify-center gap-2
+                {!isFromDb && (
+                  <button
+                    onClick={() => handleCheckout("save_cart")}
+                    className="w-full flex items-center justify-center gap-2
                   bg-[#2ac83a] hover:bg-[#1ca83d] text-white font-bold
                   text-sm py-4 rounded-sm transition-all duration-200
                   shadow-md hover:shadow-lg"
-                >
-                  Save Cart
-                </button>
+                  >
+                    Save Cart
+                  </button>
+                )}
               </div>
 
               <div className="flex items-center justify-center gap-1.5 mt-4">
