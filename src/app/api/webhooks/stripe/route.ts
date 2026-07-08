@@ -8,8 +8,6 @@ import { createNotification } from "@/src/lib/server_actions/notifications.serve
 // import { createNotification } from "@/src/lib/notifications";
 
 export async function POST(req: Request) {
-
-  console.log("from stripe webhook !")
   const rawBody = await req.text();
   const signature = req.headers.get("stripe-signature");
 
@@ -25,7 +23,6 @@ export async function POST(req: Request) {
 
   let event: Stripe.Event;
 
-
   try {
     event = stripeClient.webhooks.constructEvent(
       rawBody,
@@ -37,11 +34,7 @@ export async function POST(req: Request) {
     return new Response("Invalid signature", { status: 400 });
   }
 
-  console.log("events")
-  console.log(event)
-
   try {
-    console.log("i am checking the event from payment successed")
     switch (event.type) {
       case "checkout.session.completed":
         await handlePaymentSuccess(
@@ -60,17 +53,15 @@ export async function POST(req: Request) {
         break;
     }
     return new Response("ok", { status: 200 });
-  } catch (err) {
-    console.error("[webhook] handler error", err);
+  } catch {
     return new Response("Handler failed", { status: 500 });
   }
 }
 
 //checkout.session.completed ...
 async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
-  console.log("handlePaymentSuccess");
-  console.log(handlePaymentSuccess);
-  const { orderId, userId } = session.metadata ?? {};
+  const { orderId, userId, totalPrice, totalPriceAfterDiscount, totalSave } =
+    session.metadata ?? {};
   if (!orderId || !userId)
     throw new Error("missing orderId or userId in metadata");
 
@@ -104,6 +95,9 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
         isPaymentProcess: false,
         isOrdered: true,
         orderStatus: "packaging",
+        totalPriceAfterDiscount: Number(totalPriceAfterDiscount ?? 0),
+        totalPrice: Number(totalPrice ?? 0),
+        totalSave: Number(totalSave ?? 0),
       })
       .where(eq(orders.id, orderId));
 
