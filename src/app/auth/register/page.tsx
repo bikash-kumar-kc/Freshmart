@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getLocally, saveLocally } from "@/src/lib/localstorage";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
-import { registerUser } from "@/src/lib/server actions/auth.server.action";
+import { registerUser } from "@/src/lib/server_actions/auth.server.action";
 
 const schemaForRegister = z
   .object({

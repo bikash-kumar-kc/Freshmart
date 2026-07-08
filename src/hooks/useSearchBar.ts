@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../app/constants/queryKeys";
-import { searchProducts } from "../lib/server actions/searchBar.server.action";
+import { searchProducts } from "../lib/server_actions/searchBar.server.action";
 
 export const useSearchBarResult = (searchQuery: string | undefined) => {
   return useQuery({

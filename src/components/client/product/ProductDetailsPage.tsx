@@ -9,7 +9,7 @@ import {
   calculateDiscountPercentage,
   RelatedProductCard,
 } from "./utilities/subProductCard";
-import { GetProductResult } from "@/src/lib/server actions/product.server.action";
+import { GetProductResult } from "@/src/lib/server_actions/product.server.action";
 import GoBackButton from "../buttons/GotoBackBtn";
 import { usePathname } from "next/navigation";
 import {

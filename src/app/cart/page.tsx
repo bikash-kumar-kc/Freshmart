@@ -25,10 +25,10 @@ import { useRouter } from "next/navigation";
 import {
   clearSavedOrder,
   createOrder,
-} from "@/src/lib/server actions/product.server.action";
+} from "@/src/lib/server_actions/product.server.action";
 import { useEffect, useRef, useState } from "react";
 import LocationDialog from "./components/AddressDialog";
-import { paymentInitiator } from "@/src/lib/server actions/payment.server.action";
+import { paymentInitiator } from "@/src/lib/server_actions/payment.server.action";
 
 export default function CartPage() {
   // state...

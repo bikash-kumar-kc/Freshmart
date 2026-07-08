@@ -1,5 +1,5 @@
 "use client";
-import { IRequiredFieldTypes } from "@/src/lib/server actions/product.server.action";
+import { IRequiredFieldTypes } from "@/src/lib/server_actions/product.server.action";
 import { formatWeight } from "./helper.fun";
 import Image from "next/image";
 import Link from "next/link";

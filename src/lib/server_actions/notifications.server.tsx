@@ -8,7 +8,6 @@ import { getServerSession } from "next-auth";
 import { NotificationType } from "@/src/types/notificationTypes";
 import { randomUUID } from "node:crypto";
 
-
 interface IUnreadNotificationTypes {
   totalCount: number;
 }
@@ -226,14 +225,17 @@ export const createNotification = async ({
   title: string;
 }) => {
   try {
+
+    console.log("inside create notification ...")
     if (!userId?.trim() || !type?.trim()) {
+      
       console.log("userId is required !");
       return;
     }
 
     const session = await getServerSession(authOptions);
     if (!session || session?.user.id !== userId) {
-      console.log("User is not authenticated");
+    
       return;
     }
 

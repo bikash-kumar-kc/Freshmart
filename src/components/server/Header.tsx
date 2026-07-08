@@ -12,11 +12,11 @@ import { toast } from "react-toastify";
 import {
   countUnreadNotifications,
   updateNotificationsStatus,
-} from "@/src/lib/server actions/notifications.server";
+} from "@/src/lib/server_actions/notifications.server";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { selectFavoriteCount } from "@/src/store/faviourites/selectors";
 import { totalItemsCart } from "@/src/store/carts/selectors";
-import { userUnfinishedCart } from "@/src/lib/server actions/loadcart.server.action";
+import { userUnfinishedCart } from "@/src/lib/server_actions/loadcart.server.action";
 import { ICartItem, setCart } from "@/src/store/carts/slice";
 
 interface IStateHandler {

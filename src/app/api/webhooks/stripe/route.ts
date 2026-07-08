@@ -4,12 +4,12 @@ import { db } from "@/src/db/config";
 import { orders, orderItems, productVariants, products } from "@/src/db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import { getStripeClient } from "@/src/stripe";
-import { createNotification } from "@/src/lib/server actions/notifications.server";
+import { createNotification } from "@/src/lib/server_actions/notifications.server";
 // import { createNotification } from "@/src/lib/notifications";
 
 export async function POST(req: Request) {
 
-
+  console.log("from stripe webhook !")
   const rawBody = await req.text();
   const signature = req.headers.get("stripe-signature");
 
@@ -25,6 +25,7 @@ export async function POST(req: Request) {
 
   let event: Stripe.Event;
 
+
   try {
     event = stripeClient.webhooks.constructEvent(
       rawBody,
@@ -36,7 +37,11 @@ export async function POST(req: Request) {
     return new Response("Invalid signature", { status: 400 });
   }
 
+  console.log("events")
+  console.log(event)
+
   try {
+    console.log("i am checking the event from payment successed")
     switch (event.type) {
       case "checkout.session.completed":
         await handlePaymentSuccess(
@@ -63,6 +68,8 @@ export async function POST(req: Request) {
 
 //checkout.session.completed ...
 async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
+  console.log("handlePaymentSuccess");
+  console.log(handlePaymentSuccess);
   const { orderId, userId } = session.metadata ?? {};
   if (!orderId || !userId)
     throw new Error("missing orderId or userId in metadata");
@@ -141,18 +148,16 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
   });
 
   // notifications outside transaction, non-critical...
-  await createNotification({
-    userId,
-    type: "payment_success",
-    title: "Payment success",
-    content: `Payment Successed.`,
-  });
-  await createNotification({
-    userId,
-    type: "payment_failed",
-    title: "Payment Failed",
-    content: `Failed to Payment . OrderedId:${orderId}`,
-  });
+  try {
+    await createNotification({
+      userId,
+      type: "payment_success",
+      title: "Payment success",
+      content: `Payment Successed.`,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   console.log("[webhook] payment success", { orderId, userId });
 }
@@ -167,7 +172,7 @@ async function handlePaymentExpired(session: Stripe.Checkout.Session) {
     .from(orders)
     .where(eq(orders.id, orderId))
     .get();
-  if (!existing?.isPaymentProcess) return; 
+  if (!existing?.isPaymentProcess) return;
 
   const items = await db
     .select({
@@ -215,7 +220,6 @@ async function handlePaymentExpired(session: Stripe.Checkout.Session) {
 
 // payment_intent.payment_failed ...
 async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
-
   const { orderId, userId } = paymentIntent.metadata ?? {};
 
   if (!orderId) return;
@@ -226,7 +230,6 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
     .where(eq(orders.id, orderId))
     .get();
   if (!existing?.isPaymentProcess) return;
-
 
   const items = await db
     .select({

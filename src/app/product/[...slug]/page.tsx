@@ -1,6 +1,6 @@
 import ProductDetailsSkeleton from "@/components/skeleton/ProductDetailsSkeleton";
 import ProductDetailClient from "@/src/components/client/product/ProductDetailClient";
-import { getProductByCategorySlug } from "@/src/lib/server actions/product.server.action";
+import { getProductByCategorySlug } from "@/src/lib/server_actions/product.server.action";
 import { Suspense } from "react";
 
 export default async function Page({
