@@ -95,6 +95,10 @@ export default function CartPage() {
                 quantity: i.quantity,
               };
             }),
+            totalDiscount: cartAmountSummary?.tda as number,
+            totalPrice: cartAmountSummary?.tpwod as number,
+            totalPriceAfterDiscount: cartAmountSummary?.tpwd as number,
+            isDiscountCharge: cartAmountSummary?.isDeliveryCharged as boolean,
           });
 
           toast.info("Stock reserved for save cart !");
@@ -138,6 +142,10 @@ export default function CartPage() {
           userId: userId,
           items: requiredItems,
           type: orderType,
+          totalDiscount: cartAmountSummary?.tda as number,
+          totalPrice: cartAmountSummary?.tpwod as number,
+          totalPriceAfterDiscount: cartAmountSummary?.tpwd as number,
+          isDiscountCharge: cartAmountSummary?.isDeliveryCharged as boolean,
         };
 
         const orderCreatedInfo: {
