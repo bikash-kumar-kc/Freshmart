@@ -8,6 +8,8 @@ import { createNotification } from "@/src/lib/server actions/notifications.serve
 // import { createNotification } from "@/src/lib/notifications";
 
 export async function POST(req: Request) {
+
+
   const rawBody = await req.text();
   const signature = req.headers.get("stripe-signature");
 
@@ -16,11 +18,13 @@ export async function POST(req: Request) {
   }
 
   const stripeClient = getStripeClient();
+
   if (!stripeClient) {
     return new Response("Stripe client not found ", { status: 500 });
   }
 
   let event: Stripe.Event;
+
   try {
     event = stripeClient.webhooks.constructEvent(
       rawBody,
@@ -57,7 +61,7 @@ export async function POST(req: Request) {
   }
 }
 
-// ── Handler 1 — checkout.session.completed ──
+//checkout.session.completed ...
 async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
   const { orderId, userId } = session.metadata ?? {};
   if (!orderId || !userId)
@@ -85,7 +89,7 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
     throw new Error(`no items found for order ${orderId}`);
 
   await db.transaction(async (tx) => {
-    // 1. mark order paid
+    // mark as payment successed...
     await tx
       .update(orders)
       .set({
@@ -96,7 +100,7 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
       })
       .where(eq(orders.id, orderId));
 
-    // 2. deduct stock + release reservation
+    //deduct stock + release reservation...
     for (const item of items) {
       await tx
         .update(productVariants)
@@ -113,7 +117,7 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
         );
     }
 
-    // 3. mark product out_of_stock if all variants exhausted
+    //mark product out_of_stock if all variants exhausted...
     for (const item of items) {
       const variant = await tx
         .select({ stock: productVariants.stock })
@@ -136,7 +140,7 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
     }
   });
 
-  // notifications — outside transaction, non-critical
+  // notifications outside transaction, non-critical...
   await createNotification({
     userId,
     type: "payment_success",
@@ -153,7 +157,7 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
   console.log("[webhook] payment success", { orderId, userId });
 }
 
-// ── Handler 2 — checkout.session.expired ──
+//checkout.session.expired..
 async function handlePaymentExpired(session: Stripe.Checkout.Session) {
   const { orderId, userId } = session.metadata ?? {};
   if (!orderId) return;
@@ -163,7 +167,7 @@ async function handlePaymentExpired(session: Stripe.Checkout.Session) {
     .from(orders)
     .where(eq(orders.id, orderId))
     .get();
-  if (!existing?.isPaymentProcess) return; // already released
+  if (!existing?.isPaymentProcess) return; 
 
   const items = await db
     .select({
@@ -209,9 +213,11 @@ async function handlePaymentExpired(session: Stripe.Checkout.Session) {
   console.log("[webhook] session expired, reservation released", { orderId });
 }
 
-// ── Handler 3 — payment_intent.payment_failed ──
+// payment_intent.payment_failed ...
 async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
+
   const { orderId, userId } = paymentIntent.metadata ?? {};
+
   if (!orderId) return;
 
   const existing = await db
@@ -220,6 +226,7 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
     .where(eq(orders.id, orderId))
     .get();
   if (!existing?.isPaymentProcess) return;
+
 
   const items = await db
     .select({
