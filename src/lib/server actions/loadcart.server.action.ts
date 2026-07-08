@@ -41,7 +41,7 @@ export const userUnfinishedCart = async () => {
     )
     .get();
 
-  if (!unfinishedCart) {
+  if (!unfinishedCart?.orderId) {
     return {
       success: false,
       reason: "Unfinished cart is not available.",
@@ -105,8 +105,6 @@ export const userUnfinishedCart = async () => {
     }),
   );
 
-  console.log('requiredCartDetails')
-  console.log(requiredCartDetails)
   return {
     success: true,
     orderId: unfinishedCart.orderId,

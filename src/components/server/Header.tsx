@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { selectFavoriteCount } from "@/src/store/faviourites/selectors";
 import { totalItemsCart } from "@/src/store/carts/selectors";
 import { userUnfinishedCart } from "@/src/lib/server actions/loadcart.server.action";
-import { setCart } from "@/src/store/carts/slice";
+import { ICartItem, setCart } from "@/src/store/carts/slice";
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
@@ -73,13 +73,15 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   useEffect(() => {
     const syncCart = async () => {
       const result = await userUnfinishedCart();
+      console.log("result")
+      console.log(result)
 
       if (result.success) {
         dispatch(
           setCart({
             type: "db",
-            orderId: result.orderId,
-            cartItems: result.cartItems,
+            orderId: result.orderId!,
+            cartItems: result.cartItems as ICartItem[],
           }),
         );
       }
