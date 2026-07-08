@@ -197,6 +197,10 @@ export const paymentInitiator = async ({
       totalSave: String(order.totalSave ?? 0),
     };
 
+
+    console.log("metadata")
+    console.log(metadata)
+
     //create Stripe checkout session ────
     let checkoutSession;
     try {
@@ -253,7 +257,7 @@ export const paymentInitiator = async ({
     };
   } catch (error) {
     console.error("[paymentInitiator]", error);
-    console.log(error);
+    // console.log(error);
     return {
       success: false,
       reason: "error",
