@@ -1,12 +1,12 @@
-"use client";
+"use server";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth";
 import { db } from "@/src/db/config";
 import { orders } from "@/src/db/schema";
 import { and, eq } from "drizzle-orm";
 import { getStripeClient } from "@/src/stripe";
 import Stripe from "stripe";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth";
 
 interface IPaymentInitiatorType {
   userId: string;
@@ -35,7 +35,7 @@ export const paymentInitiator = async ({
   ordereId,
 }: IPaymentInitiatorType): Promise<PaymentInitiatorResult> => {
   try {
-    // basic validation ──────────────────
+    // basic validation for userId and orderedId...
     if (!userId || !ordereId) {
       return {
         success: false,
@@ -44,7 +44,7 @@ export const paymentInitiator = async ({
       };
     }
 
-    // auth check ────────────────────────
+    // auth check...
     const session = await getServerSession(authOptions);
     if (!session || session.user.id !== userId) {
       return {
@@ -73,7 +73,7 @@ export const paymentInitiator = async ({
       };
     }
 
-    // already paid — prevent duplicate checkout
+    // check whether for the orderedId, payment is already happend or not ...
     if (isOrderedExist.isPayment) {
       return {
         success: false,
@@ -82,16 +82,8 @@ export const paymentInitiator = async ({
       };
     }
 
-    // payment already in progress
-    if (isOrderedExist.isPaymentProcess) {
-      return {
-        success: false,
-        reason: "error",
-        message: "A payment is already in progress for this order.",
-      };
-    }
+    // fetch all items from the ordered Id with products information and varients...
 
-    //fetch full order with items + product + variants ──
     const order = await db.query.orders.findFirst({
       where: eq(orders.id, ordereId),
       with: {
@@ -115,45 +107,45 @@ export const paymentInitiator = async ({
       };
     }
 
-    // stock check for each item ─────────
-    const outOfStockItems: IOutOfStockItem[] = [];
+    // checking stock ...
+    // const outOfStockItems: IOutOfStockItem[] = [];
 
-    for (const item of order.items) {
-      // find the matching variant by weightValue + weightUnit
-      const matchedVariant = item.product.variants.find(
-        (v) =>
-          v.weightValue === item.weightValue &&
-          v.weightUnit === item.weightUnit,
-      );
+    // for (const item of order.items) {
+    //   // find the match varient and check whether the stock availiable or not...
+    //   const matchedVariant = item.product.variants.find(
+    //     (v) =>
+    //       v.weightValue === item.weightValue &&
+    //       v.weightUnit === item.weightUnit,
+    //   );
 
-      if (!matchedVariant) {
-        outOfStockItems.push({
-          productId: item.productId,
-          productName: item.product.name,
-          requested: item.quantity,
-          available: 0,
-        });
-        continue;
-      }
+    //   if (!matchedVariant) {
+    //     outOfStockItems.push({
+    //       productId: item.productId,
+    //       productName: item.product.name,
+    //       requested: item.quantity,
+    //       available: 0,
+    //     });
+    //     continue;
+    //   }
 
-      if (matchedVariant.stock < item.quantity) {
-        outOfStockItems.push({
-          productId: item.productId,
-          productName: item.product.name,
-          requested: item.quantity,
-          available: matchedVariant.stock,
-        });
-      }
-    }
+    //   if (matchedVariant.stock - matchedVariant.reservedStock < item.quantity) {
+    //     outOfStockItems.push({
+    //       productId: item.productId,
+    //       productName: item.product.name,
+    //       requested: item.quantity,
+    //       available: matchedVariant.stock,
+    //     });
+    //   }
+    // }
 
     // return out of stock items to frontend — don't proceed
-    if (outOfStockItems.length > 0) {
-      return {
-        success: false,
-        reason: "out_of_stock",
-        items: outOfStockItems,
-      };
-    }
+    // if (outOfStockItems.length > 0) {
+    //   return {
+    //     success: false,
+    //     reason: "out_of_stock",
+    //     items: outOfStockItems,
+    //   };
+    // }
 
     const stripeClient = getStripeClient();
 
@@ -165,8 +157,8 @@ export const paymentInitiator = async ({
       };
     }
 
-    // build Stripe line items ────────────
-    // format: "Organic Potato, Qty: 2, Rs 130.00"
+    // building line items ...
+
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
       order.items.map((item) => {
         const matchedVariant = item.product.variants.find(
@@ -175,8 +167,7 @@ export const paymentInitiator = async ({
             v.weightUnit === item.weightUnit,
         )!;
 
-        // price per unit in paisa (Stripe uses smallest currency unit)
-        // NPR → paisa (1 NPR = 100 paisa)
+        // rupiya into paise...
         const unitAmountInPaisa = Math.round(matchedVariant.price * 100);
 
         return {
@@ -197,8 +188,7 @@ export const paymentInitiator = async ({
         };
       });
 
-    //build metadata for webhook ────────
-    // pass totals + orderId so webhook can update the order after payment
+      // metadata for stripe webhook to update the ordered...
     const metadata: Record<string, string> = {
       orderId: ordereId,
       userId,
@@ -212,12 +202,8 @@ export const paymentInitiator = async ({
       mode: "payment",
       line_items: lineItems,
       metadata,
-
-      // success : order status page
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success/${ordereId}?session_id={CHECKOUT_SESSION_ID}`,
-
-      // cancel : back to cart with retry option
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/cancel?payment=cancelled&orderId=${ordereId}`,
+      success_url: `${process.env.NEXT_PUBLIC_API_URL}checkout/success/${ordereId}?session_id={CHECKOUT_SESSION_ID}`,  // page to show when payment successed...
+      cancel_url: `${process.env.NEXT_PUBLIC_API_URL}checkout/cancel?payment=cancelled&orderId=${ordereId}`,  // page to show when payment failed...
 
       // show order summary on Stripe page
       payment_intent_data: {
@@ -246,10 +232,11 @@ export const paymentInitiator = async ({
     };
   } catch (error) {
     console.error("[paymentInitiator]", error);
+    console.log(error);
     return {
       success: false,
       reason: "error",
-      message: "Something went wrong. Please try again.",
+      message: `Something went wrong. Please try again. ${error instanceof Error ? error.message : ""}`,
     };
   }
 };

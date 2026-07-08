@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { createOrder } from "@/src/lib/server actions/product.server.action";
 import { useState } from "react";
 import LocationDialog from "./components/AddressDialog";
+import { paymentInitiator } from "@/src/lib/server actions/payment.server.action";
 
 export default function CartPage() {
   // state...
@@ -80,12 +81,25 @@ export default function CartPage() {
         const orderCreatedInfo: {
           success: boolean;
           totalItemsInserted: number;
+          orderId: string;
+          type: string;
         } = await createOrder(requiredDataToOrder);
 
-        if (type === "save_cart") {
+        if (orderCreatedInfo.type === "save") {
           toast.success("Cart saved successfully !");
           return;
         }
+
+        // payment process :
+
+        const paymentProcessInfo = await paymentInitiator({
+          userId: userId,
+          ordereId: orderCreatedInfo.orderId,
+        });
+
+        console.log("paymentProcessInfo");
+        console.log(paymentProcessInfo);
+
         toast.success(
           `For total: ${orderCreatedInfo.totalItemsInserted} products ordered created successfully`,
         );
