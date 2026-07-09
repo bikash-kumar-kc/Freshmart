@@ -1,14 +1,13 @@
 import { IAPIResponseTypes } from "./getPopularProducts";
 
-interface IOrderType {
+export interface IOrderType {
   orderId: string;
   orderStatus:
     | "pending"
     | "delivered"
-    | "ontheway"
-    | "failed"
+    | "shipped"
     | "packaging"
-    | null;
+
   updatedTime: string;
   totalCost: number | null;
   totalItems: number;
@@ -29,7 +28,7 @@ export const getAllOrders = async ({ userId }: { userId: string }) => {
     }
 
     const reponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}api/orders/${userId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}api/order/${userId}`,
     );
 
     if (!reponse.ok) {
