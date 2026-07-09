@@ -81,7 +81,7 @@ export async function GET(
         {
           success: true,
           data: {
-            items: ordersInfo,
+            orders: ordersInfo,
             totalItems: ordersInfo.length,
           },
         },
