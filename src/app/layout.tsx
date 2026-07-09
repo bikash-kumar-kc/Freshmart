@@ -3,13 +3,12 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import TanstackProvider from "../components/client/providers/TanstackProvider";
 import ToastContainerProvider from "./providers/ToastContainer";
-
+import Footer from "../components/server/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
-
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,13 +21,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.className} h-full antialiased`}
-    >
+    <html lang="en" className={`${inter.className} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <TanstackProvider>
-          <ToastContainerProvider>{children}</ToastContainerProvider>
+          <ToastContainerProvider>
+            {children}
+            <Footer />
+          </ToastContainerProvider>
         </TanstackProvider>
       </body>
     </html>

@@ -42,7 +42,7 @@ export default function Home() {
           <Suspense fallback={<p>loading...</p>}>
             <PaginationComponent />
           </Suspense>
-          <Footer />
+         
         </ReduxProvider>
       </SessionProvider>
     </div>
