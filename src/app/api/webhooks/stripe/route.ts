@@ -60,6 +60,7 @@ export async function POST(req: Request) {
 
 //checkout.session.completed ...
 async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
+  console.log("payment got successed !");
   const { orderId, userId, totalPrice, totalPriceAfterDiscount, totalSave } =
     session.metadata ?? {};
   if (!orderId || !userId)
@@ -143,12 +144,17 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
 
   // notifications outside transaction, non-critical...
   try {
-    await createNotification({
+    const response = await createNotification({
       userId,
       type: "payment_success",
       title: "Payment success",
       content: `Payment Successed.`,
+      from: "webhook",
     });
+
+    if (response?.success) {
+      console.log("notification successed !");
+    }
   } catch (error) {
     console.log(error);
   }
@@ -206,6 +212,7 @@ async function handlePaymentExpired(session: Stripe.Checkout.Session) {
       type: "payment_failed",
       title: "Payment Failed",
       content: `Failed to Payment . OrderedId:${orderId}`,
+      from: "webhook",
     });
   }
 
@@ -263,6 +270,7 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
       type: "payment_failed",
       title: "Payment Failed",
       content: `Failed to Payment . OrderedId:${orderId}`,
+      from: "webhook",
     });
   }
 

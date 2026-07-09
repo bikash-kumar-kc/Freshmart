@@ -191,15 +191,14 @@ export const paymentInitiator = async ({
     // metadata for stripe webhook to update the ordered...
     const metadata: Record<string, string> = {
       orderId: ordereId,
-      userId,
+      userId: session.user.id,
       totalPrice: String(order.totalPrice ?? 0),
       totalPriceAfterDiscount: String(order.totalPriceAfterDiscount ?? 0),
       totalSave: String(order.totalSave ?? 0),
     };
 
-
-    console.log("metadata")
-    console.log(metadata)
+    console.log("metadata");
+    console.log(metadata);
 
     //create Stripe checkout session ────
     let checkoutSession;

@@ -2,11 +2,11 @@
 
 import { db } from "@/src/db/config";
 import { notfications, NotificationTypes } from "@/src/db/schema";
-import { authOptions } from "@/src/lib/auth";
 import { and, count, eq } from "drizzle-orm";
-import { getServerSession } from "next-auth";
 import { NotificationType } from "@/src/types/notificationTypes";
 import { randomUUID } from "node:crypto";
+import { authOptions } from "../auth";
+import { getServerSession } from "next-auth";
 
 interface IUnreadNotificationTypes {
   totalCount: number;
@@ -218,25 +218,28 @@ export const createNotification = async ({
   type,
   content,
   title,
+  from = "browser",
 }: {
   userId: string;
   type: NotificationType;
   content: string;
   title: string;
+  from: "webhook" | "browser";
 }) => {
   try {
 
-    console.log("inside create notification ...")
     if (!userId?.trim() || !type?.trim()) {
-      
       console.log("userId is required !");
       return;
     }
 
-    const session = await getServerSession(authOptions);
-    if (!session || session?.user.id !== userId) {
-    
-      return;
+    let session;
+
+    if (from === "browser") {
+      session = await getServerSession(authOptions);
+      if (!session || session?.user.id !== userId) {
+        throw new Error("User is not authenticated !");
+      }
     }
 
     await db
@@ -250,6 +253,8 @@ export const createNotification = async ({
       })
       .returning({ id: notfications.id });
 
+    console.log("notification created successfully !");
+
     return {
       success: true,
       message: "Notification created successfully",
@@ -257,8 +262,10 @@ export const createNotification = async ({
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.log(error.message);
-      return;
+      throw error;
+      // return;
     }
     console.log("Failed to create notification !");
+    throw error;
   }
 };
