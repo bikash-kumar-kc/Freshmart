@@ -71,7 +71,7 @@ export default function ProductCard({
           />
 
           {isFeatured && (
-            <span className="absolute left-3 top-3 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-amber-700">
+            <span className="absolute left-3 top-3 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold  text-amber-700">
               Featured
             </span>
           )}

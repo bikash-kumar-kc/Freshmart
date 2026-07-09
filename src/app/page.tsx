@@ -2,7 +2,6 @@
 import { SessionProvider } from "next-auth/react";
 import { Suspense } from "react";
 import ImageSlider from "../components/client/messageBanner";
-import Footer from "../components/server/Footer";
 import BannerCarouselSkeleton from "@/components/skeleton/BannerCarouselSkeleton";
 import BannerCarousel from "../components/client/bannerCarousel";
 import PaginationComponent from "../components/client/pagination/Pagination";

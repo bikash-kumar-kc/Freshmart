@@ -39,7 +39,7 @@ const PopularProducts = () => {
       >
         {popularProducts.map((p) => (
           <Link key={p.id} href={`/product/${p.category}/${p.slug}`}>
-            <ProductCard product={p} type="popular" />
+            <ProductCard product={p} type="Popular" />
           </Link>
         ))}
       </div>

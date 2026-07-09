@@ -30,7 +30,7 @@ const OfferedProductsComponent = () => {
     <div
       className=" w-full flex flex-col gap-6 mt-8"
     >
-      <h2 className="text-3xl font-semibold  ">Special Offers</h2>
+      <h2 className="text-3xl font-semibold">Special Offers</h2>
       <div
         style={{
           display: "grid",
@@ -40,7 +40,7 @@ const OfferedProductsComponent = () => {
       >
         {offeredProducts.map((p) => (
           <Link key={p.id} href={`/product/${p.category}/${p.slug}`}>
-          <ProductCard key={p.id} product={p} type="offer" />
+          <ProductCard key={p.id} product={p} type="Offer" />
           </Link>
         ))}
       </div>
