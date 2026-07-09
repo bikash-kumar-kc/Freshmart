@@ -1,7 +1,7 @@
 import { IOrderType } from "@/src/lib/api calls/server/getAllOrders";
 import { STATUS_CONFIG } from "../constant/constant";
 import { formatCurrency, formatDate, formatTime } from "../helperFun/helperFun";
-import { Link } from "lucide-react";
+import Link from "next/link";
 
 export const OrderCard = ({ order }: { order: IOrderType }) => {
   const config = STATUS_CONFIG[order?.orderStatus];
