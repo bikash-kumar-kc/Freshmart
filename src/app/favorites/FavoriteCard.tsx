@@ -1,8 +1,20 @@
+"use client";
+
 import Link from "next/link";
 import { IFavoriteProductData } from "./types/favorite.type";
 import Image from "next/image";
 import { formatWeight } from "@/src/components/client/product/utilities/helper.fun";
-import { Trash2 } from "lucide-react";
+import { ShoppingCart, Trash2 } from "lucide-react";
+import {
+  addCartItem,
+  ICartItem,
+  removeCartItem,
+} from "@/src/store/carts/slice";
+import { useAppDispatch, useAppSelector } from "@/src/store/hook";
+import { useState } from "react";
+import { isAllowedToAddedInCart } from "@/src/store/carts/selectors";
+import { toast } from "react-toastify";
+import { CartIcon } from "@/src/components/client/PopularCard";
 
 export function FavoriteCard({
   product,
@@ -12,6 +24,24 @@ export function FavoriteCard({
   onRemove: (id: string) => void;
 }) {
   const isOutOfStock = product.status === "out_of_stock";
+  const [addedToCart, setAddedToCart] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const isAllowed = useAppSelector(isAllowedToAddedInCart);
+
+  function handleCart(data: ICartItem) {
+    if (!data.productId) return;
+
+    if (!addedToCart) {
+      dispatch(addCartItem(data));
+      setAddedToCart(true);
+      toast.success("To update the quantity, visit cart section ");
+    } else {
+      dispatch(removeCartItem({ productId: data.productId }));
+      setAddedToCart(false);
+      toast.success("Product removed from cart successfully !");
+    }
+  }
 
   return (
     <div
@@ -50,7 +80,6 @@ export function FavoriteCard({
             </span>
           )}
         </div>
-
       </Link>
 
       <div className="p-3 flex flex-col flex-1">
@@ -82,15 +111,69 @@ export function FavoriteCard({
           </div>
         )}
 
-        <button
-          onClick={() => onRemove(product.id)}
-          className="mt-3 w-full flex items-center justify-center gap-1.5
+        <div className="flex flex-row w-full gap-2 items-center">
+          <button
+            onClick={() => onRemove(product.id)}
+            className="mt-3  flex-1 flex justify-center gap-1.5
             text-xs font-medium py-2 rounded-sm border border-red-100
             text-red-500 hover:bg-red-50 transition-colors"
-        >
-          <Trash2 size={12} />
-          Remove
-        </button>
+          >
+            <Trash2 size={12} />
+            {/* Remove */}
+          </button>
+
+          <button
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              if (isAllowed) {
+                toast.info(
+                  "Your cart is saved , please checkout before creating new cart",
+                );
+                return;
+              }
+              const requiredDataToAddedOnCart: ICartItem = {
+                productId: product.id,
+                varient: {
+                  weightUnit: product.weightUnit!,
+                  weightValue: product.weightValue!,
+                  price: product.price!,
+                  stock: product?.stock ?? 0,
+                },
+                isOffered: false,
+                discountAmount: 0,
+                quantity: 1,
+                category: product.category,
+                thumbnail: product.thumbnail,
+                productName: product.name,
+                slug: product.slug,
+              };
+              handleCart(requiredDataToAddedOnCart);
+            }}
+            className="flex-1 flex justify-center  rounded-sm bg-green-900 py-2 mt-3 text-white transition-colors hover:bg-green-600"
+            // disabled={isAllowed ? isAllowed : false}
+          >
+            {addedToCart ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            ) : (
+              <CartIcon />
+            )}
+            {/* {addedToCart ? "Added to cart" : "Add to cart"} */}
+          </button>
+        </div>
       </div>
     </div>
   );

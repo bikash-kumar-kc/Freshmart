@@ -10,4 +10,5 @@ export interface IFavoriteProductData {
   discount: number | null;
   isOffered: boolean;
   status: string;
+  stock:number;
 }

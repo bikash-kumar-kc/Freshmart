@@ -48,6 +48,7 @@ export async function GET(
         price: productVariants.price,
         weightValue:productVariants.weightValue,
         weightUnit: productVariants.weightUnit,
+        stock:productVariants.stock
       })
       .from(productVariants)
       .where(eq(productVariants.productId, productId));

@@ -56,9 +56,6 @@ const FavoritePage = () => {
 
   const count = favoriteItems?.length;
 
-  console.log("products :   : :");
-  console.log(productData);
-
   return (
     <main className="bg-[#F5F9F0] min-h-screen pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
