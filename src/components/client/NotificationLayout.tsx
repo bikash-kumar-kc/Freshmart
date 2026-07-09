@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Header from "../server/Header";
 import NotificationPanel from "../server/notificationPanel";
-
+import { SessionProvider } from "next-auth/react";
+import ReduxProvider from "@/src/app/providers/ReduxProvider";
 
 export default function NotificationLayout() {
   const [isOpen, setIsOpen] = useState(false);
-  
 
   const notificationRef = useRef<HTMLDivElement>(null);
 
@@ -28,22 +28,19 @@ export default function NotificationLayout() {
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside,
-      );
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   return (
-    <div ref={notificationRef} className="w-full z-50 ">
-      <Header
-        handleNotificationPanelOpen={
-          handleNotificationPanelOpen
-        }
-      />
+    <SessionProvider>
+      <ReduxProvider>
+        <div ref={notificationRef} className="w-full z-50 ">
+          <Header handleNotificationPanelOpen={handleNotificationPanelOpen} />
 
-      <NotificationPanel isOpen={isOpen} />
-    </div>
+          <NotificationPanel isOpen={isOpen} />
+        </div>
+      </ReduxProvider>
+    </SessionProvider>
   );
 }

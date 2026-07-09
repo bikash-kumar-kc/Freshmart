@@ -11,7 +11,7 @@ import ProductsSuspenseFallback from "../components/client/product/ProductsCateg
 import SpecialProductsSkeleton from "@/components/skeleton/SpecialProductSkeleton";
 import OfferedProducts from "../components/client/product/OfferedProducts";
 import PopularProducts from "../components/client/product/PopularProducts";
-import NotificationLayout from "../components/client/NotificationLayout";
+// import NotificationLayout from "../components/client/NotificationLayout";
 import ReduxProvider from "./providers/ReduxProvider";
 
 export default function Home() {
@@ -19,7 +19,7 @@ export default function Home() {
     <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 ">
       <SessionProvider>
         <ReduxProvider>
-          <NotificationLayout />
+          {/* <NotificationLayout /> */}
           <main className="w-full max-w-7xl mx-auto mt-10">
             <Suspense fallback={<BannerCarouselSkeleton />}>
               <BannerCarousel />
