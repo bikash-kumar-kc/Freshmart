@@ -1,7 +1,7 @@
 import {
   OrderCardSkeleton,
   Skeleton,
-} from "@/components/skeleton/CartSkeleton";
+} from "@/components/skeleton/OrderSkeleton";
 
 export default function Loading() {
   return (
