@@ -50,7 +50,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
       toast.error("Failed to read unread notification !");
       console.log(error);
     }
-  })
+  },[data?.user.id])
 
   const handleNotificationStatusUpdate = async () => {
     if (changeNotificationRef.current) return;
