@@ -18,7 +18,7 @@ const SearchBar = () => {
       (e) => {
         e.preventDefault();
         if (!searchTerm.trim()) return;
-        router.push(`/productpage/${searchTerm}`);
+        router.push(`/product/${searchTerm}`);
       },
       [router, searchTerm],
     );

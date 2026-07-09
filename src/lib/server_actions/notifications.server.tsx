@@ -53,7 +53,6 @@ export const countUnreadNotifications = async (
       .select({ count: count() })
       .from(notfications)
       .where(and(eq(notfications.userId, id), eq(notfications.isShown, false)));
-    console.log("response.count", response.count);
     return {
       totalCount: response.count,
     };
