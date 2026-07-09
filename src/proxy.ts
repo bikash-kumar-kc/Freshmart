@@ -11,11 +11,10 @@ export default withAuth(
         const { pathname } = req.nextUrl;
 
         if (
-          pathname.startsWith("/login") ||
-          pathname.startsWith("/register") ||
+          pathname.startsWith("/auth/login") ||
+          pathname.startsWith("/auth/register") ||
           pathname.startsWith("/api/auth") ||
           pathname.startsWith("/")
-
         ) {
           return true;
         }
@@ -27,5 +26,7 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|public/).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|public/).*)",
+    "/orderStatus","/api/orders","/lib/server_actions/payment.server.action" ],
 };

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 interface IErrorProps {
   error: Error;
   reset: () => void;
@@ -13,6 +15,7 @@ export default function Error({ error, reset }: IErrorProps) {
           <h2>Something went wrong !</h2>
           <p className="text-red-400">{error.message}</p>
           <button onClick={reset}>Try again</button>
+          <Link href={"/"}>Vist Home</Link>
         </div>
       </div>
     </div>
