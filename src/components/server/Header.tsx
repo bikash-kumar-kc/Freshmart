@@ -34,7 +34,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const itemsInCart = useAppSelector(totalItemsCart);
   const dispatch = useAppDispatch();
 
-  const handleUnreadNotification = async () => {
+  const handleUnreadNotification = useCallback(async () => {
     try {
       if (data?.user.id) {
         const { totalCount } = await countUnreadNotifications(data?.user.id);
@@ -50,7 +50,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
       toast.error("Failed to read unread notification !");
       console.log(error);
     }
-  };
+  })
 
   const handleNotificationStatusUpdate = async () => {
     if (changeNotificationRef.current) return;
@@ -70,7 +70,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
 
   useEffect(() => {
     handleUnreadNotification();
-  }, []);
+  }, [handleUnreadNotification]);
 
   useEffect(() => {
     (async () => {
