@@ -18,6 +18,7 @@ import { selectFavoriteCount } from "@/src/store/faviourites/selectors";
 import { totalItemsCart } from "@/src/store/carts/selectors";
 import { userUnfinishedCart } from "@/src/lib/server_actions/loadcart.server.action";
 import { ICartItem, setCart } from "@/src/store/carts/slice";
+import { getTotalOrdersCount } from "@/src/lib/server_actions/orders.server";
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
@@ -27,12 +28,13 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const { data } = useSession();
   console.log(data);
   const [count, setCount] = useState<number>(0);
+  const [totalOrders, setTotalOrders] = useState(0);
   const changeNotificationRef = useRef<boolean | null>(null);
   const favoriteItems = useAppSelector(selectFavoriteCount);
   const itemsInCart = useAppSelector(totalItemsCart);
   const dispatch = useAppDispatch();
 
-  const handleUnreadNotification = useCallback(async () => {
+  const handleUnreadNotification = async () => {
     try {
       if (data?.user.id) {
         const { totalCount } = await countUnreadNotifications(data?.user.id);
@@ -48,7 +50,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
       toast.error("Failed to read unread notification !");
       console.log(error);
     }
-  }, [data?.user.id]);
+  };
 
   const handleNotificationStatusUpdate = async () => {
     if (changeNotificationRef.current) return;
@@ -68,7 +70,22 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
 
   useEffect(() => {
     handleUnreadNotification();
-  }, [handleUnreadNotification]);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (!data?.user.id) {
+        return;
+      }
+      const res = await getTotalOrdersCount({ userId: data?.user.id });
+      if (!res) {
+        return;
+      }
+
+      const ordersCount = res.totalOrders;
+      setTotalOrders(ordersCount);
+    })();
+  }, [data?.user.id]);
 
   useEffect(() => {
     const syncCart = async () => {
@@ -159,13 +176,18 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
           </div>
         </Link>
 
-        <div className="relative group">
-          <Link href={"/orderstatus"}>
+        <Link href={"/orderstatus"}>
+          <div className="relative group">
             <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
               <Truck className="text-black group-hover:text-white transition-colors" />
             </button>
-          </Link>
-        </div>
+            {totalOrders > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                {totalOrders}
+              </span>
+            )}
+          </div>
+        </Link>
 
         {data?.user.id ? (
           <div>
