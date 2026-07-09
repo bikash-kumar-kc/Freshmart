@@ -1,8 +1,7 @@
 import { db } from "@/src/db/config";
 import { orderItems, orders, products, users } from "@/src/db/schema";
 import { manageApiResponse, manageError } from "@/src/utils/response";
-import { and, count, eq, sql } from "drizzle-orm";
-
+import { and, count, desc, eq, sql } from "drizzle-orm";
 
 export async function GET(
   req: Request,
@@ -74,7 +73,8 @@ export async function GET(
           eq(orders.isPaymentProcess, false),
         ),
       )
-      .groupBy(orders.id);
+      .groupBy(orders.id)
+      .orderBy(desc(orders.updatedAt));
 
     if (ordersInfo.length === 0) {
       return Response.json(
