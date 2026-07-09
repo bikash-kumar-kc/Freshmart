@@ -19,7 +19,7 @@ console.log("here")
 
   if (showLoading) {
     return (
-      <div className="mt-2 bg-white rounded-lg py-3 z-10">
+      <div className="mt-2 bg-white rounded-lg py-3 z-50">
         <div className="flex flex-col gap-3">
           {/* Show 5 skeleton items */}
           {[...Array(5)].map((_, idx) => (

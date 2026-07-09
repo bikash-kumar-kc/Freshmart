@@ -26,7 +26,7 @@ const BannerCarousel = () => {
     >
       <CarouselContent>
         {FeaturedProducts?.map((prod, index) => {
-          // const { id, name, price, unit, image, alt } = prod;
+        
           return (
             <CarouselItem
               key={index}
