@@ -13,6 +13,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import { randomUUID } from "node:crypto";
 import { success } from "zod";
+import { cacheLife, cacheTag } from "next/cache";
 
 export interface IPRODUCTRESPONSE {
   id: string;
@@ -72,6 +73,9 @@ export async function getProductByCategorySlug(
   category: string,
   slug: string,
 ): Promise<GetProductResult> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`product:${category}:${slug}`);
   try {
     if (!category?.trim() || !slug?.trim()) {
       return {
