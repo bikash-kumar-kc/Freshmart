@@ -10,7 +10,6 @@ import ProductsSuspenseFallback from "../components/client/product/ProductsCateg
 import SpecialProductsSkeleton from "@/components/skeleton/SpecialProductSkeleton";
 import OfferedProducts from "../components/client/product/OfferedProducts";
 import PopularProducts from "../components/client/product/PopularProducts";
-// import NotificationLayout from "../components/client/NotificationLayout";
 import ReduxProvider from "./providers/ReduxProvider";
 
 export default function Home() {
