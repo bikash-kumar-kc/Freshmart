@@ -45,7 +45,7 @@ const BannerCarousel = () => {
                 />
 
                 <div className="relative py-10 bg-red-500">
-                  <div className="absolute left-8 -top-25 z-50">
+                  <div className="absolute left-8 -top-25 z-40">
                     <BannerProductCard
                       thumbnail={""}
                       productName={prod.name}

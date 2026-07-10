@@ -18,6 +18,7 @@ const SearchBar = () => {
       (e) => {
         e.preventDefault();
         if (!searchTerm.trim()) return;
+        setSearchTerm("")
         router.push(`/product/${searchTerm}`);
       },
       [router, searchTerm],
@@ -26,7 +27,7 @@ const SearchBar = () => {
   return (
     <div className="relative w-full">
       <form onSubmit={handleSearchSubmit}>
-        <div className="flex w-full border border-gray-300 rounded-[10px] lg:rounded-3xl overflow-hidden bg-white">
+        <div className="flex w-full border border-gray-300 rounded-[10px] lg:rounded-3xl overflow-visible bg-white">
           <input
             type="text"
             value={searchTerm}
@@ -56,7 +57,7 @@ const SearchBar = () => {
 
       {searchTerm.length > 0 && (
         <div className="absolute z-50 top-14 left-0 w-full">
-          <Suggestions suggestions={data ?? []} showLoading={isLoading} />
+          <Suggestions suggestions={data ?? []} showLoading={isLoading} RemoveSuggestion={()=>setSearchTerm("")} />
         </div>
       )}
     </div>

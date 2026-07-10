@@ -35,7 +35,7 @@ export default function NotificationLayout() {
   return (
     <SessionProvider>
       <ReduxProvider>
-        <div ref={notificationRef} className="w-full z-50 ">
+        <div ref={notificationRef} className="w-full">
           <Header handleNotificationPanelOpen={handleNotificationPanelOpen} />
 
           <NotificationPanel isOpen={isOpen} />
