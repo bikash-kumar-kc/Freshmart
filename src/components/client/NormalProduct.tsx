@@ -1,7 +1,5 @@
 "use client";
 import { CATEGORIES } from "@/src/app/categories/categories";
-import { isAllowedToAddedInCart } from "@/src/store/carts/selectors";
-import { useAppSelector } from "@/src/store/hook";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -23,7 +21,7 @@ export default function HoverRevealCard({
   return (
     <Link href={`/categories/${slug}/${productId}`}>
       <div className="group relative w-60 overflow-hidden rounded-sm">
-        {/* Image */}
+       
         <div className="relative h-60 w-full">
           <Image
             src={

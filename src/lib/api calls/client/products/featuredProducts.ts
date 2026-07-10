@@ -6,7 +6,7 @@ type IFeaturedProductResponse = IAPIResponseTypes<IFeaturedProductsData>;
 
 export const getFeaturedProducts = async (): Promise<IFeaturedProductsData> => {
   try {
-    const response = await fetch("http://localhost:3000/api/products/featuredProducts");
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/featuredProducts`);
     if (!response.ok) {
       const error =
         response.status === 404 ? await response.text() : await response.json();
