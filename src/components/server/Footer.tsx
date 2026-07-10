@@ -142,7 +142,7 @@ const Footer = () => {
       {/* ── Bottom bar ───────────────────────────────────────────────── */}
       <div className=" w-full px-6 mt-10 border-t border-green-900 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="text-[12px] text-green-600">
-          &copy; {new Date().getFullYear()} FreshMart. All rights reserved.
+          &copy;FreshMart. All rights reserved.
         </p>
         <div className="flex items-center gap-5">
           {["Privacy policy", "Terms of service", "Cookie settings"].map(
