@@ -21,21 +21,10 @@ export const getPopularProducts =
   async (): Promise<IPopularProductApiResponse> => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/products/popularProducts",
+        `${process.env.NEXT_PUBLIC_API_URL}api/products/popularProducts`,
       );
       if (!response.ok) {
-        const error =
-          response.status === 404
-            ? await response.text()
-            : await response.json();
-
-        throw new Error(
-          response.status === 404
-            ? "route not found"
-            : error.message
-              ? error.message
-              : "Failed to get the featured products ",
-        );
+        throw new Error("Failed to get the featured products ");
       }
       const data: IPopularProductResponse = await response.json();
       return {

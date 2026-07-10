@@ -10,8 +10,8 @@ interface IOfferedProduct {
   weightValue: number | null;
   weightUnit: string | null;
   price: number | null;
-  category:string;
-  stock:number;
+  category: string;
+  stock: number;
 }
 
 interface IOfferedProductApiResponse {
@@ -24,20 +24,13 @@ export const getOfferedProducts =
   async (): Promise<IOfferedProductApiResponse> => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/products/offerProducts",
+        `${process.env.NEXT_PUBLIC_API_URL}api/products/offerProducts`,
       );
       if (!response.ok) {
-        const error =
-          response.status === 404
-            ? await response.text()
-            : await response.json();
+        
 
         throw new Error(
-          response.status === 404
-            ? "route not found"
-            : error.message
-              ? error.message
-              : "Failed to get the featured products ",
+         "failed to get offered products"
         );
       }
       const data: IOfferedProductResponse = await response.json();

@@ -8,16 +8,7 @@ export const getFeaturedProducts = async (): Promise<IFeaturedProductsData> => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/featuredProducts`);
     if (!response.ok) {
-      const error =
-        response.status === 404 ? await response.text() : await response.json();
-
-      throw new Error(
-        response.status === 404
-          ? "route not found"
-          : error.message
-            ? error.message
-            : "Failed to get the featured products ",
-      );
+     throw new Error("Failed to get featured products")
     }
     const data: IFeaturedProductResponse = await response.json();
     return {
