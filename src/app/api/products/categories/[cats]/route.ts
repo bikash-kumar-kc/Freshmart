@@ -3,6 +3,53 @@ import { products, productVariants } from "@/src/db/schema";
 import { ICategoriesProductReponse } from "@/src/types/product.types/productsbycategories.types";
 import { manageApiResponse, manageError } from "@/src/utils/response";
 import { and, eq, gt, inArray } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
+
+const getCachedCategoryProducts = async (
+  cats: string,
+  categoriesArray: string[],
+) => {
+  "use cache";
+  cacheLife("days");
+  cacheTag(`categories-${cats}`);
+
+  const response: ICategoriesProductReponse[] = await db
+    .select({
+      productId: products.id,
+      slug: products.slug,
+      productName: products.name,
+      thumbnail: products.thumbnail,
+      categoryName: products.category,
+      stock: productVariants.stock,
+    })
+    .from(products)
+    .innerJoin(productVariants, eq(productVariants.productId, products.id))
+    .where(
+      and(
+        inArray(products.category, categoriesArray),
+        gt(productVariants.stock, 0),
+      ),
+    );
+  // .limit(5);
+
+  if (response.length === 0) {
+    return [];
+  }
+
+  const groupedProducts = Object.entries(
+    Object.groupBy(response, (product) => product.categoryName),
+  ).map(([category, products]) => ({
+    category,
+    products,
+  }));
+
+  const filteredGroupProducts = groupedProducts.map((gc) => ({
+    ...gc,
+    products: gc.products ? gc.products.splice(0, 5) : gc.products,
+  }));
+
+  return filteredGroupProducts;
+};
 
 export async function GET(
   req: Request,
@@ -19,24 +66,8 @@ export async function GET(
     const categoriesArray = catArray.map((c) =>
       c.includes("&") ? c.split("&").join("&") : c,
     );
-    const response: ICategoriesProductReponse[] = await db
-      .select({
-        productId: products.id,
-        slug: products.slug,
-        productName: products.name,
-        thumbnail: products.thumbnail,
-        categoryName: products.category,
-        stock:productVariants.stock
-      })
-      .from(products)
-      .innerJoin(productVariants, eq(productVariants.productId, products.id))
-      .where(
-        and(
-          inArray(products.category, categoriesArray),
-          gt(productVariants.stock, 0),
-        ),
-      );
-    // .limit(5);
+
+    const response = await getCachedCategoryProducts(cats, categoriesArray);
 
     if (response.length === 0) {
       return Response.json(
@@ -53,24 +84,7 @@ export async function GET(
       );
     }
 
-    // console.log("response", response);
-
-    const groupedProducts = Object.entries(
-      Object.groupBy(response, (product) => product.categoryName),
-    ).map(([category, products]) => ({
-      category,
-      products,
-    }));
-
-    const filteredGroupProducts = groupedProducts.map((gc) => ({
-      ...gc,
-      products: gc.products ? gc.products.splice(0, 5) : gc.products,
-    }));
-
-    const resObj = manageApiResponse(
-      "categoriesBasedProducts",
-      filteredGroupProducts,
-    );
+    const resObj = manageApiResponse("categoriesBasedProducts", response);
 
     return Response.json(
       {

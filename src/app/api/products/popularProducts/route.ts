@@ -1,8 +1,7 @@
 import { db } from "@/src/db/config";
 import { products, productVariants } from "@/src/db/schema";
 import { and, eq, inArray } from "drizzle-orm";
-
-export const revalidate = 86400;
+import { cacheLife } from "next/cache";
 
 export const productInformationRequired = {
   id: products.id,
@@ -32,74 +31,90 @@ export interface IPopularProduct {
   stock: number;
 }
 
-export async function GET() {
-  try {
-    const popularProducts = await db
-      .select({
-        ...productInformationRequired,
-        category: products.category,
-        isOffered: products.isOffered,
-      })
-      .from(products)
-      .where(
-        and(eq(products.isMostPopular, true), eq(products.isOffered, false)),
-      );
+export async function getPopularProducts() {
+  "use cache";
+  cacheLife("days");
 
-    if (popularProducts.length === 0) {
+  const popularProducts = await db
+    .select({
+      id: products.id,
+      slug: products.slug,
+      thumbnail: products.thumbnail,
+      name: products.name,
+      description: products.description,
+      category: products.category,
+      isOffered: products.isOffered,
+    })
+    .from(products)
+    .where(
+      and(eq(products.isMostPopular, true), eq(products.isOffered, false)),
+    );
+
+  if (popularProducts.length === 0) {
+    return [];
+  }
+
+  const productIds = popularProducts.map((p) => p.id);
+
+  const variants = await db
+    .select({
+      productId: productVariants.productId,
+      weightValue: productVariants.weightValue,
+      weightUnit: productVariants.weightUnit,
+      price: productVariants.price,
+      stock: productVariants.stock,
+    })
+    .from(productVariants)
+    .where(inArray(productVariants.productId, productIds));
+
+  const cheapest = new Map<string, (typeof variants)[number]>();
+
+  for (const v of variants) {
+    const existing = cheapest.get(v.productId);
+
+    if ((!existing || v.weightValue < existing.weightValue) && v.stock > 0) {
+      cheapest.set(v.productId, v);
+    }
+  }
+
+  return popularProducts.map((p) => {
+    const variant = cheapest.get(p.id);
+
+    return {
+      ...p,
+      weightValue: variant?.weightValue ?? null,
+      weightUnit: variant?.weightUnit ?? null,
+      price: variant?.price ?? null,
+      stock: variant?.stock ?? 0,
+    };
+  });
+}
+
+export async function GET() {
+
+  try {
+    const response = await getPopularProducts();
+
+    if (response.length === 0) {
       return Response.json(
         {
           success: true,
           data: {
-            popularProducts: [],
+            PopularProducts: [],
             totalPopularProducts: 0,
           },
         },
-        { status: 200 },
+        {
+          status: 200,
+        },
       );
     }
-
-    const productIds = popularProducts.map((p) => p.id);
-
-    const variantRows = await db
-      .select({
-        productId: productVariants.productId,
-        weightValue: productVariants.weightValue,
-        weightUnit: productVariants.weightUnit,
-        price: productVariants.price,
-        stock: productVariants.stock,
-      })
-      .from(productVariants)
-      .where(inArray(productVariants.productId, productIds));
-
-    const cheapestByProductId = new Map<string, (typeof variantRows)[0]>();
-    for (const v of variantRows) {
-      const existing = cheapestByProductId.get(v.productId);
-      if (!existing || v.weightValue < existing.weightValue) {
-        const isOutOfStock = v.stock === 0;
-        if (!isOutOfStock) {
-          cheapestByProductId.set(v.productId, v);
-        }
-      }
-    }
-
-    const result: IPopularProduct[] = popularProducts.map((p) => {
-      const variant = cheapestByProductId.get(p.id);
-      return {
-        ...p,
-        weightValue: variant?.weightValue ?? null,
-        weightUnit: variant?.weightUnit ?? null,
-        price: variant?.price ?? null,
-        isOutOfStock: variant?.stock === 0 ? true : false,
-        stock: variant?.stock as number,
-      };
-    });
-
     return Response.json(
       {
         success: true,
         data: {
-          popularProducts: result,
-          totalPopularProducts: result.length,
+          popularProducts: response,
+          totalPopularProducts: response.length,
         },
       },
       { status: 200 },

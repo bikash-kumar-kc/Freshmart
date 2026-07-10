@@ -1,8 +1,7 @@
 import { db } from "@/src/db/config";
 import { products, productVariants } from "@/src/db/schema";
 import { and, eq, inArray } from "drizzle-orm";
-
-export const revalidate = 86400;
+import { cacheLife, cacheTag } from "next/cache";
 
 export interface IProduct {
   weightValue: number | null;
@@ -16,81 +15,82 @@ export interface IProduct {
   discount: number | null;
   isFeatured: boolean;
   category: string;
-  stock:number
+  stock: number;
 }
 export interface IFeaturedProductsData {
   featuredProducts: IProduct[];
   totalFeaturedProducts: number;
 }
 
+const getFeaturedProducts = async () => {
+  "use cache";
+  cacheLife("days");
+  cacheTag("featured-products");
+  const featuredProducts = await db
+    .select({
+      productId: products.id,
+      name: products.name,
+      slug: products.slug,
+      descriptions: products.description,
+      thumbnail: products.thumbnail,
+      discount: products.discount,
+      isFeatured: products.isFeatured,
+      category: products.category,
+    })
+    .from(products)
+    .where(and(eq(products.isFeatured, true), eq(products.status, "active")));
+
+  if (featuredProducts.length === 0) {
+    return [];
+  }
+
+  const arrayOfFeaturedProductIds = featuredProducts.map((p) => p.productId);
+
+  const featuredProductVarients = await db
+    .select({
+      productId: productVariants.productId,
+      weightValue: productVariants.weightValue,
+      weightUnit: productVariants.weightUnit,
+      price: productVariants.price,
+      stock: productVariants.stock,
+    })
+    .from(productVariants)
+    .where(inArray(productVariants.productId, arrayOfFeaturedProductIds));
+
+  const cheapestByProductId = new Map<
+    string,
+    (typeof featuredProductVarients)[0]
+  >();
+  for (const v of featuredProductVarients) {
+    const existing = cheapestByProductId.get(v.productId);
+    if (!existing || v.weightValue < existing.weightValue) {
+      const isOutOfStock = v.stock === 0;
+      if (!isOutOfStock) cheapestByProductId.set(v.productId, v);
+    }
+  }
+
+  const result = featuredProducts.map((p) => {
+    const variant = cheapestByProductId.get(p.productId);
+    return {
+      ...p,
+      weightValue: variant?.weightValue ?? null,
+      weightUnit: variant?.weightUnit ?? null,
+      price: variant?.price ?? null,
+      stock: variant?.stock ?? null,
+    };
+  });
+
+  return result;
+};
 export async function GET() {
   try {
-    const featuredProducts = await db
-      .select({
-        productId: products.id,
-        name: products.name,
-        slug: products.slug,
-        descriptions: products.description,
-        thumbnail: products.thumbnail,
-        discount: products.discount,
-        isFeatured: products.isFeatured,
-        category: products.category,
-      })
-      .from(products)
-      .where(and(eq(products.isFeatured, true), eq(products.status, "active")));
-
-    if (featuredProducts.length === 0) {
-      return Response.json({
-        success: true,
-        data: {
-          featuredProducts,
-          totalFeaturedProducts: 0,
-        },
-      });
-    }
-
-    const arrayOfFeaturedProductIds = featuredProducts.map((p) => p.productId);
-
-    const featuredProductVarients = await db
-      .select({
-        productId: productVariants.productId,
-        weightValue: productVariants.weightValue,
-        weightUnit: productVariants.weightUnit,
-        price: productVariants.price,
-        stock: productVariants.stock,
-      })
-      .from(productVariants)
-      .where(inArray(productVariants.productId, arrayOfFeaturedProductIds));
-
-    const cheapestByProductId = new Map<
-      string,
-      (typeof featuredProductVarients)[0]
-    >();
-    for (const v of featuredProductVarients) {
-      const existing = cheapestByProductId.get(v.productId);
-      if (!existing || v.weightValue < existing.weightValue) {
-        const isOutOfStock = v.stock === 0;
-        if (!isOutOfStock) cheapestByProductId.set(v.productId, v);
-      }
-    }
-
-    const result = featuredProducts.map((p) => {
-      const variant = cheapestByProductId.get(p.productId);
-      return {
-        ...p,
-        weightValue: variant?.weightValue ?? null,
-        weightUnit: variant?.weightUnit ?? null,
-        price: variant?.price ?? null,
-        stock: variant?.stock ?? null,
-      };
-    });
-
+    const response = await getFeaturedProducts();
     return Response.json(
       {
         success: true,
         data: {
-          featuredProducts: result,
-          totalFeaturedProducts: featuredProducts.length,
+          featuredProducts: response,
+          totalFeaturedProducts: response.length,
         },
       },
       {
