@@ -4,6 +4,7 @@ import { products, productVariants } from "@/src/db/schema";
 import { productInformationRequired } from "../popularProducts/route";
 import { manageApiResponse, manageError } from "@/src/utils/response";
 import { and, eq, inArray } from "drizzle-orm";
+export const revalidate = 86400;
 
 export interface IOfferedProduct {
   id: string;

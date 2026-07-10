@@ -2,6 +2,8 @@ import { db } from "@/src/db/config";
 import { products, productVariants } from "@/src/db/schema";
 import { and, eq, inArray } from "drizzle-orm";
 
+export const revalidate = 86400;
+
 export interface IProduct {
   weightValue: number | null;
   weightUnit: string | null;

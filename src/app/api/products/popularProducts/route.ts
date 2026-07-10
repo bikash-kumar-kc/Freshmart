@@ -2,7 +2,7 @@ import { db } from "@/src/db/config";
 import { products, productVariants } from "@/src/db/schema";
 import { and, eq, inArray } from "drizzle-orm";
 
-export const REVALIDATE_TIME = 86400;
+export const revalidate = 86400;
 
 export const productInformationRequired = {
   id: products.id,
