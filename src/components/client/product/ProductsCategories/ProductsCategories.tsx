@@ -48,9 +48,9 @@ const ProductsCategories = () => {
 
   return (
     <div className="w-full max-w-7xl m-auto  ">
-      <div className="w-full flex flex-col gap-5">
+      <div className="w-full flex flex-col gap-5 mt-8">
         {categoriesProducts?.catBundle?.map((c) => (
-          <div key={c.category} className="flex flex-col gap-2 mt-8">
+          <div key={c.category} className="flex flex-col gap-2">
             <h2 className="font-semibold text-2xl ">{c.category}</h2>
             <div className="w-full flex flex-wrap flex-row gap-4 justify-between items-center space-y-2">
               {c?.products.map((p,index) => (
