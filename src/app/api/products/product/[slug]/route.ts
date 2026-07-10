@@ -2,7 +2,58 @@ import { db } from "@/src/db/config";
 import { products, productVariants } from "@/src/db/schema";
 import { manageError } from "@/src/utils/response";
 import { eq } from "drizzle-orm";
-import { NextRequest } from "next/server";
+import { cacheLife, cacheTag } from "next/cache";
+import { NextRequest } from "next/server"; 
+
+
+
+const getCachedProduct = async (slug: string) => {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`product-${slug}`);
+  const [response] = await db
+    .select({
+      id: products.id,
+      slug: products.slug,
+      category: products.category,
+      name: products.name,
+      thumbnail: products.thumbnail,
+      isOffered: products.isOffered,
+      status: products.status,
+      discount: products.discount,
+    })
+    .from(products)
+    .where(eq(products.slug, slug));
+
+  const productId = response.id;
+
+  if (!productId) {
+    throw new Error("Failed to get product id!");
+  }
+
+  const productVarient = await db
+    .select({
+      price: productVariants.price,
+      weightValue: productVariants.weightValue,
+      weightUnit: productVariants.weightUnit,
+      stock: productVariants.stock,
+    })
+    .from(productVariants)
+    .where(eq(productVariants.productId, productId));
+
+  if (!productVarient || productVarient.length === 0) {
+    throw new Error("Failed to get product varients !");
+  }
+
+  const cheapestVariant = productVarient.reduce((cheapest, current) =>
+    current.price < cheapest.price ? current : cheapest,
+  );
+
+  return {
+    response,
+    cheapestVariant,
+  };
+};
 
 export async function GET(
   res: NextRequest,
@@ -23,45 +74,7 @@ export async function GET(
       );
     }
 
-    const [response] = await db
-      .select({
-        id: products.id,
-        slug: products.slug,
-        category: products.category,
-        name: products.name,
-        thumbnail: products.thumbnail,
-        isOffered: products.isOffered,
-        status: products.status,
-        discount: products.discount,
-      })
-      .from(products)
-      .where(eq(products.slug, slug));
-
-    const productId = response.id;
-
-    if (!productId) {
-      throw new Error("Failed to get product id!");
-    }
-
-    const productVarient = await db
-      .select({
-        price: productVariants.price,
-        weightValue:productVariants.weightValue,
-        weightUnit: productVariants.weightUnit,
-        stock:productVariants.stock
-      })
-      .from(productVariants)
-      .where(eq(productVariants.productId, productId));
-
-
-
-    if (!productVarient || productVarient.length === 0) {
-      throw new Error("Failed to get product varients !");
-    }
-
-    const cheapestVariant = productVarient.reduce((cheapest, current) =>
-      current.price < cheapest.price ? current : cheapest,
-    );
+    const { response, cheapestVariant } = await getCachedProduct(slug);
 
     const requiredObj = {
       ...response,
