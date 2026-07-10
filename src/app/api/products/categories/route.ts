@@ -2,7 +2,6 @@ import { db } from "@/src/db/config";
 import { products } from "@/src/db/schema";
 import { manageApiResponse, manageError } from "@/src/utils/response";
 
-export const dynamic = "force-static";
 
 export interface ICategoriesTypes {
   category: string;
