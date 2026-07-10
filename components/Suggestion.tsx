@@ -6,10 +6,10 @@ import { useCallback } from "react";
 export interface ISuggestionTypes {
   suggestions: ISearchResult[] | [];
   showLoading: boolean;
+  RemoveSuggestion: () => void;
 }
-const Suggestion = ({ suggestions, showLoading }: ISuggestionTypes) => {
+const Suggestion = ({ suggestions, showLoading,RemoveSuggestion }: ISuggestionTypes) => {
   const router = useRouter();
-console.log("here")
   const handleOnClick = useCallback(
     (slug: string, category: string) => {
       router.push(`/product/${category}/${slug}`);
@@ -19,7 +19,7 @@ console.log("here")
 
   if (showLoading) {
     return (
-      <div className="mt-2 bg-white rounded-lg py-3 z-50">
+      <div className="mt-2 bg-white rounded-lg py-3">
         <div className="flex flex-col gap-3">
           {/* Show 5 skeleton items */}
           {[...Array(5)].map((_, idx) => (
@@ -32,7 +32,7 @@ console.log("here")
 
   if (!suggestions || suggestions.length === 0) {
     return (
-      <div className="mt-2 bg-white text-black rounded-lg p-3 z-10">
+      <div className="mt-2 bg-white text-black rounded-lg p-3 ">
         <p className="text-xs font-medium">
           No suggestions found. Try searching something else!
         </p>
@@ -41,16 +41,17 @@ console.log("here")
   }
 
   return (
-    <div className="bg-white text-gray-700 rounded-lg border border-gray-100 py-3 z-50 shadow-sm shadow-gray-200">
+    <div className="bg-white text-gray-700 rounded-lg border border-gray-100 py-3 shadow-sm shadow-gray-200">
       <div className="flex flex-col gap-2">
         {suggestions?.map((suggestion, idx) => {
           return (
             <div
               key={suggestion?.productId || idx}
               className="flex items-center gap-2 hover:bg-gray-100 px-3 cursor-pointer h-fit"
-              onClick={() =>
-                handleOnClick(suggestion.slug, suggestion.category)
-              }
+              onClick={() => {
+                handleOnClick(suggestion.slug, suggestion.category);
+                RemoveSuggestion();
+              }}
             >
               <div className="relative w-8 h-8">
                 <Image
