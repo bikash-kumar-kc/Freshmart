@@ -48,7 +48,7 @@ const SearchBar = () => {
           <button
             type="submit"
             disabled={!searchTerm.trim()}
-            className="px-4 bg-[#ffeaef] text-gray-600 flex items-center justify-center cursor-pointer hover:bg-[#e27991] hover:text-white duration-200"
+            className="px-4 bg-[#ffeaef] text-gray-600 flex items-center justify-center cursor-pointer hover:bg-[#e27991] hover:text-white duration-200  rounded-br-2xl rounded-tr-2xl"
           >
             <Search />
           </button>
