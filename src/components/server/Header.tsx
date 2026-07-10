@@ -15,7 +15,10 @@ import {
 } from "@/src/lib/server_actions/notifications.server";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { selectFavoriteCount } from "@/src/store/faviourites/selectors";
-import { totalItemsCart } from "@/src/store/carts/selectors";
+import {
+  getAllItemsFromCart,
+  totalItemsCart,
+} from "@/src/store/carts/selectors";
 import { userUnfinishedCart } from "@/src/lib/server_actions/loadcart.server.action";
 import { ICartItem, setCart } from "@/src/store/carts/slice";
 import { getTotalOrdersCount } from "@/src/lib/server_actions/orders.server";
@@ -33,6 +36,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const favoriteItems = useAppSelector(selectFavoriteCount);
   const itemsInCart = useAppSelector(totalItemsCart);
   const dispatch = useAppDispatch();
+  const allCartProducts = useAppSelector(getAllItemsFromCart);
 
   const handleUnreadNotification = useCallback(async () => {
     try {
@@ -50,7 +54,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
       toast.error("Failed to read unread notification !");
       console.log(error);
     }
-  },[data?.user.id])
+  }, [data?.user.id]);
 
   const handleNotificationStatusUpdate = async () => {
     if (changeNotificationRef.current) return;
@@ -102,7 +106,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
     };
 
     syncCart();
-  }, [dispatch]);
+  }, [dispatch, allCartProducts?.totalItems]);
 
   return (
     <div

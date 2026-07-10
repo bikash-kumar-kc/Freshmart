@@ -18,7 +18,7 @@ import {
 } from "@/src/store/carts/selectors";
 import EmptyCart from "./components/EmptyCart";
 import CartRow from "./components/CartRow";
-import { clearCartItems } from "@/src/store/carts/slice";
+import { clearCartItems} from "@/src/store/carts/slice";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -157,8 +157,11 @@ export default function CartPage() {
 
         if (orderCreatedInfo.type === "save") {
           toast.success("Cart saved successfully !");
-          dispatch(clearCartItems());
+          setTimeout(() => {
+            dispatch(clearCartItems());
+          }, 1000);
           router.push("/");
+
           return;
         }
 
@@ -214,6 +217,7 @@ export default function CartPage() {
         alreadyNotify.current = true;
       }
   }, [isFromDb, allCartProducts?.totalItems]);
+
 
   if (allCartProducts?.totalItems === 0) {
     return (
