@@ -1,4 +1,3 @@
-import { REVALIDATE_TIME } from "@/src/app/api/products/popularProducts/route";
 
 export interface IAPIResponseTypes<T> {
   success: boolean;
@@ -27,9 +26,9 @@ interface IPopularProductsData {
 type IPopularProductResponse = IAPIResponseTypes<IPopularProductsData>;
 
 export const getPopularProducts = async (): Promise<IPopularProductsData> => {
-  const res = await fetch("http://localhost:3000/api/products/popularProducts", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/popularProducts`, {
     next: {
-      revalidate: REVALIDATE_TIME,
+      revalidate: 8600,
     },
   });
 
