@@ -18,7 +18,7 @@ import {
 } from "@/src/store/carts/selectors";
 import EmptyCart from "./components/EmptyCart";
 import CartRow from "./components/CartRow";
-import { clearCartItems} from "@/src/store/carts/slice";
+import { clearCartItems } from "@/src/store/carts/slice";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -93,6 +93,7 @@ export default function CartPage() {
                 weightValue: i.varient.weightValue,
                 weightUnit: i.varient.weightUnit as "g" | "kg" | "ml" | "l",
                 quantity: i.quantity,
+                slug: i.slug,
               };
             }),
             totalDiscount: cartAmountSummary?.tda as number,
@@ -125,12 +126,14 @@ export default function CartPage() {
           weightValue: number;
           weightUnit: "g" | "kg" | "ml" | "l";
           quantity: number;
+          slug: string;
         }[] = allCartProducts.items.cartItems.map((i) => {
           return {
             productId: i.productId,
             weightValue: i.varient.weightValue,
             weightUnit: i.varient.weightUnit as "g" | "kg" | "ml" | "l",
             quantity: i.quantity,
+            slug: i.slug,
           };
         });
 
@@ -217,7 +220,6 @@ export default function CartPage() {
         alreadyNotify.current = true;
       }
   }, [isFromDb, allCartProducts?.totalItems]);
-
 
   if (allCartProducts?.totalItems === 0) {
     return (

@@ -5,6 +5,7 @@ import { orders, orderItems, productVariants, products } from "@/src/db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import { getStripeClient } from "@/src/stripe";
 import { createNotification } from "@/src/lib/server_actions/notifications.server";
+import { revalidateCacheTag } from "@/src/utils/revalidateTag";
 // import { createNotification } from "@/src/lib/notifications";
 
 export async function POST(req: Request) {
@@ -79,6 +80,7 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
       weightValue: orderItems.weightValue,
       weightUnit: orderItems.weightUnit,
       quantity: orderItems.quantity,
+      slug: orderItems.slug,
     })
     .from(orderItems)
     .where(eq(orderItems.orderId, orderId));
@@ -140,6 +142,10 @@ async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
       }
     }
   });
+
+  const slugs = items.map((i) => i.slug);
+
+  slugs.forEach((s) => revalidateCacheTag(s));
 
   // notifications outside transaction, non-critical...
   try {

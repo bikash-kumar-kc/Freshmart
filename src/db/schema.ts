@@ -329,6 +329,8 @@ export const orderItems = sqliteTable(
     weightUnit: text("weight_unit", {
       enum: ["g", "kg", "l", "ml"],
     }).notNull(),
+    slug: text("slug").notNull(),
+    
   },
   (table) => [
     index("order_items_order_idx").on(table.orderId),

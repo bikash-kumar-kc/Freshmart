@@ -9,7 +9,7 @@ import { NextRequest } from "next/server";
 
 const getCachedProduct = async (slug: string) => {
   "use cache";
-  cacheLife("hours");
+  cacheLife("minutes");
   cacheTag(`product-${slug}`);
   const [response] = await db
     .select({
