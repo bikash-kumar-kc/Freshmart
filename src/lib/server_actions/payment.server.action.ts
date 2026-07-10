@@ -180,6 +180,7 @@ export const paymentInitiator = async ({
                 productId: item.productId,
                 weightValue: String(item.weightValue),
                 weightUnit: item.weightUnit,
+                slug: item.product.slug,
               },
             },
             unit_amount: unitAmountInPaisa,

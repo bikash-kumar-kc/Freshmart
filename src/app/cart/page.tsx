@@ -157,6 +157,7 @@ export default function CartPage() {
 
         if (orderCreatedInfo.type === "save") {
           toast.success("Cart saved successfully !");
+          dispatch(clearCartItems());
           router.push("/");
           return;
         }
@@ -192,7 +193,6 @@ export default function CartPage() {
           toast.error(error.message);
           return;
         }
-
         toast.error("Failed to create ordered !");
       } finally {
         if (type === "save_cart") {

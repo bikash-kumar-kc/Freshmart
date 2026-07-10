@@ -60,7 +60,6 @@ export async function POST(req: Request) {
 
 //checkout.session.completed ...
 async function handlePaymentSuccess(session: Stripe.Checkout.Session) {
-  console.log("payment got successed !");
   const { orderId, userId, totalPrice, totalPriceAfterDiscount, totalSave } =
     session.metadata ?? {};
   if (!orderId || !userId)
