@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getLocally, saveLocally } from "@/src/lib/localstorage";
+import { getLocally, saveLocally } from "@/src/lib/localstorage/localstorage";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { registerUser } from "@/src/lib/server_actions/auth.server.action";

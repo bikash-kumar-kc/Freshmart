@@ -1,5 +1,5 @@
 import { getServerSession, Session } from "next-auth";
-import { authOptions } from "../lib/auth";
+import { authOptions } from "../lib/auth/auth";
 
 export const isUserLoggedIn = async (): Promise<{
   loggedIn: boolean;

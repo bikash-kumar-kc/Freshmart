@@ -9,7 +9,7 @@ import {
 } from "@/src/db/schema";
 import { eq, and, gte, lt, isNull } from "drizzle-orm";
 import webpush from "web-push";
-import qstash from "../../../qstash/index";
+import qstash from "../../../qstash/client";
 
 webpush.setVapidDetails(
   process.env.VAPID_MAILTO!,

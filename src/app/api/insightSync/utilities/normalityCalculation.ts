@@ -1,4 +1,4 @@
-import { ProductSignal } from "./popularProducts";
+import { ProductSignal } from "./productSignal";
 
 export interface ScoredProduct extends ProductSignal {
   score: number; // 0–1

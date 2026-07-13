@@ -6,7 +6,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getLocally } from "@/src/lib/localstorage";
+import { getLocally } from "@/src/lib/localstorage/localstorage";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 

@@ -2,7 +2,7 @@ import {
   getAllOrders,
   IOrderType,
 } from "@/src/lib/api calls/server/getAllOrders";
-import { authOptions } from "@/src/lib/auth";
+import { authOptions } from "@/src/lib/auth/auth";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { TABS } from "./constant/constant";

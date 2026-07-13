@@ -9,10 +9,10 @@ import {
   freqProducts,
 } from "@/src/db/schema";
 import { eq, and } from "drizzle-orm";
-import { collectProductSignals } from "./utilities/popularProducts";
+import { collectProductSignals } from "./utilities/productSignal";
 import { computePopularityScores } from "./utilities/normalityCalculation";
-import { getTop20PercentThreshold } from "./utilities/top20Percent";
-import { pickTop5Popular } from "./utilities/pickTop5Popular";
+import { getTop20PercentThreshold } from "../popularityCheck/utilis/top20Percent";
+import { pickTop5Popular } from "../popularityCheck/utilis/pickTop5Popular";
 import { writePopularityScores } from "./utilities/popularityStatusUpdated";
 
 export const getUserList = tool({

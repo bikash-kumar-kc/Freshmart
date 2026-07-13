@@ -1,7 +1,7 @@
 "use server";
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth";
+import { authOptions } from "../auth/auth";
 import { db } from "@/src/db/config";
 import { and, count, eq } from "drizzle-orm";
 import { orders } from "@/src/db/schema";

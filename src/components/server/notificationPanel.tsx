@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Bell, Trash2 } from "lucide-react";
 import { TYPE_CONFIG } from "@/src/constants/mockNotifications";
-import { timeAgo } from "@/src/lib/timeFormater";
+import { timeAgo } from "@/src/utils/timeFormater";
 import {
   useDeleteNotification,
   useGetAllNotifications,

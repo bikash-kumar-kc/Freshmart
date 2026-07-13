@@ -6,7 +6,7 @@ import { and, eq } from "drizzle-orm";
 import { getStripeClient } from "@/src/stripe";
 import Stripe from "stripe";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth";
+import { authOptions } from "../auth/auth";
 
 interface IPaymentInitiatorType {
   userId: string;

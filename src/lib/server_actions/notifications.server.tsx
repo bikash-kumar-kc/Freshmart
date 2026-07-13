@@ -5,7 +5,7 @@ import { notfications, NotificationTypes } from "@/src/db/schema";
 import { and, count, eq } from "drizzle-orm";
 import { NotificationType } from "@/src/types/notificationTypes";
 import { randomUUID } from "node:crypto";
-import { authOptions } from "../auth";
+import { authOptions } from "../auth/auth";
 import { getServerSession } from "next-auth";
 
 interface IUnreadNotificationTypes {
