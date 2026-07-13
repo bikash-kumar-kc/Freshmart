@@ -37,6 +37,7 @@ export const getOrderHistory = tool({
     Do not call this for the same userId more than once.
     - note: one thing that take the latest 4 order history for each product and then find the frequency criteria.
     - note: considered one thing that is : like if a user buy a product in 8th then 10th then 12th then 14th but did not buy at 16th and then while calculating the frequncy product then considered today days and the interval remains same then processed otherwise skip.
+    - note: for each product , if the product is in frequency then do one things calcuated the next expected order date and call the 'writeOrderInsight' tools an insert a row in orderInsights
     `,
 
   inputSchema: z.object({
@@ -100,6 +101,9 @@ export const writeOrderInsight = tool({
     avgQuantity: z.number().describe("Average quantity per order"),
     weightUnit: z.string().describe("unit of product"),
     weightValue: z.number().describe("Price for a given unit to product"),
+    expectedNewOrderedDate: z
+      .string()
+      .describe("Next Expected date to purchase the product"),
   }),
 
   execute: async ({
@@ -110,6 +114,7 @@ export const writeOrderInsight = tool({
     avgQuantity,
     weightUnit,
     weightValue,
+    expectedNewOrderedDate,
   }) => {
     const now = new Date().toDateString();
     const id = `${userId}_${productId}`;
@@ -125,6 +130,7 @@ export const writeOrderInsight = tool({
         avgQuantity,
         weightUnit,
         weightValue,
+        nextExpectedDate: expectedNewOrderedDate,
         lastComputedAt: now,
       })
       .onConflictDoUpdate({

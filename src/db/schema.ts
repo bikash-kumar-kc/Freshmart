@@ -168,6 +168,7 @@ export const orderInsights = sqliteTable(
     avgQuantity: real("avg_quantity").notNull().default(1),
     weightUnit: text("weight_unit"),
     weightValue: integer("weight_value"),
+    nextExpectedDate: text("next_expected_date"),
     lastComputedAt: text("last_computed_at")
       .notNull()
       .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
