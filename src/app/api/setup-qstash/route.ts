@@ -22,7 +22,6 @@ export async function POST(request: Request) {
       success: true,
       message: "QStash schedules registered successfully.",
     });
-    
   } catch (error) {
     console.error(error);
 
@@ -30,6 +29,7 @@ export async function POST(request: Request) {
       {
         success: false,
         message: "Failed to register schedules.",
+        reason: error?.message,
       },
       {
         status: 500,
