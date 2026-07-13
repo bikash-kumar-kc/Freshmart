@@ -13,8 +13,8 @@ async function registerSchedules() {
   const jobs = [
     {
       name: "freqProdSync",
-      destination: `${APP_URL}api/freqProdSync`,
-      cron: "0 2 * * *",
+      destination: `${APP_URL}api/informUser`,
+      cron: "0 3 * * *",
       retries: 5,
     },
     {
