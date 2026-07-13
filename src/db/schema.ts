@@ -172,7 +172,11 @@ export const orderInsights = sqliteTable(
     lastComputedAt: text("last_computed_at")
       .notNull()
       .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    isNotificationSend: integer("is_notification_send", { mode: "boolean" })
+      .notNull()
+      .default(false),
   },
+
   (table) => [
     index("order_insights_user_product_idx").on(table.userId, table.productId),
   ],
