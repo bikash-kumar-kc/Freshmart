@@ -10,9 +10,8 @@ import {
 } from "@/src/db/schema";
 import { eq, and, ne, sql } from "drizzle-orm";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth";
+import { authOptions } from "../auth/auth";
 import { randomUUID } from "node:crypto";
-import { success } from "zod";
 import { cacheLife, cacheTag } from "next/cache";
 
 export interface IPRODUCTRESPONSE {
