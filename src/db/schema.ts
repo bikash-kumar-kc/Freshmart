@@ -166,6 +166,8 @@ export const orderInsights = sqliteTable(
     avgIntervalDays: real("avg_interval_days"),
     buyCount: integer("buy_count").notNull().default(0),
     avgQuantity: real("avg_quantity").notNull().default(1),
+    weightUnit: text("weight_unit"),
+    weightValue: integer("weight_value"),
     lastComputedAt: text("last_computed_at")
       .notNull()
       .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
@@ -234,6 +236,7 @@ export const jobRuns = sqliteTable("job_runs", {
   error: text("error"),
 });
 
+// notifications table...
 export const notfications = sqliteTable("notifications", {
   id: text("id").primaryKey(),
   userId: text("user_id")
@@ -250,6 +253,7 @@ export const notfications = sqliteTable("notifications", {
     .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
 });
 
+// orders table...
 export const orders = sqliteTable(
   "orders",
   {
@@ -305,6 +309,8 @@ export const orders = sqliteTable(
   ],
 );
 
+// order items table...
+
 export const orderItems = sqliteTable(
   "order_items",
   {
@@ -330,7 +336,6 @@ export const orderItems = sqliteTable(
       enum: ["g", "kg", "l", "ml"],
     }).notNull(),
     slug: text("slug").notNull(),
-    
   },
   (table) => [
     index("order_items_order_idx").on(table.orderId),
