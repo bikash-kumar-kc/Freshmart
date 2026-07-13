@@ -6,7 +6,7 @@ import { and, eq, gte, isNotNull, ne } from "drizzle-orm";
 export const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 // product signal types...
-export interface ProductSignal {
+export interface IProductSignal {
   productId: string;
   category: string;
   quantityOrdered: number;
@@ -15,7 +15,7 @@ export interface ProductSignal {
 
 // product signal modules...
 
-const collectProductSignals = async (): Promise<ProductSignal[]> => {
+const collectProductSignals = async (): Promise<IProductSignal[]> => {
   // seven days before date...
   const sevenDaysAgo = new Date(Date.now() - SEVEN_DAYS_MS).toISOString();
 
