@@ -1,16 +1,21 @@
 import { generateText, stepCountIs } from "ai";
 import { google } from "@ai-sdk/google";
-import { buildSuggestedCart, checkExistingCart, getDueFreqProducts, sendRestockNotification } from "./tools";
+import {
+  buildSuggestedCart,
+  checkExistingCart,
+  getDueFreqProducts,
+  sendRestockNotification,
+} from "./tools";
 
 export async function runRestockNotifierAgent() {
   const { text, steps } = await generateText({
-    model: google("gemini-2.5-flash"),
+    model: google(process.env.AI_MODEL as string),
     stopWhen: stepCountIs(300),
     tools: {
-        getDueFreqProducts,
-        checkExistingCart,
-        buildSuggestedCart,
-        sendRestockNotification,
+      getDueFreqProducts,
+      checkExistingCart,
+      buildSuggestedCart,
+      sendRestockNotification,
     },
     system: `
 You are a restock notification agent for a smart shopping assistant.

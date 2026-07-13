@@ -237,7 +237,6 @@ export const sendRestockNotification = tool({
           .update(users)
           .set({ pushSubscription: null })
           .where(eq(users.id, userId));
-
         await db
           .update(suggestedCarts)
           .set({ status: "notification_failed" })
