@@ -4,8 +4,7 @@ import { runInsightSyncAgent } from "./agent";
 import { db } from "@/src/db/config";
 import { jobRuns } from "@/src/db/schema";
 
-// app/api/agent/insight-sync/route.ts
-export const POST = verifySignatureAppRouter(async (req: Request) => {
+export const POST = verifySignatureAppRouter(async () => {
   const startedAt = new Date().toISOString();
   const runId = nanoid();
 
@@ -24,9 +23,7 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
     });
 
     return Response.json({ ok: true }, { status: 200 });
-
   } catch (err) {
-    // store failure too — useful for debugging
     await db.insert(jobRuns).values({
       id: runId,
       jobName: "insight-sync",
@@ -35,7 +32,6 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
       completedAt: new Date().toISOString(),
       error: String(err),
     });
-
     return Response.json({ ok: false }, { status: 500 });
   }
 });
