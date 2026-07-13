@@ -1,23 +1,17 @@
 import { generateText, stepCountIs } from "ai";
 import { google } from "@ai-sdk/google";
-import {
-  getOrderHistory,
-  getUserList,
-  updatePopularityScoresTool,
-  writeOrderInsight,
-} from "./tools";
+import { getOrderHistory, getUserList, writeOrderInsight } from "./tools";
 
 export async function runInsightSyncAgent() {
+
+
   const { text, steps } = await generateText({
-    model: google("gemini-2.5-flash"),
+    model: google(process.env.AI_MODEL as string),
     stopWhen: stepCountIs(500),
     tools: {
       getUserList,
       getOrderHistory,
-      // getLastComputedAt,
       writeOrderInsight,
-      updatePopularityScores:updatePopularityScoresTool,
-      // upsertFreqProduct,
     },
     system: `
       You are a background data-sync agent for a smart shopping assistant.
@@ -35,13 +29,15 @@ export async function runInsightSyncAgent() {
          with buyCount < 3.
       6. Never call getUserList more than once.
       7. Process users one at a time — do not skip ahead.
-       8. After ALL users have been processed — call updatePopularityScores
-         exactly once. This must be the very last tool call of the job.
-      9. When done, respond with a summary of what was processed and
-         which 5 products were marked as most popular.
     `,
     prompt: "Start the insight sync job.Process all users now.",
   });
 
   return { summary: text, steps: steps.length };
 }
+
+// commented prompt...
+//  8. After ALL users have been processed — call updatePopularityScores
+//          exactly once. This must be the very last tool call of the job.
+//       9. When done, respond with a summary of what was processed and
+//          which 5 products were marked as most popular.
