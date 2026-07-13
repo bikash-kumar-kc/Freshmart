@@ -152,7 +152,6 @@ export const orderHistory = sqliteTable(
 );
 
 // orderInsights...
-
 export const orderInsights = sqliteTable(
   "order_insights",
   {
@@ -183,7 +182,6 @@ export const orderInsights = sqliteTable(
 );
 
 // frequency products...
-
 export const freqProducts = sqliteTable(
   "freqproducts",
   {
@@ -207,7 +205,6 @@ export const freqProducts = sqliteTable(
 );
 
 // suggestedCarts...
-
 export const suggestedCarts = sqliteTable(
   "suggested_carts",
   {
