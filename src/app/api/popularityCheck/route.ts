@@ -3,8 +3,9 @@ import { computePopularityScores } from "./utilis/calculatePopularityScore";
 import { pickTop5Popular } from "./utilis/pickTop5Popular";
 import { getTop20PercentThreshold } from "./utilis/top20Percent";
 import { writePopularityScores } from "./utilis/writePopularityScore";
+import { verifySignatureAppRouter } from "@upstash/qstash/dist/nextjs";
 
-async function POST() {
+const POST = verifySignatureAppRouter(async () => {
   try {
     // calculate signals...
     const signals = await collectProductSignals();
@@ -89,6 +90,5 @@ async function POST() {
       message: "Internal server error",
     });
   }
-}
-
+});
 export default POST;
