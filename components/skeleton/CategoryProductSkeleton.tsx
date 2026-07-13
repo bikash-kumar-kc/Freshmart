@@ -1,38 +1,77 @@
 import React from "react";
+import CategoryProductSkeleton from "./CategoryProductSkeleton";
 
-const CategoryProductSkeleton = () => {
+const CategoryPageSkeleton = () => {
   return (
-    <div className="flex gap-4 flex-wrap">
-      {Array.from({ length: 8 }).map((_, i) => (
-        <div
-          key={i}
-          className="w-[200px] overflow-hidden rounded-sm bg-white shadow-sm"
-        >
-          {/* Image */}
-          <div className="relative aspect-square w-full overflow-hidden bg-gray-200">
-            <div className="absolute inset-0 -translate-x-full animate-[shimmer_4s_infinite] bg-linear-to-r from-transparent via-white/60 to-transparent" />
-          </div>
+    <main className="bg-amber-50 min-h-screen">
+      <div className="max-w-7xl mx-auto py-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6 px-2">
+          <div>
+            <div className="h-8 w-52 rounded bg-gray-200 relative overflow-hidden">
+              <div className="absolute inset-0 -translate-x-full animate-[shimmer_4s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+            </div>
 
-          {/* Content */}
-          <div className="p-4">
-            <div className="h-3 w-16 rounded bg-gray-200" />
-            <div className="mt-2 h-4 w-3/4 rounded bg-gray-200" />
-            <div className="mt-1 h-4 w-1/2 rounded bg-gray-200" />
-
-            <div className="mt-3 flex items-baseline gap-2">
-              <div className="h-4 w-12 rounded bg-gray-200" />
-              <div className="h-3 w-10 rounded bg-gray-200" />
+            <div className="mt-2 h-3 w-28 rounded bg-gray-200 relative overflow-hidden">
+              <div className="absolute inset-0 -translate-x-full animate-[shimmer_4s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
             </div>
           </div>
 
-          {/* Add to cart button */}
-          {/* <div className="px-4 pb-4">
-            <div className="h-9 w-full rounded-xl bg-gray-200" />
-          </div> */}
+          <div className="h-10 w-24 rounded-sm bg-gray-200 relative overflow-hidden">
+            <div className="absolute inset-0 -translate-x-full animate-[shimmer_4s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+          </div>
         </div>
-      ))}
-    </div>
+
+        <div className="flex gap-6 items-start">
+          {/* Desktop Sidebar */}
+          <aside
+            className="hidden md:flex flex-col w-75 shrink-0
+            bg-white rounded-sm border border-gray-100
+            p-3 sticky top-4"
+          >
+            <div className="h-3 w-20 rounded bg-gray-200 mb-4" />
+
+            <div className="flex flex-col gap-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-3 px-3 py-2 rounded-sm"
+                >
+                  <div className="h-8 w-8 rounded-full bg-gray-200 relative overflow-hidden">
+                    <div className="absolute inset-0 -translate-x-full animate-[shimmer_4s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+                  </div>
+
+                  <div className="flex-1 h-4 rounded bg-gray-200 relative overflow-hidden">
+                    <div className="absolute inset-0 -translate-x-full animate-[shimmer_4s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </aside>
+
+          {/* Mobile Categories */}
+          <div
+            className="md:hidden flex gap-2 overflow-x-auto
+            pb-2 -mx-4 px-4 mb-4 w-full"
+          >
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="shrink-0 h-10 w-28 rounded-sm bg-gray-200 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_4s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+              </div>
+            ))}
+          </div>
+
+          {/* Products */}
+          <div className="flex-1">
+            <CategoryProductSkeleton />
+          </div>
+        </div>
+      </div>
+    </main>
   );
 };
 
-export default CategoryProductSkeleton;
+export default CategoryPageSkeleton;
