@@ -1,8 +1,8 @@
-import { success } from "zod";
 import collectProductSignals from "./utilis/productSignal";
 import { computePopularityScores } from "./utilis/calculatePopularityScore";
 import { pickTop5Popular } from "./utilis/pickTop5Popular";
 import { getTop20PercentThreshold } from "./utilis/top20Percent";
+import { writePopularityScores } from "./utilis/writePopularityScore";
 
 async function POST() {
   // calculate signals...
@@ -33,7 +33,19 @@ async function POST() {
     topFiveProductsOfUniqueCategory.map((p) => p.productId),
   );
 
+  const IdsArray = Array.from(top5Ids);
+
   // updating the db...
+  await writePopularityScores(scored, top5Ids);
+
+  // returning response back to job...
+  return Response.json({
+    success: true,
+    message: "Successfully update the popularity score for products",
+    data: new Date(),
+    threshold: threshold,
+    top5Ids: IdsArray.join(""),
+  });
 }
 
 export default POST;
