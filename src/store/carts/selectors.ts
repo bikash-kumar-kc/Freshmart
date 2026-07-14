@@ -1,23 +1,23 @@
+import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 export const DELIVERYCHARGEDLIMIT = 500;
-export const totalItemsCart = (state: RootState) => {
-  if (!state) return;
-  return {
-    totalItemsCart: state.carts.cartItems.cartItems.length,
-  };
-};
 
-export const getAllItemsFromCart = (state: RootState) => {
-  if (!state) {
-    return;
-  }
+const totalItems = (state: RootState) => state.carts.cartItems.cartItems.length;
 
-  return {
-    items: state.carts.cartItems,
-    totalItems: state.carts.cartItems.cartItems.length,
-  };
-};
+export const totalItemsCart = createSelector([totalItems], (items) => ({
+  totalItemsCart: items,
+}));
+
+const selectCartItems = (state: RootState) => state.carts.cartItems;
+
+export const getAllItemsFromCart = createSelector(
+  [selectCartItems],
+  (cartItems) => ({
+    items: cartItems,
+    totalItems: cartItems.cartItems.length,
+  }),
+);
 
 export const isProductInCart =
   (productId: string | undefined) => (state: RootState) => {
