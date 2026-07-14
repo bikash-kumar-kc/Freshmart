@@ -67,13 +67,11 @@ Do not call this tool once per product.
 
   inputSchema: z.object({
     userId: z.string(),
-
     productIds: z.array(z.string()),
   }),
 
   execute: async ({ userId, productIds }) => {
     const title = "Time to restock 🛒";
-
     const content =
       productIds.length === 1
         ? "One of your frequently purchased products is due for restocking."
