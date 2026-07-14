@@ -32,11 +32,12 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   console.log(data);
   const [count, setCount] = useState<number>(0);
   const [totalOrders, setTotalOrders] = useState(0);
-  const changeNotificationRef = useRef<boolean | null>(null);
-  const favoriteItems = useAppSelector(selectFavoriteCount);
+  // const changeNotificationRef = useRef<boolean | null>(null);
+  const favoriteItems = useAppSelector(selectFavoriteCount) ?? 0;
   const itemsInCart = useAppSelector(totalItemsCart);
   const dispatch = useAppDispatch();
   const allCartProducts = useAppSelector(getAllItemsFromCart);
+  const storeCalled = useRef<boolean | null>(null);
 
   const handleUnreadNotification = useCallback(async () => {
     try {
@@ -57,12 +58,12 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   }, [data?.user.id]);
 
   const handleNotificationStatusUpdate = async () => {
-    if (changeNotificationRef.current) return;
+    // if (changeNotificationRef.current) return;
     if (!data?.user.id) return;
     try {
       await updateNotificationsStatus(data?.user.id);
       setCount(0);
-      changeNotificationRef.current = true;
+      // changeNotificationRef.current = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -91,21 +92,30 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
     })();
   }, [data?.user.id]);
 
-  useEffect(() => {
-    const syncCart = async () => {
-      const result = await userUnfinishedCart();
-      if (result.success) {
-        dispatch(
-          setCart({
-            type: "db",
-            orderId: result.orderId!,
-            cartItems: result.cartItems as ICartItem[],
-          }),
-        );
-      }
-    };
+  const [mounted, setMounted] = useState(false);
 
-    syncCart();
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!storeCalled.current) {
+      const syncCart = async () => {
+        const result = await userUnfinishedCart();
+        if (result.success) {
+          dispatch(
+            setCart({
+              type: "db",
+              orderId: result.orderId!,
+              cartItems: result.cartItems as ICartItem[],
+            }),
+          );
+        }
+      };
+
+      syncCart();
+      storeCalled.current = true;
+    }
   }, [dispatch, allCartProducts?.totalItems]);
 
   return (
@@ -155,12 +165,10 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
 
             {/* Badge */}
 
-            {itemsInCart && itemsInCart?.totalItemsCart > 0 ? (
+            {mounted && itemsInCart.totalItemsCart > 0 && (
               <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
                 {itemsInCart.totalItemsCart}
               </span>
-            ) : (
-              ""
             )}
           </div>
         </Link>
@@ -170,13 +178,11 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
             <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
               <Heart className="text-black group-hover:text-white transition-colors" />
             </button>
-            {favoriteItems
-              ? favoriteItems > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                    {favoriteItems}
-                  </span>
-                )
-              : ""}
+            {mounted && favoriteItems > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                {favoriteItems}
+              </span>
+            )}
           </div>
         </Link>
 
