@@ -139,13 +139,14 @@ export function ProductCard({ product }: { product: IPRODUCTTYPE }) {
     hover:scale-[1.02]"
     >
       {/* Image */}
-      <div className="relative h-[200px] overflow-hidden">
+      <div className="relative h-50 overflow-hidden">
         <Image
           src={product.image}
           alt={product.alt}
           fill
           className="object-cover"
           sizes="240px"
+          priority
         />
 
         {/* Wishlist */}

@@ -150,6 +150,7 @@ export function ProductCard({
           fill
           className="object-cover"
           sizes="240px"
+          priority
         />
 
         {/* Wishlist */}
