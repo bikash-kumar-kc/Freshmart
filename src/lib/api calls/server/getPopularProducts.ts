@@ -1,4 +1,4 @@
-
+"use client"
 export interface IAPIResponseTypes<T> {
   success: boolean;
   data: T;
@@ -26,11 +26,7 @@ interface IPopularProductsData {
 type IPopularProductResponse = IAPIResponseTypes<IPopularProductsData>;
 
 export const getPopularProducts = async (): Promise<IPopularProductsData> => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/popularProducts`, {
-    next: {
-      revalidate: 8600,
-    },
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/popularProducts`);
 
   if (!res.ok) {
     throw new Error("Faile to fetch popular products");
