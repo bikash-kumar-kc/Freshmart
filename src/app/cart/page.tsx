@@ -29,6 +29,8 @@ import {
 import { useEffect, useRef, useState } from "react";
 import LocationDialog from "./components/AddressDialog";
 import { paymentInitiator } from "@/src/lib/server_actions/payment.server.action";
+import { PushOptIn } from "@/src/components/client/PushOptIn";
+import { isUserSubscribed } from "@/src/lib/api calls/client/user/checkUserSubscribed";
 
 export default function CartPage() {
   // state...
@@ -43,6 +45,7 @@ export default function CartPage() {
 
   const [checkOutLoading, setCheckOutLoading] = useState<boolean>(false);
   const [saveCartLoading, setSaveCartLoading] = useState<boolean>(false);
+  const [isSubscribed, setSubscribed] = useState<boolean>(false);
 
   // router
   const router = useRouter();
@@ -221,6 +224,15 @@ export default function CartPage() {
       }
   }, [isFromDb, allCartProducts?.totalItems]);
 
+  useEffect(() => {
+    if (session?.user.id) {
+      (async () => {
+        const isSubscribed = isUserSubscribed(session?.user.id as string);
+        setSubscribed(!!isSubscribed);
+      })();
+    }
+  }, [session?.user.id]);
+
   if (allCartProducts?.totalItems === 0) {
     return (
       <main className="bg-[#F5F9F0] min-h-screen">
@@ -264,19 +276,22 @@ export default function CartPage() {
               )}
             </div>
           </div>
-          {totalCartProducts
-            ? totalCartProducts?.totalItemsCart > 0 && (
-                <button
-                  onClick={handleClearAll}
-                  className="flex items-center gap-1.5 text-sm font-medium
+          <div className="flex gap-2">
+            {isSubscribed && <PushOptIn />}
+            {totalCartProducts
+              ? totalCartProducts?.totalItemsCart > 0 && (
+                  <button
+                    onClick={handleClearAll}
+                    className="flex items-center gap-1.5 text-sm font-medium
                 text-red-500 hover:text-red-700 px-3 py-2 rounded-sm
                 hover:bg-red-50 transition-colors"
-                >
-                  <Trash2 size={14} />
-                  Clear all
-                </button>
-              )
-            : ""}
+                  >
+                    <Trash2 size={14} />
+                    Clear all
+                  </button>
+                )
+              : ""}
+          </div>
         </div>
 
         <div className="flex flex-col relative lg:flex-row gap-6 items-start">
