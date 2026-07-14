@@ -45,7 +45,7 @@ export default function CartPage() {
 
   const [checkOutLoading, setCheckOutLoading] = useState<boolean>(false);
   const [saveCartLoading, setSaveCartLoading] = useState<boolean>(false);
-  const [isSubscribed, setSubscribed] = useState<boolean>(false);
+  const [isSubscribed, setSubscribed] = useState<boolean>(true);
 
   // router
   const router = useRouter();
@@ -227,7 +227,8 @@ export default function CartPage() {
   useEffect(() => {
     if (session?.user.id) {
       (async () => {
-        const isSubscribed = isUserSubscribed(session?.user.id as string);
+        const isSubscribed = await isUserSubscribed(session?.user.id as string);
+        console.log("isSubscribed",isSubscribed)
         setSubscribed(!!isSubscribed);
       })();
     }
@@ -277,7 +278,7 @@ export default function CartPage() {
             </div>
           </div>
           <div className="flex gap-2">
-            {isSubscribed && <PushOptIn />}
+            {!isSubscribed && <PushOptIn />}
             {totalCartProducts
               ? totalCartProducts?.totalItemsCart > 0 && (
                   <button
