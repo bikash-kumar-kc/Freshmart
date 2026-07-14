@@ -6,15 +6,15 @@ import { Suspense } from "react";
 import { CategoryItem } from "../CategoryItem";
 import { CATEGORIES } from "../categories";
 import ProductPage from "./ProductPage";
-import CategoryProductSkeleton from "@/components/skeleton/CategoryProductSkeleton";
+import CategoryPageSkeleton from "@/components/skeleton/CategoryProductSkeleton";
 
 interface PageProps {
   params: Promise<{ cat: string[] }>;
 }
 
-export default function Page({ params }: PageProps) {
+export default async function Page({ params }: PageProps) {
   return (
-    <Suspense fallback={<CategoryProductSkeleton />}>
+    <Suspense fallback={<CategoryPageSkeleton />}>
       <PageContent params={params} />
     </Suspense>
   );
@@ -31,6 +31,7 @@ async function PageContent({ params }: PageProps) {
     notFound();
   }
 
+  console.log("just before rendering the product page...");
   return (
     <main className="bg-amber-50 min-h-screen">
       <div className="max-w-7xl mx-auto py-6">
