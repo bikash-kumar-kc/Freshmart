@@ -55,7 +55,7 @@ Never retry failures.
           ? "One of your frequently purchased products is due for restocking."
           : `${productIds.length} products are due for restocking.`,
 
-      url: "/notifications",
+      url: "/",
     });
 
     try {
