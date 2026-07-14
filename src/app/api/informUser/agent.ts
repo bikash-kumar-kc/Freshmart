@@ -7,7 +7,6 @@ export async function runRestockNotifierAgent() {
   const { text, steps } = await generateText({
     model: google(process.env.AI_MODEL as string),
     stopWhen: stepCountIs(300),
-
     tools: {
       getDueOrderInsights,
       createNotificationTool,
