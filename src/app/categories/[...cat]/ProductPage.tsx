@@ -37,8 +37,8 @@ const ProductPage = async ({
   cat: string;
   productId: string;
 }) => {
-  if (!cat?.trim()) return;
 
+  if (!cat?.trim()) return;
   const productList = await getProductsByCategory(cat);
 
   const displayedProduct = productList.find((p) => p.id === productId);
@@ -74,6 +74,8 @@ const ProductPage = async ({
         </div>
       )}
     </div>
+
+   
   );
 };
 
