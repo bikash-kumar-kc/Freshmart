@@ -5,23 +5,18 @@ import { ProductCard } from "../PopularCard";
 import Link from "next/link";
 
 const PopularProducts = () => {
-  const {
-    data: popularProductsInfo,
-    isLoading: popularProductsLoading,
-    isError,
-    error,
-  } = useGetPopularProducts(); 
+  const {data: popularProductsInfo  } = useGetPopularProducts(); 
 
 
   const popularProducts = popularProductsInfo?.popularProducts;
 
-  if (popularProductsLoading) {
-    return <p className="text-gray-500 text-center">loading...</p>;
-  }
+  // if (popularProductsLoading) {
+  //   return <p className="text-gray-500 text-center">loading...</p>;
+  // }
 
-  if (isError) {
-    return <p className="text-red-600 text-center">{error.message}</p>;
-  }
+  // if (isError) {
+  //   return <p className="text-red-600 text-center">{error.message}</p>;
+  // }
 
   if (!popularProducts) {
     return <p className="text-red-600">failed to get popular products</p>;
