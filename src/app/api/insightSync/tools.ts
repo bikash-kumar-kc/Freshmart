@@ -26,19 +26,65 @@ export const getUserList = tool({
 // tool that gives all the user order records...
 export const getOrderHistory = tool({
   description: `
-    Fetch the full order history for a single user.
-    Call this once per user using the userId from getUserList.
-     The returned items array contains every product the user has bought
-    and when they bought it.Use this data to compute:
-    - how many times each product was bought (buy_count) 
-    - average days between purchases (avg_interval_days)
-    - average quantity per order (avg_quantity)
-    - if there is any product  that the user is buying in a regular interval.Like today is 12th june and then user is buying this product in every two days interval then call the write "writeOrderInsight" tool only at once. Here, considered the product must have at least 3 order that sync with the average days between purchases. The writeOrderInsight must be for each unique product not products at once.
-    Do not call this for the same userId more than once.
-    - note: one thing that take the latest 4 order history for each product and then find the frequency criteria.
-    - note: considered one thing that is : like if a user buy a product in 8th then 10th then 12th then 14th but did not buy at 16th and then while calculating the frequncy product then considered today days and the interval remains same then processed otherwise skip.
-    - note: for each product , if the product is in frequency then do one things calcuated the next expected order date and call the 'writeOrderInsight' tools an insert a row in orderInsights
-    `,
+Analyze a single user's full order history (from getOrderHistory) and compute
+a purchase-cadence insight for each product they've bought. Call this once per userId.
+
+Today's date: use the current system date for all "today" comparisons below.
+
+STEP 1 — Group and merge
+For each product_id, collect all its order line items sorted by created_at ascending.
+If two or more orders for the SAME product occur on the SAME calendar date
+(ignore time-of-day), merge them into a single purchase event:
+  - event date = that calendar date
+  - event quantity = sum of quantities from the merged orders
+This prevents same-day duplicate orders from being counted as separate purchases.
+
+STEP 2 — Minimum data check
+Skip a product entirely (do not call writeOrderInsight) if it has fewer than
+3 distinct purchase events after merging. Still include it in the final
+buy_count summary (see STEP 6).
+
+STEP 3 — Use the last 4 events
+If a product has more than 4 purchase events, use only the most recent 4
+for all calculations below. Earlier events are ignored.
+
+STEP 4 — Compute cadence stats
+From the (up to 4) purchase events:
+  - buy_count = total number of merged purchase events for this product (all-time, not just last 4)
+  - Compute the gap in days between each consecutive pair of events.
+  - avg_interval_days = mean of these gaps.
+  - Compute how much the gaps vary using coefficient of variation:
+      cv = standard_deviation(gaps) / avg_interval_days
+  - avg_quantity = mean quantity across the (up to 4) events used.
+
+STEP 5 — Decide if the product is "regular" (tolerance, not exact match)
+A product counts as regular ONLY if BOTH are true:
+  (a) cv <= 0.4  (gaps are consistent within 40% variation — do NOT require
+      gaps to be exactly equal; real purchase timing always has some noise)
+  (b) avg_interval_days > 0
+
+If regular:
+  - next_expected_date = date of the most recent purchase event + avg_interval_days
+  - Additionally check staleness: if next_expected_date is more than
+    (2 * avg_interval_days) days in the past relative to today, treat the
+    pattern as broken/inactive — do NOT call writeOrderInsight for it, since
+    the user has likely stopped buying this product regularly.
+  - Otherwise, call writeOrderInsight exactly once for this product with:
+    userId, productId, avgIntervalDays, buyCount, avgQuantity, weightUnit,
+    weightValue, expectedNewOrderedDate = next_expected_date (ISO date string).
+
+If not regular, or if it fails the minimum data / staleness checks: do NOT
+call writeOrderInsight for that product.
+
+STEP 6 — Always return a summary
+Regardless of how many (if any) products qualified as regular, return a
+JSON summary listing every product_id with its buy_count, so the caller
+always has full visibility into purchase counts even when no insight rows
+were written.
+
+Never call writeOrderInsight more than once per product per run, and never
+call getOrderHistory more than once for the same userId.
+`,
 
   inputSchema: z.object({
     userId: z.string().describe("The user id from getUserList"),
