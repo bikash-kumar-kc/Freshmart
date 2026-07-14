@@ -1,10 +1,12 @@
 import React from "react";
-import CategoryProductSkeleton from "./CategoryProductSkeleton";
+import ProductCardSkeleton from "./ProductCardSkeleton";
+import ProductCardsSkeleton from "./ProductCardsSkeleton";
+// import CategoryProductSkeleton from "./CategoryProductSkeleton";
 
 const CategoryPageSkeleton = () => {
   return (
-    <main className="bg-amber-50 min-h-screen">
-      <div className="max-w-7xl mx-auto py-6">
+    <main className="bg-amber-50 max-w-7xl m-auto py-4">
+      <div className=" mx-auto min-h-screen">
         {/* Header */}
         <div className="flex items-center justify-between mb-6 px-2">
           <div>
@@ -32,7 +34,7 @@ const CategoryPageSkeleton = () => {
             <div className="h-3 w-20 rounded bg-gray-200 mb-4" />
 
             <div className="flex flex-col gap-4">
-              {Array.from({ length: 8 }).map((_, i) => (
+              {Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
                   className="flex items-center gap-3 px-3 py-2 rounded-sm"
@@ -65,8 +67,9 @@ const CategoryPageSkeleton = () => {
           </div>
 
           {/* Products */}
-          <div className="flex-1">
-            <CategoryProductSkeleton />
+          <div className="flex-1 min-h-screen">
+            {/* <CategoryProductSkeleton /> */}
+            <ProductCardsSkeleton/>
           </div>
         </div>
       </div>
