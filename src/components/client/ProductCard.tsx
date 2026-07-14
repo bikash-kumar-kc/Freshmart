@@ -145,6 +145,7 @@ export function ProductCard({ product }: { product: IPRODUCTTYPE }) {
           alt={product.alt}
           fill
           className="object-cover"
+          sizes="240px"
         />
 
         {/* Wishlist */}

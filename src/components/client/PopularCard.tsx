@@ -149,6 +149,7 @@ export function ProductCard({
           alt={product.thumbnail}
           fill
           className="object-cover"
+          sizes="240px"
         />
 
         {/* Wishlist */}

@@ -67,6 +67,7 @@ export default function ProductCard({
             }
             alt={productName}
             fill
+            sizes="215px"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
 

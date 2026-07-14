@@ -29,39 +29,35 @@ const BannerCarousel = () => {
         
           return (
             <CarouselItem
-              key={index}
-              className="basis-full w-300 h-125 rounded-2xl "
-            >
-              <div
-                className={` w-full h-full flex justify-center items-center rounded-2xl `}
-              >
-                <Image
-                  src={"/pic_2_banner.jpg"}
-                  width={1280}
-                  height={20}
-                  alt={prod.thumbnail as string}
-                  className={`h-full object-cover rounded-2xl`}
-                  priority={index == 0}
-                />
+  key={index}
+  className="basis-full w-300 h-125 rounded-2xl"
+>
+  <div className="relative w-full h-full rounded-2xl overflow-hidden">
+    <Image
+      src="/pic_2_banner.jpg"
+      alt={prod.thumbnail as string}
+      fill
+      priority={index === 0}
+      sizes="1200px"
+      className="object-cover rounded-2xl"
+    />
 
-                <div className="relative py-10 bg-red-500">
-                  <div className="absolute left-8 -top-25 z-40">
-                    <BannerProductCard
-                      thumbnail={""}
-                      productName={prod.name}
-                      category={prod.category}
-                      slug={prod.slug}
-                      isFeatured={prod.isFeatured}
-                      weightValue={prod.weightValue!}
-                      weightUnit={prod.weightUnit!}
-                      price={prod.price!}
-                      productId={prod.productId}
-                      stock={prod.stock}
-                    />
-                  </div>
-                </div>
-              </div>
-            </CarouselItem>
+    <div className="absolute left-8 top-1/2 -translate-y-1/2 z-10">
+      <BannerProductCard
+        thumbnail=""
+        productName={prod.name}
+        category={prod.category}
+        slug={prod.slug}
+        isFeatured={prod.isFeatured}
+        weightValue={prod.weightValue!}
+        weightUnit={prod.weightUnit!}
+        price={prod.price!}
+        productId={prod.productId}
+        stock={prod.stock}
+      />
+    </div>
+  </div>
+</CarouselItem>
           );
         })}
       </CarouselContent>
