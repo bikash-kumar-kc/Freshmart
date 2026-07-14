@@ -10,8 +10,7 @@ interface Props {
 }
 
 export default function ProductDetailClient({ productPromise }: Props) {
-  const { product, relatedProducts, filteredVariantRow } = use(productPromise);
-
+  const { product, relatedProducts, filteredVariantRow } = use(productPromise)
   if (!product) notFound();
 
   return (
