@@ -10,7 +10,7 @@ const ImageComponent = ({isSignedIn=false}:{isSignedIn?:boolean}) => {
         alt="Woman carrying organic vegetable basket"
         fill
         className="w-full h-full object-cover brightness-50 group-hover:brightness-100 transition-all duration-300"
-        priority
+        priority={true}
       />
 
       {/* Gradient — fades out on hover along with brightness change */}
