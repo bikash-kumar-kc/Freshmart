@@ -1,5 +1,4 @@
-import React from "react";
-import ProductCardSkeleton from "./ProductCardSkeleton";
+
 import ProductCardsSkeleton from "./ProductCardsSkeleton";
 // import CategoryProductSkeleton from "./CategoryProductSkeleton";
 

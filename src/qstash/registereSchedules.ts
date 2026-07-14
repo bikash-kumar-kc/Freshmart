@@ -1,6 +1,6 @@
 import client from "./client";
 
-const APP_URL = process.env.NEXT_PUBLIC_API_URL!;
+const APP_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 async function registerSchedules() {
   // fetching all existing schedules from QStash
