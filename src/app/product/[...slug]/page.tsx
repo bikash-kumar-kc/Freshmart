@@ -8,11 +8,10 @@ async function ProductDetails({
 }: {
   params: Promise<{ slug: string[] }>;
 }) {
-  const { slug } = await params;
 
+  const { slug } = await params;
   const [category, productName] = slug;
   const productPromise = getProductByCategorySlug(category, productName);
-
   return <ProductDetailClient productPromise={productPromise} />;
 }
 
