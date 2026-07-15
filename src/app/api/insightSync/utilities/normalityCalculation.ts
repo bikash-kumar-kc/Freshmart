@@ -9,7 +9,7 @@ export function computePopularityScores(
 ): ScoredProduct[] {
   if (signals.length === 0) return [];
  
-  const maxOrders = Math.max(...signals.map((s) => s.recentOrders));
+  const maxOrders = Math.max(...signals.map((s) => s.quantityOrdered));
   const maxBuyers = Math.max(...signals.map((s) => s.uniqueBuyers));
  
  
@@ -21,7 +21,7 @@ export function computePopularityScores(
     ...s,
     score:
       Math.round(
-        ((s.recentOrders / maxOrders) * 0.6 +
+        ((s.quantityOrdered / maxOrders) * 0.6 +
           (s.uniqueBuyers / maxBuyers) * 0.4) *
           1000
       ) / 1000, 
