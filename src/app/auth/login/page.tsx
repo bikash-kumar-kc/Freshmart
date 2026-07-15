@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getLocally } from "@/src/lib/localstorage/localstorage";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 const schemaForSession = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -22,7 +22,7 @@ const schemaForSession = z.object({
 
 export type ISESSIONTYPES = z.infer<typeof schemaForSession>;
 
-const Page = () => {
+const SignInForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
@@ -67,7 +67,7 @@ const Page = () => {
           : result?.error,
       );
       setLoading(false);
-      if(redirect){
+      if (redirect) {
         router.push("/auth/register?redirect=/cart");
         return;
       }
@@ -173,6 +173,13 @@ const Page = () => {
         </p>
       </div>
     </>
+  );
+};
+const Page = () => {
+  return (
+    <Suspense fallback={<p>Signin form loading...</p>}>
+      <SignInForm />
+    </Suspense>
   );
 };
 
