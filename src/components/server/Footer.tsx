@@ -98,7 +98,7 @@ const Footer = () => {
             </div>
 
             {/* Tagline */}
-            <p className="text-[13px] text-green-400 leading-relaxed max-w-[220px]">
+            <p className="text-[13px] text-green-400 leading-relaxed max-w-55">
               Organic groceries delivered to your door in minutes. Fresh from
               the farm, straight to you.
             </p>
@@ -112,7 +112,7 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-[34px] h-[34px] rounded-lg border border-green-800 bg-green-900/60 flex items-center justify-center text-green-400 hover:bg-green-800 hover:text-green-100 transition-colors duration-150"
+                  className="w-8.5 h-8.5 rounded-lg border border-green-800 bg-green-900/60 flex items-center justify-center text-green-400 hover:bg-green-800 hover:text-green-100 transition-colors duration-150"
                 >
                   {s.icon}
                 </a>

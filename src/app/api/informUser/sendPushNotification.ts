@@ -5,11 +5,7 @@ import { tool } from "ai";
 import z from "zod";
 import { db } from "@/src/db/config";
 
-webpush.setVapidDetails(
-  process.env.VAPID_MAILTO!,
-  process.env.VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!,
-);
+
 
 export const sendPushNotification = tool({
   description: `
@@ -59,6 +55,7 @@ Never retry failures.
     });
 
     try {
+      
       await webpush.sendNotification(subscription, payload);
     } catch (err: any) {
       if (err.statusCode === 410) {
