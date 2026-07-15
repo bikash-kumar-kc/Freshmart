@@ -24,7 +24,7 @@ export const getAllOrders = async ({ userId }: { userId: string }) => {
     }
 
     const reponse = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/order/${userId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/order/${userId}`,
     );
 
     if (!reponse.ok) {
