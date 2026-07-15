@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getLocally, saveLocally } from "@/src/lib/localstorage/localstorage";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { registerUser } from "@/src/lib/server_actions/auth.server.action";
 
 const schemaForRegister = z
@@ -28,7 +28,7 @@ const schemaForRegister = z
 
 export type IREGISTERTYPES = z.infer<typeof schemaForRegister>;
 
-const Page = () => {
+const RegisterForm = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -93,9 +93,7 @@ const Page = () => {
 
   return (
     <>
-      {/* ── Left: Form panel ───────────────────────────────────────────── */}
       <div className="w-full lg:w-[40%] flex flex-col justify-center px-8 sm:px-12 bg-amber-50">
-        {/* Logo / brand name */}
         <div className="mb-10 flex flex-col items-center">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl">🌿</span>
@@ -106,12 +104,10 @@ const Page = () => {
           <p className="text-gray-400 text-sm">Create your account</p>
         </div>
 
-        {/* Form */}
         <form
           onSubmit={handleSubmit(handleSubmitHandler)}
           className="flex flex-col gap-5"
         >
-          {/* Email */}
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="email"
@@ -132,7 +128,6 @@ const Page = () => {
             )}
           </div>
 
-          {/* Password */}
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="password"
@@ -153,7 +148,6 @@ const Page = () => {
             )}
           </div>
 
-          {/* Confirm Password */}
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="confirmPassword"
@@ -176,7 +170,6 @@ const Page = () => {
             )}
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white text-sm font-semibold py-2.5 rounded-sm transition-colors duration-200 mt-1"
@@ -185,7 +178,6 @@ const Page = () => {
           </button>
         </form>
 
-        {/* Login link */}
         <p className="text-gray-500 text-sm mt-6 text-center">
           Already have an account?{" "}
           <Link
@@ -197,6 +189,14 @@ const Page = () => {
         </p>
       </div>
     </>
+  );
+};
+
+const Page = () => {
+  return (
+    <Suspense fallback={<p>loading register form...</p>}>
+      <RegisterForm />
+    </Suspense>
   );
 };
 
