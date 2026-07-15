@@ -6,7 +6,7 @@ type IFeaturedProductResponse = IAPIResponseTypes<IFeaturedProductsData>;
 
 export const getFeaturedProducts = async (): Promise<IFeaturedProductsData> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/featuredProducts`);
+    const response = await fetch(`/api/products/featuredProducts`);
     if (!response.ok) {
      throw new Error("Failed to get featured products")
     }

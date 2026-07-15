@@ -26,7 +26,7 @@ interface IPopularProductsData {
 type IPopularProductResponse = IAPIResponseTypes<IPopularProductsData>;
 
 export const getPopularProducts = async (): Promise<IPopularProductsData> => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/products/popularProducts`);
+  const res = await fetch(`/api/products/popularProducts`);
 
   if (!res.ok) {
     throw new Error("Faile to fetch popular products");

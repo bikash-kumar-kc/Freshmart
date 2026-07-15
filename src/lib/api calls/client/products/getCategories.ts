@@ -27,7 +27,7 @@ export const getCategories = async (): Promise<CategoriesResult> => {
     console.log("Base_api_url: ", BASE_API_URL);
 
     if (!BASE_API_URL) throw new Error("Failed to get base url !");
-    const response = await fetch(`${BASE_API_URL}api/products/categories`);
+    const response = await fetch(`/api/products/categories`);
 
     if (!response.ok) {
       const error: IErrorTypes = await response.json();

@@ -24,7 +24,7 @@ export const getProductBySlug = async ({
     if (!BASE_URL) {
       throw new Error("Base url is required to make a call !");
     }
-    const res = await fetch(`${BASE_URL}api/products/product/${slug}`);
+    const res = await fetch(`/api/products/product/${slug}`);
     if (!res.ok) {
       const errRes = manageError(await res.json());
       throw new Error(errRes);

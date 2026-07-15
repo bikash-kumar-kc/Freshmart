@@ -24,7 +24,7 @@ export const getOfferedProducts =
   async (): Promise<IOfferedProductApiResponse> => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/products/offerProducts`,
+        `/api/products/offerProducts`,
       );
       if (!response.ok) {
         

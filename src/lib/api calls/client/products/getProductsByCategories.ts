@@ -27,14 +27,14 @@ export const getProductsByCategories = async (
       throw new Error("Cats is required !");
     }
 
-    const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL;
+    // const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-    if (!BASE_API_URL) {
-      throw new Error("Failed to get base url !");
-    }
+    // if (!BASE_API_URL) {
+    //   throw new Error("Failed to get base url !");
+    // }
 
     const response = await fetch(
-      `${BASE_API_URL}api/products/categories/${cats}`,
+      `/api/products/categories/${cats}`,
     );
 
     if (!response.ok) {

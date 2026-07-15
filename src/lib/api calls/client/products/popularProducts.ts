@@ -21,7 +21,7 @@ export const getPopularProducts =
   async (): Promise<IPopularProductApiResponse> => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/products/popularProducts`,
+        `/api/products/popularProducts`,
       );
       if (!response.ok) {
         throw new Error("Failed to get the featured products ");
