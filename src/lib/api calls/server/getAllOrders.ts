@@ -27,9 +27,7 @@ export const getAllOrders = async ({ userId }: { userId: string }) => {
       throw new Error("User Id is required !");
     }
 
-    const reponse = await fetch(
-      `/api/order/${userId}`,
-    );
+    const reponse = await fetch(`/api/order/${userId}`);
 
     if (!reponse.ok) {
       throw new Error("Failed to get orders");
