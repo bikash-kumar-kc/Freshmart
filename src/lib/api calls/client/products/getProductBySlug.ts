@@ -51,6 +51,7 @@ export const getProductBySlug = async ({
         discount: p.discount ?? null,
         isOffered: p.isOffered ?? false,
         status: p.status,
+        stock:p.stock
       },
       totalProducts: 1,
     };
