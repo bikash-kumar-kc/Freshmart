@@ -105,11 +105,11 @@ export function ProductCard({
   }
 
   useEffect(() => {
-    setWished(isFavorite);
+    setWished(!!isFavorite);
   }, [isFavorite]);
 
   useEffect(() => {
-    setAdded(isProductOnCart);
+    setAdded(!!isProductOnCart);
   }, [isProductOnCart]);
 
   const handleFavoriteToggle = ({

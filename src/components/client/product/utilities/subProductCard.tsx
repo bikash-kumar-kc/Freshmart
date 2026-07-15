@@ -36,7 +36,7 @@ export const RelatedProductCard = ({
   const isFavorite = useAppSelector(selectIsFavorite(product.id));
 
   useEffect(() => {
-    setWished(isFavorite);
+    setWished(!!isFavorite);
   }, [isFavorite]);
 
   
