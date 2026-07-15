@@ -58,6 +58,7 @@ export const POST = async () => {
 
     return Response.json({ ok: true }, { status: 200 });
   } catch (err) {
+    console.log(err);
     await db.insert(jobRuns).values({
       id: runId,
       jobName: "insight-sync",

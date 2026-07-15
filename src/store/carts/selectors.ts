@@ -39,42 +39,79 @@ export const productQuantity =
     };
   };
 
-export const statusOfCart = (state: RootState) => {
-  if (!state) return;
-  return {
-    type: state.carts.type,
-    orderId: state.carts.orderId,
-  };
-};
+// export const statusOfCart = (state: RootState) => {
+//   if (!state) return;
+//   return {
+//     type: state.carts.type,
+//     orderId: state.carts.orderId,
+//   };
+// };
+
+
+
+export const statusOfCart = createSelector(
+  [(state: RootState) => state.carts.type,
+   (state: RootState) => state.carts.orderId],
+  (type, orderId) => ({
+    type,
+    orderId,
+  })
+);
 
 export const isAllowedToAddedInCart = (state: RootState) => {
   if (!state) return;
   return state.carts.orderId && state.carts.type === "db";
 };
 
-export const totalCalculation = (state: RootState) => {
-  if (!state) return;
+export const totalCalculation = createSelector(
+  [(state: RootState) => state.carts.cartItems.cartItems],
+  (cartItems) => {
+    const totalPriceWithoutDiscount = cartItems.reduce(
+      (totalPrice, item) =>
+        totalPrice + item.varient.price * item.quantity,
+      0
+    );
 
-  const totalPriceWithoutDiscount = state.carts.cartItems.cartItems.reduce(
-    (totalPrice, i) => totalPrice + i.varient.price * i.quantity,
-    0,
-  );
+    const totalDiscountAmount = cartItems.reduce(
+      (totalDiscount, item) =>
+        totalDiscount + (item.discountAmount ?? 0) * item.quantity,
+      0
+    );
 
-  const totalDiscountAmount = state.carts.cartItems.cartItems.reduce(
-    (totalDiscount, i) => {
-      console.log(i.discountAmount);
-      return totalDiscount + (i.discountAmount ?? 0) * i.quantity;
-    },
-    0,
-  );
+    return {
+      tpwod: totalPriceWithoutDiscount,
+      tda: totalDiscountAmount,
+      tpwd: totalPriceWithoutDiscount - totalDiscountAmount,
+      totalSaving: totalDiscountAmount,
+      isDeliveryCharged:
+        totalPriceWithoutDiscount <= DELIVERYCHARGEDLIMIT,
+    };
+  }
+);
 
-  return {
-    tpwod: totalPriceWithoutDiscount,
-    tda: totalDiscountAmount,
-    tpwd: totalPriceWithoutDiscount - totalDiscountAmount,
-    totalSaving:
-      totalPriceWithoutDiscount -
-      (totalPriceWithoutDiscount - totalDiscountAmount),
-    isDeliveryCharged: totalPriceWithoutDiscount <= DELIVERYCHARGEDLIMIT,
-  };
-};
+// export const totalCalculation = (state: RootState) => {
+//   if (!state) return;
+
+//   const totalPriceWithoutDiscount = state.carts.cartItems.cartItems.reduce(
+//     (totalPrice, i) => totalPrice + i.varient.price * i.quantity,
+//     0,
+//   );
+
+//   const totalDiscountAmount = state.carts.cartItems.cartItems.reduce(
+//     (totalDiscount, i) => {
+//       console.log(i.discountAmount);
+//       return totalDiscount + (i.discountAmount ?? 0) * i.quantity;
+//     },
+//     0,
+//   );
+
+//   return {
+//     tpwod: totalPriceWithoutDiscount,
+//     tda: totalDiscountAmount,
+//     tpwd: totalPriceWithoutDiscount - totalDiscountAmount,
+//     totalSaving:
+//       totalPriceWithoutDiscount -
+//       (totalPriceWithoutDiscount - totalDiscountAmount),
+//     isDeliveryCharged: totalPriceWithoutDiscount <= DELIVERYCHARGEDLIMIT,
+//   };
+// };
