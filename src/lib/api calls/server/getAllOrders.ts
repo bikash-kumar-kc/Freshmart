@@ -2,11 +2,7 @@ import { IAPIResponseTypes } from "./getPopularProducts";
 
 export interface IOrderType {
   orderId: string;
-  orderStatus:
-    | "pending"
-    | "delivered"
-    | "shipped"
-    | "packaging"
+  orderStatus: "pending" | "delivered" | "shipped" | "packaging";
 
   updatedTime: string;
   totalCost: number | null;
@@ -27,7 +23,9 @@ export const getAllOrders = async ({ userId }: { userId: string }) => {
       throw new Error("User Id is required !");
     }
 
-    const reponse = await fetch(`/api/order/${userId}`);
+    const reponse = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/order/${userId}`,
+    );
 
     if (!reponse.ok) {
       throw new Error("Failed to get orders");
