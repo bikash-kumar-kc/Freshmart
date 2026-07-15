@@ -13,19 +13,19 @@ async function registerSchedules() {
   const jobs = [
     {
       name: "freqProdSync",
-      destination: `${APP_URL}/api/informUser`,
+      destination: `${APP_URL}api/informUser`,
       cron: "0 3 * * *",
       retries: 5,
     },
     {
       name: "insightSync",
-      destination: `${APP_URL}/api/insightSync`,
+      destination: `${APP_URL}api/insightSync`,
       cron: "0 3 * * *",
       retries: 5,
     },
     {
       name: "popularityCheck",
-      destination: `${APP_URL}/api/popularityCheck`,
+      destination: `${APP_URL}api/popularityCheck`,
       cron: "0 4 * * *",
       retries: 5,
     },
