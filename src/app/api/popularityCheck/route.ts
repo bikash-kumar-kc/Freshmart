@@ -5,7 +5,7 @@ import { getTop20PercentThreshold } from "./utilis/top20Percent";
 import { writePopularityScores } from "./utilis/writePopularityScore";
 import { verifySignatureAppRouter } from "@upstash/qstash/dist/nextjs";
 
-const POST = verifySignatureAppRouter(async () => {
+export const POST = verifySignatureAppRouter(async () => {
   try {
     // calculate signals...
     const signals = await collectProductSignals();
@@ -91,4 +91,4 @@ const POST = verifySignatureAppRouter(async () => {
     });
   }
 });
-export default POST;
+
