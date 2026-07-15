@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProductOnSearchTerm } from "../lib/productOnSearchTerm";
 import { QUERY_KEYS } from "../app/constants/queryKeys";
-
+import { getProductOnSearchTerm } from "../lib/search/productOnSearchTerm";
 
 const useProductOnSearchTerm = (keyword: string) => {
   return useQuery({
