@@ -22,8 +22,10 @@ export async function POST(request: Request) {
       success: true,
       message: "QStash schedules registered successfully.",
     });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
+
+    const error = err as { message?: string };
 
     return Response.json(
       {
