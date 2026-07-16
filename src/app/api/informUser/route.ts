@@ -8,42 +8,7 @@ import { jobRuns } from "@/src/db/schema";
 export const maxDuration = 300;
 
 // production...
-export const POST = verifySignatureAppRouter(async () => {
-  const startedAt = new Date().toISOString();
-  const runId = nanoid();
-
-  try {
-    const result = await runRestockNotifierAgent();
-
-    await db.insert(jobRuns).values({
-      id: runId,
-      jobName: "restock-notifier",
-      status: "success",
-      summary: result.summary,
-      steps: result.steps,
-      startedAt,
-      completedAt: new Date().toISOString(),
-    });
-
-    return Response.json({ ok: true }, { status: 200 });
-
-  } catch (err) {
-    await db.insert(jobRuns).values({
-      id: runId,
-      jobName: "restock-notifier",
-      status: "failed",
-      startedAt,
-      completedAt: new Date().toISOString(),
-      error: String(err),
-    });
-
-    return Response.json({ ok: false }, { status: 500 });
-  }
-});
-
-
-// development...
-// export const POST = async () => {
+// export const POST = verifySignatureAppRouter(async () => {
 //   const startedAt = new Date().toISOString();
 //   const runId = nanoid();
 
@@ -74,4 +39,39 @@ export const POST = verifySignatureAppRouter(async () => {
 
 //     return Response.json({ ok: false }, { status: 500 });
 //   }
-// };
+// });
+
+
+// development...
+export const POST = async () => {
+  const startedAt = new Date().toISOString();
+  const runId = nanoid();
+
+  try {
+    const result = await runRestockNotifierAgent();
+
+    await db.insert(jobRuns).values({
+      id: runId,
+      jobName: "restock-notifier",
+      status: "success",
+      summary: result.summary,
+      steps: result.steps,
+      startedAt,
+      completedAt: new Date().toISOString(),
+    });
+
+    return Response.json({ ok: true }, { status: 200 });
+
+  } catch (err) {
+    await db.insert(jobRuns).values({
+      id: runId,
+      jobName: "restock-notifier",
+      status: "failed",
+      startedAt,
+      completedAt: new Date().toISOString(),
+      error: String(err),
+    });
+
+    return Response.json({ ok: false }, { status: 500 });
+  }
+};
