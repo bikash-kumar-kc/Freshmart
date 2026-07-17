@@ -22,6 +22,7 @@ import {
 import { userUnfinishedCart } from "@/src/lib/server_actions/loadcart.server.action";
 import { ICartItem, setCart } from "@/src/store/carts/slice";
 import { getTotalOrdersCount } from "@/src/lib/server_actions/orders.server";
+import { useAuthContext } from "@/src/context/AuthContext";
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
@@ -29,6 +30,7 @@ interface IStateHandler {
 
 const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const { data } = useSession();
+  const { user, updateAuthStatus } = useAuthContext();
   console.log(data);
   const [count, setCount] = useState<number>(0);
   const [totalOrders, setTotalOrders] = useState(0);
@@ -97,6 +99,16 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (data?.user && data?.user.id) {
+      updateAuthStatus({
+        isLoggedIn: true,
+        userId: data?.user.id as string,
+        email: data?.user.email as string,
+      });
+    }
+  }, [data?.user]);
 
   useEffect(() => {
     if (!storeCalled.current) {
@@ -199,7 +211,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
           </div>
         </Link>
 
-        {data?.user.id ? (
+        {user?.isLoggedIn ? (
           <div>
             <button className="group p-2 rounded-full bg-white/80 text-black shadow-md backdrop-blur-sm transition-all hover:bg-transparent hover:scale-110">
               <MdOutlinePersonRemoveAlt1
