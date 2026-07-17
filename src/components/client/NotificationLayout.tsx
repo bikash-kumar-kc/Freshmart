@@ -33,14 +33,12 @@ export default function NotificationLayout() {
   }, []);
 
   return (
-    <SessionProvider>
-      <ReduxProvider>
-        <div ref={notificationRef} className="w-full">
-          <Header handleNotificationPanelOpen={handleNotificationPanelOpen} />
+    <ReduxProvider>
+      <div ref={notificationRef} className="w-full">
+        <Header handleNotificationPanelOpen={handleNotificationPanelOpen} />
 
-          <NotificationPanel isOpen={isOpen} />
-        </div>
-      </ReduxProvider>
-    </SessionProvider>
+        <NotificationPanel isOpen={isOpen} />
+      </div>
+    </ReduxProvider>
   );
 }
