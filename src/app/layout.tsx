@@ -5,6 +5,7 @@ import TanstackProvider from "../components/client/providers/TanstackProvider";
 import ToastContainerProvider from "./providers/ToastContainer";
 import Footer from "../components/server/Footer";
 import NotificationLayout from "../components/client/NotificationLayout";
+import AuthContextProvider from "../context/AuthContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,13 +25,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.className} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <TanstackProvider>
-          <ToastContainerProvider>
-            <NotificationLayout/>
-            {children}
-            <Footer />
-          </ToastContainerProvider>
-        </TanstackProvider>
+        <AuthContextProvider>
+          <TanstackProvider>
+            <ToastContainerProvider>
+              <NotificationLayout />
+              {children}
+              <Footer />
+            </ToastContainerProvider>
+          </TanstackProvider>
+        </AuthContextProvider>
       </body>
     </html>
   );
