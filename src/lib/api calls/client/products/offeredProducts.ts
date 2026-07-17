@@ -1,3 +1,5 @@
+
+"use client"
 import { IAPIResponseTypes } from "../../server/getPopularProducts";
 interface IOfferedProduct {
   id: string;

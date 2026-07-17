@@ -20,9 +20,7 @@ type IPopularProductResponse = IAPIResponseTypes<IPopularProductApiResponse>;
 export const getPopularProducts =
   async (): Promise<IPopularProductApiResponse> => {
     try {
-      const response = await fetch(
-        `/api/products/popularProducts`,
-      );
+      const response = await fetch(`/api/products/popularProducts`);
       if (!response.ok) {
         throw new Error("Failed to get the featured products ");
       }
