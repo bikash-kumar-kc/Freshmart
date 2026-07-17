@@ -1,12 +1,13 @@
 "use client";
+import OrderPaymentResponseSkeleton from "@/components/skeleton/order.payment.response.skeleton";
 import { clearCartItems } from "@/src/store/carts/slice";
 import { useAppDispatch } from "@/src/store/hook";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Suspense, useEffect, useRef } from "react";
 
-const SuccessPage = ()=>{
- const params = useParams<{ orderedId: string }>();
+const SuccessPage = () => {
+  const params = useParams<{ orderedId: string }>();
   const orderId = params.orderedId;
   const useEffectCalledRef = useRef<boolean | null>(null);
   const dispatch = useAppDispatch();
@@ -51,8 +52,7 @@ const SuccessPage = ()=>{
 
         <h1 className="text-2xl font-semibold text-gray-900">Order placed!</h1>
         <p className="text-gray-500">
-          Your payment was
-          successful. Your order is being processed.
+          Your payment was successful. Your order is being processed.
         </p>
 
         {/* order note — webhook writes the order async */}
@@ -93,15 +93,14 @@ const SuccessPage = ()=>{
       </div>
     </main>
   );
-}
-
+};
 
 const Page = () => {
- return (
-    <Suspense fallback={<p>payment success page is loading...</p>}>
-        <SuccessPage/>
+  return (
+    <Suspense fallback={<OrderPaymentResponseSkeleton></OrderPaymentResponseSkeleton>}>
+      <SuccessPage />
     </Suspense>
- )
+  );
 };
 
 export default Page;
