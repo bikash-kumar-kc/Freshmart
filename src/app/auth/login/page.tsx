@@ -81,6 +81,7 @@ const SignInForm = () => {
       router.push(`${redirect}`);
       return;
     }
+    router.refresh();
     router.push("/");
   };
 
