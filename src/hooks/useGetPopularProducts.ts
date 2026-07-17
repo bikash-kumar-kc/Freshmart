@@ -1,4 +1,4 @@
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../app/constants/queryKeys";
 import { getPopularProducts } from "../lib/api calls/server/getPopularProducts";
 

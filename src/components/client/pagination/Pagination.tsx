@@ -7,7 +7,6 @@ import {
   PaginationItem,
   PaginationLink,
 } from "@/components/ui/pagination";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 const PaginationComponent = () => {
