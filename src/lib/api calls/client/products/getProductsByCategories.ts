@@ -1,3 +1,5 @@
+"use client"
+
 import { ICategoriesProductReponse } from "@/src/types/product.types/productsbycategories.types";
 import { IAPIResponseTypes } from "../../server/getPopularProducts";
 import { manageError } from "@/src/utils/response";
