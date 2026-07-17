@@ -15,7 +15,6 @@ import ReduxProvider from "./providers/ReduxProvider";
 export default function Home() {
   return (
     <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 ">
-      <SessionProvider>
         <ReduxProvider>
           {/* <NotificationLayout /> */}
           <main className="w-full max-w-7xl mx-auto mt-10">
@@ -41,7 +40,6 @@ export default function Home() {
             <PaginationComponent />
           </Suspense>
         </ReduxProvider>
-      </SessionProvider>
     </div>
   );
 }
