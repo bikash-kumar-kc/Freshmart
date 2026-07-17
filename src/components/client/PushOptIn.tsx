@@ -21,9 +21,17 @@ export function PushOptIn() {
         return;
       }
 
+      console.log(JSON.stringify(subscription))
+    
+      const stringifySubscription = JSON.stringify(subscription);
+
+      if(!stringifySubscription){
+        toast.error("Failed to get parsed subscription")
+      }
+
       await updateUserSubscriptionStatus({
         userId: data?.user.id as string,
-        subscription: JSON.stringify(subscription),
+        subscription: stringifySubscription,
       });
 
       toast.success("Subscribe for web push successfully");
