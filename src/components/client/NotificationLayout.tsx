@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Header from "../server/Header";
 import NotificationPanel from "../server/notificationPanel";
-import { SessionProvider } from "next-auth/react";
 import ReduxProvider from "@/src/app/providers/ReduxProvider";
 
 export default function NotificationLayout() {
@@ -33,12 +32,10 @@ export default function NotificationLayout() {
   }, []);
 
   return (
-    <ReduxProvider>
-      <div ref={notificationRef} className="w-full">
-        <Header handleNotificationPanelOpen={handleNotificationPanelOpen} />
+    <div ref={notificationRef} className="w-full">
+      <Header handleNotificationPanelOpen={handleNotificationPanelOpen} />
 
-        <NotificationPanel isOpen={isOpen} />
-      </div>
-    </ReduxProvider>
+      <NotificationPanel isOpen={isOpen} />
+    </div>
   );
 }

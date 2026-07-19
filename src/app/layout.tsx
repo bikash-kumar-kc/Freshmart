@@ -6,6 +6,7 @@ import ToastContainerProvider from "./providers/ToastContainer";
 import Footer from "../components/server/Footer";
 import NotificationLayout from "../components/client/NotificationLayout";
 import SessionProviderWrapper from "./providers/SessionProvider";
+import ReduxProvider from "./providers/ReduxProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,11 +28,13 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <SessionProviderWrapper>
           <TanstackProvider>
-            <ToastContainerProvider>
-              <NotificationLayout />
-              {children}
-              <Footer />
-            </ToastContainerProvider>
+            <ReduxProvider>
+              <ToastContainerProvider>
+                <NotificationLayout />
+                {children}
+                <Footer />
+              </ToastContainerProvider>
+            </ReduxProvider>
           </TanstackProvider>
         </SessionProviderWrapper>
       </body>
