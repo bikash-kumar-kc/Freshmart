@@ -30,7 +30,7 @@ export default function RootLayout({
           <TanstackProvider>
             <ReduxProvider>
               <ToastContainerProvider>
-                <NotificationLayout />
+                {/* <NotificationLayout /> */}
                 {children}
                 <Footer />
               </ToastContainerProvider>

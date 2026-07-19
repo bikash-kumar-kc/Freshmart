@@ -9,12 +9,13 @@ import ProductsSuspenseFallback from "../components/client/product/ProductsCateg
 import SpecialProductsSkeleton from "@/components/skeleton/SpecialProductSkeleton";
 import OfferedProducts from "../components/client/product/OfferedProducts";
 import PopularProducts from "../components/client/product/PopularProducts";
+import NotificationLayout from "../components/client/NotificationLayout";
 
 export default function Home() {
   return (
     <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 ">
        
-          {/* <NotificationLayout /> */}
+          <NotificationLayout />
           <main className="w-full max-w-7xl mx-auto mt-10">
             <Suspense fallback={<BannerCarouselSkeleton />}>
               <BannerCarousel />
