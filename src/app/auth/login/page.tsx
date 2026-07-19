@@ -75,13 +75,14 @@ const SignInForm = () => {
       return;
     }
 
-    setLoading(false);
-
     if (redirect) {
       router.push(`${redirect}`);
       return;
     }
-    router.push("/");
+
+    void router.push("/");
+
+    setLoading(false);
   };
 
   return (
