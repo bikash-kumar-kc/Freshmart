@@ -100,7 +100,7 @@ export async function GET() {
         {
           success: true,
           data: {
-            PopularProducts: [],
+            popularProducts: [],
             totalPopularProducts: 0,
           },
         },
