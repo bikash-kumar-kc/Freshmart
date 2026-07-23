@@ -1,3 +1,5 @@
+import ProductCardSkeleton from "./ProductCardSkeleton";
+
 export default function ProductDetailSkeleton() {
   return (
     <div className="w-full max-w-7xl mx-auto">
@@ -67,27 +69,30 @@ export default function ProductDetailSkeleton() {
               <div className="h-4 w-20 bg-gray-200 rounded" />
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-              {[...Array(8)].map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-sm border border-gray-100 overflow-hidden"
-                >
-                  {/* Same aspect ratio as RelatedProductCard */}
-                  <div className="aspect-4/3 bg-gray-200" />
+            <div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+                {[...Array(8)].map((_, i) => (
+                  // <div
+                  //   key={i}
+                  //   className="bg-white rounded-sm border border-gray-100 overflow-hidden"
+                  // >
+                  //   {/* Same aspect ratio as RelatedProductCard */}
+                  //   <div className="aspect-4/3 bg-gray-200" />
 
-                  <div className="p-3">
-                    <div className="h-10 w-50 bg-gray-200 rounded mb-2" />
+                  //   <div className="p-3">
+                  //     <div className="h-10 w-50 bg-gray-200 rounded mb-2" />
 
-                    <div className="h-4 w-full bg-gray-200 rounded mb-1" />
+                  //     <div className="h-4 w-full bg-gray-200 rounded mb-1" />
 
-                    <div className="flex gap-2 mt-3">
-                      <div className="h-4 w-16 bg-gray-200 rounded" />
-                      <div className="h-4 w-12 bg-gray-200 rounded" />
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  //     <div className="flex gap-2 mt-3">
+                  //       <div className="h-4 w-16 bg-gray-200 rounded" />
+                  //       <div className="h-4 w-12 bg-gray-200 rounded" />
+                  //     </div>
+                  //   </div>
+                  // </div>
+                  <ProductCardSkeleton key={i} />
+                ))}
+              </div>
             </div>
           </div>
         </div>
