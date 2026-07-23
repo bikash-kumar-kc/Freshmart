@@ -1,8 +1,10 @@
 "use client";
 
 import { useGetPopularProducts } from "@/src/hooks/useGetPopularProducts";
-import { ProductCard } from "../PopularCard";
+// import { ProductCard } from "../PopularCard";
 import Link from "next/link";
+import { ProductCard } from "./unifiedProductCard/UnifiedProductCard";
+import { fromFlatProduct } from "./unifiedProductCard/normalizeProduct";
 
 const PopularProducts = () => {
   const { data: popularProductsInfo, isError, error } = useGetPopularProducts();
@@ -29,7 +31,8 @@ const PopularProducts = () => {
       >
         {popularProducts.map((p) => (
           <Link key={p.id} href={`/product/${p.category}/${p.slug}`}>
-            <ProductCard product={p} type="Popular" />
+            {/* <ProductCard product={p} type="Popular" /> */}
+            <ProductCard product={fromFlatProduct(p)} />
           </Link>
         ))}
       </div>
