@@ -8,7 +8,7 @@ import { clearFavorites, removeFavorite } from "@/src/store/faviourites/slice";
 import { Trash2 } from "lucide-react";
 import { EmptyFavorites } from "./EmptyState";
 import { FavoriteCardSkeleton } from "@/components/skeleton/FavoriteSkeleton";
-import { FavoriteCard } from "./FavoriteCard";
+// import { FavoriteCard } from "./FavoriteCard";
 import GoBackButton from "@/src/components/client/buttons/GotoBackBtn";
 import { ProductCard } from "@/src/components/client/product/unifiedProductCard/UnifiedProductCard";
 import { fromFlatProduct } from "@/src/components/client/product/unifiedProductCard/normalizeProduct";
