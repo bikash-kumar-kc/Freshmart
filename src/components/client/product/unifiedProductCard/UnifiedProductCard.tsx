@@ -89,6 +89,7 @@ export function ProductCard({
   mode?: CardMode;
   specialId?: string;
   onRemoveFavorite?: (id: string) => void;
+  type?: string;
 }) {
   const [wished, setWished] = useState(mode === "favorite");
   const [added, setAdded] = useState(false);
@@ -183,7 +184,9 @@ export function ProductCard({
     >
       <div className="relative h-50 overflow-hidden">
         <Image
-          src={"https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"}
+          src={
+            "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
+          }
           alt={product.name}
           fill
           className={`object-cover ${isOutOfStock ? "opacity-60" : ""}`}
