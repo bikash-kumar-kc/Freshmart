@@ -41,9 +41,13 @@ export const productQuantity =
     const product = state.carts.cartItems.cartItems.filter(
       (i) => i.productId === productId,
     );
+    console.log("i am here..............")
+    if (product.length === 0) return null;
+    console.log("i am here too...")
     return {
       productId: product[0].productId,
       quantity: product[0].quantity,
+      stock: product[0].varient.stock,
     };
   };
 
