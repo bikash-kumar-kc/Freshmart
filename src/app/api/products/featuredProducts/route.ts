@@ -7,7 +7,7 @@ export interface IProduct {
   weightValue: number | null;
   weightUnit: string | null;
   price: number | null;
-  productId: string;
+  id: string;
   name: string;
   slug: string;
   descriptions: string;
@@ -28,7 +28,7 @@ const getFeaturedProducts = async () => {
   cacheTag("featured-products");
   const featuredProducts = await db
     .select({
-      productId: products.id,
+      id: products.id,
       name: products.name,
       slug: products.slug,
       descriptions: products.description,
@@ -44,11 +44,11 @@ const getFeaturedProducts = async () => {
     return [];
   }
 
-  const arrayOfFeaturedProductIds = featuredProducts.map((p) => p.productId);
+  const arrayOfFeaturedProductIds = featuredProducts.map((p) => p.id);
 
   const featuredProductVarients = await db
     .select({
-      productId: productVariants.productId,
+      id: productVariants.productId,
       weightValue: productVariants.weightValue,
       weightUnit: productVariants.weightUnit,
       price: productVariants.price,
@@ -62,15 +62,15 @@ const getFeaturedProducts = async () => {
     (typeof featuredProductVarients)[0]
   >();
   for (const v of featuredProductVarients) {
-    const existing = cheapestByProductId.get(v.productId);
+    const existing = cheapestByProductId.get(v.id);
     if (!existing || v.weightValue < existing.weightValue) {
       const isOutOfStock = v.stock === 0;
-      if (!isOutOfStock) cheapestByProductId.set(v.productId, v);
+      if (!isOutOfStock) cheapestByProductId.set(v.id, v);
     }
   }
 
   const result = featuredProducts.map((p) => {
-    const variant = cheapestByProductId.get(p.productId);
+    const variant = cheapestByProductId.get(p.id);
     return {
       ...p,
       weightValue: variant?.weightValue ?? null,
