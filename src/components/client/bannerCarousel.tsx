@@ -10,7 +10,9 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { useGetFeaturedProducts } from "@/src/hooks/usePromotionProducts";
-import BannerProductCard from "../server/bannerCard";
+// import BannerProductCard from "../server/bannerCard";
+import { ProductCard } from "./product/unifiedProductCard/UnifiedProductCard";
+import { fromFlatProduct } from "./product/unifiedProductCard/normalizeProduct";
 
 const BannerCarousel = () => {
   const { data: FeaturedProductsResponse } = useGetFeaturedProducts();
@@ -42,8 +44,8 @@ const BannerCarousel = () => {
       className="object-cover rounded-2xl"
     />
 
-    <div className="absolute left-8 top-1/2 -translate-y-1/2 z-10">
-      <BannerProductCard
+    <div className="absolute left-8 top-1/2 -translate-y-8 z-10">
+      {/* <BannerProductCard
         thumbnail=""
         productName={prod.name}
         category={prod.category}
@@ -54,7 +56,9 @@ const BannerCarousel = () => {
         price={prod.price!}
         productId={prod.productId}
         stock={prod.stock}
-      />
+      /> */}
+
+      <ProductCard product={fromFlatProduct(prod)} />
     </div>
   </div>
 </CarouselItem>
