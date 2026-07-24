@@ -1,26 +1,23 @@
 "use client";
 
 import { useGetPopularProducts } from "@/src/hooks/useGetPopularProducts";
-import { ProductCard } from "../PopularCard";
+// import { ProductCard } from "../PopularCard";
 import Link from "next/link";
+import { ProductCard } from "./unifiedProductCard/UnifiedProductCard";
+import { fromFlatProduct } from "./unifiedProductCard/normalizeProduct";
 
 const PopularProducts = () => {
-  const { data: popularProductsInfo } = useGetPopularProducts();
+  const { data: popularProductsInfo, isError, error } = useGetPopularProducts();
 
   const popularProducts = popularProductsInfo?.popularProducts;
-  const totalPopularProducts = popularProductsInfo.totalPopularProducts;
 
-  // if (popularProductsLoading) {
-  //   return <p className="text-gray-500 text-center">loading...</p>;
-  // }
 
-  // if (isError) {
-  //   return <p className="text-red-600 text-center">{error.message}</p>;
-  // }
+  if (isError) {
+    return <p className="text-red-600 text-center">{error.message}</p>;
+  }
 
-  if (!popularProducts) return;
-  if (totalPopularProducts === 0) {
-    return <h1>no popular products</h1>;
+  if (popularProducts.length === 0) {
+    return <p></p>;
   }
 
   return (
@@ -35,7 +32,8 @@ const PopularProducts = () => {
       >
         {popularProducts.map((p) => (
           <Link key={p.id} href={`/product/${p.category}/${p.slug}`}>
-            <ProductCard product={p} type="Popular" />
+            {/* <ProductCard product={p} type="Popular" /> */}
+            <ProductCard product={fromFlatProduct(p)} />
           </Link>
         ))}
       </div>

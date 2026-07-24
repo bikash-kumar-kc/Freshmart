@@ -9,7 +9,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getLocally } from "@/src/lib/localstorage/localstorage";
 import { toast } from "react-toastify";
 import { Suspense, useEffect, useState } from "react";
-import AuthContextProvider, { useAuthContext } from "@/src/context/AuthContext";
 
 const schemaForSession = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -27,7 +26,6 @@ const SignInForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
-  const { updateAuthStatus } = useAuthContext();
 
   const [loading, setLoading] = useState(false);
   const [localAuth, setLocalAuth] = useState<{
@@ -77,14 +75,14 @@ const SignInForm = () => {
       return;
     }
 
-    setLoading(false);
-
     if (redirect) {
       router.push(`${redirect}`);
       return;
     }
-    updateAuthStatus({ isLoggedIn: true, email: data.email, userId: "" });
-    router.push("/");
+
+    void router.push("/");
+
+    setLoading(false);
   };
 
   return (

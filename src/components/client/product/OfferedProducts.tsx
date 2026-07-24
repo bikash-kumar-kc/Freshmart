@@ -1,8 +1,10 @@
 "use client";
 
 import { useGetOfferedProducts } from "@/src/hooks/useGetOfferedProducts";
-import { ProductCard } from "../PopularCard";
+// import { ProductCard } from "../PopularCard";
 import Link from "next/link";
+import { ProductCard } from "./unifiedProductCard/UnifiedProductCard";
+import { fromFlatProduct } from "./unifiedProductCard/normalizeProduct";
 
 const OfferedProductsComponent = () => {
   const {
@@ -40,7 +42,9 @@ const OfferedProductsComponent = () => {
       >
         {offeredProducts.map((p) => (
           <Link key={p.id} href={`/product/${p.category}/${p.slug}`}>
-          <ProductCard key={p.id} product={p} type="Offer" />
+          {/* <ProductCard key={p.id} product={p} type="Offer" /> */}
+          <ProductCard product={fromFlatProduct(p)} />
+
           </Link>
         ))}
       </div>

@@ -27,15 +27,27 @@ export const isProductInCart =
     );
   };
 
+export const fetchProductFromCart =
+  (productId: string | undefined) => (state: RootState) => {
+    if (!productId) return;
+    return state.carts.cartItems.cartItems.find(
+      (i) => i.productId === productId,
+    );
+  };
+
 export const productQuantity =
   (productId: string | undefined) => (state: RootState) => {
     if (!productId) return;
     const product = state.carts.cartItems.cartItems.filter(
       (i) => i.productId === productId,
     );
+    console.log("i am here..............")
+    if (product.length === 0) return null;
+    console.log("i am here too...")
     return {
       productId: product[0].productId,
       quantity: product[0].quantity,
+      stock: product[0].varient.stock,
     };
   };
 
@@ -47,15 +59,15 @@ export const productQuantity =
 //   };
 // };
 
-
-
 export const statusOfCart = createSelector(
-  [(state: RootState) => state.carts.type,
-   (state: RootState) => state.carts.orderId],
+  [
+    (state: RootState) => state.carts.type,
+    (state: RootState) => state.carts.orderId,
+  ],
   (type, orderId) => ({
     type,
     orderId,
-  })
+  }),
 );
 
 export const isAllowedToAddedInCart = (state: RootState) => {
@@ -67,15 +79,14 @@ export const totalCalculation = createSelector(
   [(state: RootState) => state.carts.cartItems.cartItems],
   (cartItems) => {
     const totalPriceWithoutDiscount = cartItems.reduce(
-      (totalPrice, item) =>
-        totalPrice + item.varient.price * item.quantity,
-      0
+      (totalPrice, item) => totalPrice + item.varient.price * item.quantity,
+      0,
     );
 
     const totalDiscountAmount = cartItems.reduce(
       (totalDiscount, item) =>
         totalDiscount + (item.discountAmount ?? 0) * item.quantity,
-      0
+      0,
     );
 
     return {
@@ -83,10 +94,9 @@ export const totalCalculation = createSelector(
       tda: totalDiscountAmount,
       tpwd: totalPriceWithoutDiscount - totalDiscountAmount,
       totalSaving: totalDiscountAmount,
-      isDeliveryCharged:
-        totalPriceWithoutDiscount <= DELIVERYCHARGEDLIMIT,
+      isDeliveryCharged: totalPriceWithoutDiscount <= DELIVERYCHARGEDLIMIT,
     };
-  }
+  },
 );
 
 // export const totalCalculation = (state: RootState) => {

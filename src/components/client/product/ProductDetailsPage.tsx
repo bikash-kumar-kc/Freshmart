@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ShoppingCart, MapPin, ChevronDown } from "lucide-react";
+import { ShoppingCart, MapPin, ChevronDown, Home } from "lucide-react";
 import { formatWeight } from "./utilities/helper.fun";
 import { ImageGallery } from "./utilities/image.gallary";
 import { FreshnessBadge } from "./utilities/FreshnessBadge";
@@ -21,8 +21,12 @@ import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import {
   isAllowedToAddedInCart,
   isProductInCart,
+  productQuantity,
 } from "@/src/store/carts/selectors";
 import { toast } from "react-toastify";
+import { ProductCard } from "./unifiedProductCard/UnifiedProductCard";
+import { fromFlatProduct } from "./unifiedProductCard/normalizeProduct";
+import QuantityControl from "@/src/app/cart/components/QuantityControl";
 
 export default function ProductDetailPage({
   product,
@@ -36,6 +40,7 @@ export default function ProductDetailPage({
   const dispatch = useAppDispatch();
   const isProductOnCart = useAppSelector(isProductInCart(product?.id));
   const isAllowed = useAppSelector(isAllowedToAddedInCart);
+  const productInfo = useAppSelector(productQuantity(product?.id));
 
   const isOutOfStock =
     product?.status === "inactive" || filteredVariantRow?.stock === 0;
@@ -74,7 +79,18 @@ export default function ProductDetailPage({
   return (
     <main className="flex flex-col bg-[#F5F9F0] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <GoBackButton />
+        <div className="flex justify-between">
+          <GoBackButton />
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 text-sm font-medium
+                     text-green-700 hover:text-white hover:bg-green-400
+                     px-3 py-2 transition-colors rounded-sm"
+          >
+            <Home size={14} />
+            Home
+          </Link>
+        </div>
         <div
           className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 ${animate ? "animate-fade-up" : ""}`}
         >
@@ -158,7 +174,14 @@ export default function ProductDetailPage({
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 mb-5">
+            <div className="flex flex-col sm:flex-row items-center gap-3 mb-5">
+              {isProductOnCart && !!productInfo && (
+                <QuantityControl
+                  value={productInfo.quantity}
+                  maxStock={productInfo.stock}
+                  id={productInfo.productId}
+                />
+              )}
               <button
                 onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                   e.preventDefault();
@@ -257,11 +280,12 @@ export default function ProductDetailPage({
               gap-4"
             >
               {relatedProducts.slice(0, 8).map((rp) => (
-                <RelatedProductCard
-                  key={rp.id}
-                  product={rp}
-                  isAnimate={animate}
-                />
+                // <RelatedProductCard
+                //   key={rp.id}
+                //   product={rp}
+                //   isAnimate={animate}
+                // />
+                <ProductCard key={rp.id} product={fromFlatProduct(rp)} />
               ))}
             </div>
           </div>

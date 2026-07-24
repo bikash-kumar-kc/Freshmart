@@ -37,6 +37,9 @@ export const getPopularProducts = async (): Promise<IPopularProductsData> => {
   }
 
   const data: IPopularProductResponse = await res.json();
+
+  console.log("data")
+  console.log(data)
   return {
     popularProducts: data.data.popularProducts,
     totalPopularProducts: data.data.totalPopularProducts,

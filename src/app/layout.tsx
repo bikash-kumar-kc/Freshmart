@@ -4,8 +4,8 @@ import "./globals.css";
 import TanstackProvider from "../components/client/providers/TanstackProvider";
 import ToastContainerProvider from "./providers/ToastContainer";
 import Footer from "../components/server/Footer";
-import NotificationLayout from "../components/client/NotificationLayout";
-import AuthContextProvider from "../context/AuthContext";
+import SessionProviderWrapper from "./providers/SessionProvider";
+import ReduxProvider from "./providers/ReduxProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,15 +25,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.className} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <AuthContextProvider>
+        <SessionProviderWrapper>
           <TanstackProvider>
-            <ToastContainerProvider>
-              <NotificationLayout />
-              {children}
-              <Footer />
-            </ToastContainerProvider>
+            <ReduxProvider>
+              <ToastContainerProvider>
+                {/* <NotificationLayout /> */}
+                {children}
+                <Footer />
+              </ToastContainerProvider>
+            </ReduxProvider>
           </TanstackProvider>
-        </AuthContextProvider>
+        </SessionProviderWrapper>
       </body>
     </html>
   );

@@ -14,12 +14,10 @@ export default function ProductDetailClient({ productPromise }: Props) {
   if (!product) notFound();
 
   return (
-    <ReduxProvider>
       <ProductDetailPage
         product={product}
         filteredVariantRow={filteredVariantRow}
         relatedProducts={relatedProducts}
       />
-    </ReduxProvider>
   );
 }

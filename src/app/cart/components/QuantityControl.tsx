@@ -1,9 +1,8 @@
 import { productQuantity, statusOfCart } from "@/src/store/carts/selectors";
 import { updateCartItem } from "@/src/store/carts/slice";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
-import { ConsoleLogWriter } from "drizzle-orm";
 import { Minus, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function QuantityControl({
   value,
@@ -57,6 +56,10 @@ function QuantityControl({
   };
 
   const isFromDb = statusCart ? statusCart.type === "db" : false;
+
+  useEffect(() => {
+    setQuantity(String(value));
+  }, [value]);
 
   return (
     <div className="flex items-center gap-0 h-8">

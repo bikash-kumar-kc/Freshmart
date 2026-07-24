@@ -8,8 +8,10 @@ import { clearFavorites, removeFavorite } from "@/src/store/faviourites/slice";
 import { Trash2 } from "lucide-react";
 import { EmptyFavorites } from "./EmptyState";
 import { FavoriteCardSkeleton } from "@/components/skeleton/FavoriteSkeleton";
-import { FavoriteCard } from "./FavoriteCard";
+// import { FavoriteCard } from "./FavoriteCard";
 import GoBackButton from "@/src/components/client/buttons/GotoBackBtn";
+import { ProductCard } from "@/src/components/client/product/unifiedProductCard/UnifiedProductCard";
+import { fromFlatProduct } from "@/src/components/client/product/unifiedProductCard/normalizeProduct";
 
 const FavoritePage = () => {
   const dispatch = useAppDispatch();
@@ -107,10 +109,16 @@ const FavoritePage = () => {
             xl:grid-cols-5 gap-3 sm:gap-4"
           >
             {productData.map((product) => (
-              <FavoriteCard
+              // <FavoriteCard
+              //   key={product.id}
+              //   product={product}
+              //   onRemove={handleRemove}
+              // />
+              <ProductCard
                 key={product.id}
-                product={product}
-                onRemove={handleRemove}
+                product={fromFlatProduct(product)}
+                mode="favorite"
+                onRemoveFavorite={handleRemove}
               />
             ))}
           </div>

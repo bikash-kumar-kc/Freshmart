@@ -1,7 +1,9 @@
+import { fromCategoryProduct } from "@/src/components/client/product/unifiedProductCard/normalizeProduct";
+import { ProductCard } from "@/src/components/client/product/unifiedProductCard/UnifiedProductCard";
 import { db } from "@/src/db/config";
 import { products, productVariants } from "@/src/db/schema";
 import { eq, inArray } from "drizzle-orm";
-import { ProductCard } from "../ProductCard";
+// import { ProductCard } from "../ProductCard";
 
 async function getProductsByCategory(dbName: string) {
   const productRows = await db
@@ -37,7 +39,6 @@ const ProductPage = async ({
   cat: string;
   productId: string;
 }) => {
-
   if (!cat?.trim()) return;
   const productList = await getProductsByCategory(cat);
 
@@ -65,17 +66,20 @@ const ProductPage = async ({
                 gap-3 sm:gap-4"
         >
           {orderedProducts.map((product) => (
+            // <ProductCard
+            //   key={product.id}
+            //   product={product}
+            //   specialId={productId}
+            // />
             <ProductCard
-              key={product.id}
-              product={product}
+            key={product.id}
+              product={fromCategoryProduct(product)}
               specialId={productId}
             />
           ))}
         </div>
       )}
     </div>
-
-   
   );
 };
 

@@ -1,5 +1,4 @@
 "use client";
-import { SessionProvider } from "next-auth/react";
 import { Suspense } from "react";
 import ImageSlider from "../components/client/messageBanner";
 import BannerCarouselSkeleton from "@/components/skeleton/BannerCarouselSkeleton";
@@ -10,14 +9,13 @@ import ProductsSuspenseFallback from "../components/client/product/ProductsCateg
 import SpecialProductsSkeleton from "@/components/skeleton/SpecialProductSkeleton";
 import OfferedProducts from "../components/client/product/OfferedProducts";
 import PopularProducts from "../components/client/product/PopularProducts";
-import ReduxProvider from "./providers/ReduxProvider";
+import NotificationLayout from "../components/client/NotificationLayout";
 
 export default function Home() {
   return (
     <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 ">
-      <SessionProvider>
-        <ReduxProvider>
-          {/* <NotificationLayout /> */}
+       
+          <NotificationLayout />
           <main className="w-full max-w-7xl mx-auto mt-10">
             <Suspense fallback={<BannerCarouselSkeleton />}>
               <BannerCarousel />
@@ -40,8 +38,6 @@ export default function Home() {
           <Suspense fallback={<p>loading...</p>}>
             <PaginationComponent />
           </Suspense>
-        </ReduxProvider>
-      </SessionProvider>
     </div>
   );
 }
