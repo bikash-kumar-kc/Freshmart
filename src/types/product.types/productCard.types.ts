@@ -11,6 +11,6 @@ export interface IUnifiedProduct {
   discount?: number | null;
   isOffered?: boolean;
   isMostPopular?: boolean;
-  status: string;
+  status?: string;
   stock: number;
 }

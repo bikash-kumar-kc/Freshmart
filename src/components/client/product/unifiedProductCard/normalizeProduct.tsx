@@ -26,7 +26,7 @@ export function fromCategoryProduct(product: ICategoryProducts): IUnifiedProduct
 export function fromFlatProduct(product: {
   id: string; slug: string; category: string; name: string; thumbnail: string;
   price: number | null; weightValue: number | null; weightUnit: string | null;
-  discount?: number | null; isOffered?: boolean; status: string; stock: number;
+  discount?: number | null; isOffered?: boolean; status?: string; stock: number;
 }): IUnifiedProduct {
   return { ...product, isMostPopular: false };
 }
