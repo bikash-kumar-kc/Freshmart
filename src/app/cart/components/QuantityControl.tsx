@@ -86,6 +86,7 @@ function QuantityControl({
           value={quantity}
           max={maxStock}
           onChange={(e) => {
+            e.stopPropagation();
             const value = e.target.value;
             const refinedValue = Math.max(1, Math.min(Number(value), maxStock));
             setQuantity(String(refinedValue));
