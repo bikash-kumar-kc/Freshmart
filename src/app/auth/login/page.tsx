@@ -89,12 +89,14 @@ const SignInForm = () => {
     <>
       <div className="w-full lg:w-[40%] flex flex-col justify-center px-8 sm:px-12 bg-amber-50">
         <div className="mb-10 flex flex-col items-center">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl">🌿</span>
-            <span className="text-lg font-bold text-green-700 tracking-wider">
-              FRESHMART
-            </span>
-          </div>
+          <Link href={"/"}>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-2xl">🌿</span>
+              <span className="text-lg font-bold text-green-700 tracking-wider">
+                FRESHMART
+              </span>
+            </div>
+          </Link>
           <p className="text-gray-400 text-sm">Sign in to your account</p>
         </div>
 
@@ -179,7 +181,7 @@ const SignInForm = () => {
 const Page = () => {
   return (
     <Suspense fallback={<p>Signin form loading...</p>}>
-        <SignInForm />
+      <SignInForm />
     </Suspense>
   );
 };
