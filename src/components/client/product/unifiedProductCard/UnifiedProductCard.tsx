@@ -176,70 +176,70 @@ export function ProductCard({
   }
 
   return (
-    <Link
-      href={`/product/${product.category}/${product.slug}`}
+    <div
       className={`group bg-white border rounded-md overflow-hidden flex flex-col
         transition-transform duration-200 ease-out hover:scale-[1.02]
         ${specialId === product.id ? "border-purple-500" : "border-black/10"}`}
     >
-      <div className="relative h-50 overflow-hidden">
-        <Image
-          src={
-            "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
-          }
-          alt={product.name}
-          fill
-          className={`object-cover ${isOutOfStock ? "opacity-60" : ""}`}
-          sizes="240px"
-        />
+      <Link href={`/product/${product.category}/${product.slug}`}>
+        <div className="relative h-50 overflow-hidden">
+          <Image
+            src={
+              "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
+            }
+            alt={product.name}
+            fill
+            className={`object-cover ${isOutOfStock ? "opacity-60" : ""}`}
+            sizes="240px"
+          />
 
-        <button
-          onClick={handleTopRightButton}
-          aria-label={
-            mode === "favorite"
-              ? "Remove from favorites"
-              : wished
-                ? "Remove from wishlist"
-                : "Add to wishlist"
-          }
-          className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90
+          <button
+            onClick={handleTopRightButton}
+            aria-label={
+              mode === "favorite"
+                ? "Remove from favorites"
+                : wished
+                  ? "Remove from wishlist"
+                  : "Add to wishlist"
+            }
+            className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90
             flex items-center justify-center text-[#555] cursor-pointer p-0"
-        >
-          {mode === "favorite" ? (
-            <Trash2 size={14} />
-          ) : (
-            <HeartIcon filled={wished} />
-          )}
-        </button>
+          >
+            {mode === "favorite" ? (
+              <Trash2 size={14} />
+            ) : (
+              <HeartIcon filled={wished} />
+            )}
+          </button>
 
-        <div className="absolute left-2 top-2 flex flex-col gap-1">
-          {product.isMostPopular && (
-            <span className="bg-amber-400 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
-              Popular
-            </span>
-          )}
-          {product.isOffered && product.discount ? (
-            <span className="bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
-              -{product.discount}%
-            </span>
-          ) : null}
-          {isOutOfStock && (
-            <span className="bg-gray-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
-              Out of stock
-            </span>
+          <div className="absolute left-2 top-2 flex flex-col gap-1">
+            {product.isMostPopular && (
+              <span className="bg-amber-400 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                Popular
+              </span>
+            )}
+            {product.isOffered && product.discount ? (
+              <span className="bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                -{product.discount}%
+              </span>
+            ) : null}
+            {isOutOfStock && (
+              <span className="bg-gray-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                Out of stock
+              </span>
+            )}
+          </div>
+
+          {product.weightValue && product.weightUnit && (
+            <div className="absolute bottom-2.5 right-2.5">
+              <span className="bg-[rgba(27,52,4,0.6)] text-[#EAF3DE] text-[10px] px-2.25 py-0.75 rounded-full">
+                {product.weightValue}
+                {product.weightUnit}
+              </span>
+            </div>
           )}
         </div>
-
-        {product.weightValue && product.weightUnit && (
-          <div className="absolute bottom-2.5 right-2.5">
-            <span className="bg-[rgba(27,52,4,0.6)] text-[#EAF3DE] text-[10px] px-2.25 py-0.75 rounded-full">
-              {product.weightValue}
-              {product.weightUnit}
-            </span>
-          </div>
-        )}
-      </div>
-
+      </Link>
       <div className="px-3.5 py-3 flex items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="m-0 text-sm font-medium text-[#1a1a1a] line-clamp-1">
@@ -272,6 +272,6 @@ export function ProductCard({
           {added ? <CheckIcon /> : <CartIcon />}
         </button>
       </div>
-    </Link>
+    </div>
   );
 }
