@@ -55,6 +55,7 @@ function QuantityControl({
     }
   };
 
+
   const isFromDb = statusCart ? statusCart.type === "db" : false;
 
   useEffect(() => {
@@ -64,9 +65,7 @@ function QuantityControl({
   return (
     <div className="flex items-center gap-0 h-8">
       <button
-        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-          e.preventDefault();
-          e.stopPropagation();
+        onClick={() => {
           handleDecrement(id);
         }}
         className="w-8 h-8 flex items-center justify-center rounded-l-lg
@@ -86,7 +85,6 @@ function QuantityControl({
           value={quantity}
           max={maxStock}
           onChange={(e) => {
-            e.stopPropagation();
             const value = e.target.value;
             const refinedValue = Math.max(1, Math.min(Number(value), maxStock));
             setQuantity(String(refinedValue));
@@ -120,7 +118,6 @@ function QuantityControl({
       </div>
       <button
         onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-          e.preventDefault();
           e.stopPropagation();
           handleIncrement(id);
         }}
