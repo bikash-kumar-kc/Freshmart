@@ -619,6 +619,52 @@ export const productVariantsRelations = relations(
   }),
 );
 
+export const notificationTypeEnum = ["vendor", "admin"] as const;
+
+export const notificationSubTypeEnum = [
+  "vendor_registration_filed",
+  "vendor_account_created",
+  "vendor_added_product",
+  "vendor_edited_product",
+  "vendor_suggested_product_name",
+  "vendor_replied_quotation",
+  "product_approved",
+  "product_rejected",
+  "admin_filed_quotation",
+  "display_order_request",
+] as const;
+
+export const notificationsVendorAdmin = sqliteTable(
+  "notifications_vendor_admin",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+
+    type: text("type", { enum: notificationTypeEnum }).notNull(),
+    subType: text("sub_type", { enum: notificationSubTypeEnum }).notNull(),
+
+    vendorId: text("vendor_id").references(() => vendors.id, {
+      onDelete: "cascade",
+    }),
+
+    referenceId: text("reference_id"),
+    referenceType: text("reference_type"),
+
+    message: text("message").notNull(),
+    content: text("content"),
+
+    isRead: integer("is_read", { mode: "boolean" }).notNull().default(false),
+    readAt: text("read_at"),
+
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(current_timestamp)`),
+  },
+  (table) => [
+    index("notifications_vendor_idx").on(table.vendorId),
+    index("notifications_type_idx").on(table.type),
+  ],
+);
+
 // types...
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
