@@ -44,7 +44,7 @@ export const users = sqliteTable(
 
     createdAt: text("created_at")
       .notNull()
-      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`)
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
     // updatedAt: text("updated_at"),
     // .notNull()
     // .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
@@ -68,6 +68,7 @@ export const vendors = sqliteTable("vendors", {
 
   phoneNumber: text("phone_number").notNull(),
   addressLocation: text("address_location").notNull(),
+  email: text("email").notNull(),
 
   vatNumber: text("vat_number"),
   panVatCertificateUrl: text("pan_vat_certificate_url").notNull(),
@@ -76,6 +77,10 @@ export const vendors = sqliteTable("vendors", {
     .default(sql`'[]'`),
 
   isVendorApproved: integer("is_vendor_approved", { mode: "boolean" })
+    .notNull()
+    .default(false),
+
+  isEmailVerified: integer("is_email_verified", { mode: "boolean" })
     .notNull()
     .default(false),
 
@@ -297,6 +302,14 @@ export const products = sqliteTable(
 
     // popularity check -------------
     popularityScore: real("popularity_score").notNull().default(0),
+
+    // vendor id...
+    vendorId: text("vendor_id").references(() => vendors.id),
+
+    // productlistingid...
+    productListingId: integer("product_listing_id").references(
+      () => productListing.id,
+    ),
 
     createdAt: text("created_at")
       .notNull()
@@ -550,7 +563,16 @@ export const orderItems = sqliteTable(
     weightUnit: text("weight_unit", {
       enum: ["g", "kg", "l", "ml"],
     }).notNull(),
+
     slug: text("slug").notNull(),
+
+    // vendor id...
+    vendorId: text("vendor_id").references(() => vendors.id),
+
+    // productlistingid...
+    productListingId: integer("product_listing_id").references(
+      () => productListing.id,
+    ),
   },
   (table) => [
     index("order_items_order_idx").on(table.orderId),
