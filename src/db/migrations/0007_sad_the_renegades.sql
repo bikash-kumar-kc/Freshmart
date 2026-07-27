@@ -1,0 +1,1 @@
+ALTER TABLE `order_items` ADD `is_rejected_by_admin` integer DEFAULT false NOT NULL;

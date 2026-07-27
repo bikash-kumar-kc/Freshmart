@@ -573,6 +573,10 @@ export const orderItems = sqliteTable(
     productListingId: integer("product_listing_id").references(
       () => productListing.id,
     ),
+
+    isRejectedByAdmin: integer("is_rejected_by_admin", { mode: "boolean" })
+      .notNull()
+      .default(false),
   },
   (table) => [
     index("order_items_order_idx").on(table.orderId),
