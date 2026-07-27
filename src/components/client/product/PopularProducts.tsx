@@ -11,7 +11,6 @@ const PopularProducts = () => {
 
   const popularProducts = popularProductsInfo?.popularProducts;
 
-
   if (isError) {
     return <p className="text-red-600 text-center">{error.message}</p>;
   }
@@ -31,10 +30,7 @@ const PopularProducts = () => {
         }}
       >
         {popularProducts.map((p) => (
-          <Link key={p.id} href={`/product/${p.category}/${p.slug}`}>
-            {/* <ProductCard product={p} type="Popular" /> */}
-            <ProductCard product={fromFlatProduct(p)} />
-          </Link>
+          <ProductCard key={p.id} product={fromFlatProduct(p)} />
         ))}
       </div>
     </div>

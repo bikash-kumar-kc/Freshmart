@@ -29,9 +29,7 @@ const OfferedProductsComponent = () => {
   }
 
   return (
-    <div
-      className=" w-full flex flex-col gap-6 mt-8"
-    >
+    <div className=" w-full flex flex-col gap-6 mt-8">
       <h2 className="text-3xl font-semibold">Special Offers</h2>
       <div
         style={{
@@ -41,11 +39,7 @@ const OfferedProductsComponent = () => {
         }}
       >
         {offeredProducts.map((p) => (
-          <Link key={p.id} href={`/product/${p.category}/${p.slug}`}>
-          {/* <ProductCard key={p.id} product={p} type="Offer" /> */}
-          <ProductCard product={fromFlatProduct(p)} />
-
-          </Link>
+          <ProductCard key={p.id} product={fromFlatProduct(p)} />
         ))}
       </div>
     </div>
