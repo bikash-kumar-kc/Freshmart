@@ -64,6 +64,13 @@
       "when": 1785168562205,
       "tag": "0008_living_thunderbolts",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1785216351609,
+      "tag": "0009_flippant_sersi",
+      "breakpoints": true
     }
   ]
 }
