@@ -71,6 +71,27 @@
       "when": 1785216351609,
       "tag": "0009_flippant_sersi",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1785302708346,
+      "tag": "0010_slim_metal_master",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1785303657012,
+      "tag": "0011_young_tombstone",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1785304767092,
+      "tag": "0012_lovely_brother_voodoo",
+      "breakpoints": true
     }
   ]
 }

@@ -177,6 +177,7 @@ export const productListing = sqliteTable(
     isAcceptedByAdmin: integer("is_accepted_by_admin", { mode: "boolean" })
       .notNull()
       .default(false),
+    isLived: integer("is_lived", { mode: "boolean" }).default(false),
 
     createdAt: text("created_at")
       .notNull()
@@ -239,10 +240,17 @@ export const products = sqliteTable(
   {
     id: text("id").primaryKey(),
 
+    // vendor id...
+    vendorId: text("vendor_id").references(() => vendors.id),
+    type: text("type", { enum: ["display", "inventory"] }),
     name: text("name").notNull(),
     slug: text("slug").notNull().unique(), // unique — see index below
-
+    categoryId: integer("category_id").references(() => category.id),
+    productNameId: integer("product_name_id").references(() => productName.id),
     category: text("category").notNull(),
+    packagingTypeId: integer("packaging_type_id").references(
+      () => packagingType.id,
+    ),
 
     // comma-separated search terms, e.g. "potato,aalu"
 
@@ -303,9 +311,6 @@ export const products = sqliteTable(
     // popularity check -------------
     popularityScore: real("popularity_score").notNull().default(0),
 
-    // vendor id...
-    vendorId: text("vendor_id").references(() => vendors.id),
-
     // productlistingid...
     productListingId: integer("product_listing_id").references(
       () => productListing.id,
@@ -333,6 +338,9 @@ export const productVariants = sqliteTable(
     productId: text("product_id")
       .notNull()
       .references(() => products.id, { onDelete: "cascade" }),
+    measurementTypeId: integer("measurement_type_id").references(
+      () => measurementType.id,
+    ),
 
     weightValue: real("weight_value").notNull(),
     weightUnit: text("weight_unit").notNull(),
@@ -698,6 +706,7 @@ export const quotations = sqliteTable(
     isDelivered: integer("is_delivered", { mode: "boolean" })
       .notNull()
       .default(false),
+    isLived: integer("is_lived", { mode: "boolean" }).notNull().default(false),
 
     createdAt: text("created_at")
       .notNull()

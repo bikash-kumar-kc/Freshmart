@@ -1,0 +1,1 @@
+ALTER TABLE `quotations` ADD `is_lived` integer DEFAULT false NOT NULL;
