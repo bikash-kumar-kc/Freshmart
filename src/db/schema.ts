@@ -178,6 +178,9 @@ export const productListing = sqliteTable(
       .notNull()
       .default(false),
     isLived: integer("is_lived", { mode: "boolean" }).default(false),
+    isRejectedByAdmin: integer("is_rejected_by_admin", {
+      mode: "boolean",
+    }).default(false),
 
     createdAt: text("created_at")
       .notNull()
@@ -683,7 +686,7 @@ export const quotations = sqliteTable(
       .references(() => vendors.id, { onDelete: "cascade" }),
     adminId: text("admin_id")
       .notNull()
-      .references(() => admins.id),
+      .references(() => users.id),
     productListingId: integer("product_listing_id")
       .notNull()
       .references(() => productListing.id),
