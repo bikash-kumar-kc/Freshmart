@@ -255,8 +255,10 @@ export const products = sqliteTable(
       () => packagingType.id,
     ),
 
-    // comma-separated search terms, e.g. "potato,aalu"
+    // local name for the product...
+    localName: text('local_name'),
 
+    // comma-separated search terms, e.g. "potato,aalu"...
     keywords: text("keywords").notNull().default(""),
 
     description: text("description").notNull(),
