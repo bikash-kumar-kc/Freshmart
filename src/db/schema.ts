@@ -741,7 +741,7 @@ export const quotationVariants = sqliteTable("quotation_variants", {
     .references(() => quotations.id, { onDelete: "cascade" }),
   productListingVariantId: integer("product_listing_variant_id")
     .notNull()
-    .references(() => productListingVariants.id),
+    .references(() => productListingVariants.id, { onDelete: "cascade" }),
 
   originalPricePerUnit: integer("original_price_per_unit").notNull(),
   adminSuggestedPricePerUnit: integer(
