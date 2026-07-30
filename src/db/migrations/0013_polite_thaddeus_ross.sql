@@ -1,0 +1,1 @@
+ALTER TABLE `product_listing` ADD `is_rejected_by_admin` integer DEFAULT false;
