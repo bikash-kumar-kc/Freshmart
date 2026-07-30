@@ -113,6 +113,34 @@
       "when": 1785400584244,
       "tag": "0015_brainy_wolverine",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "6",
+      "when": 1785402126623,
+      "tag": "0016_orange_grandmaster",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "6",
+      "when": 1785402265695,
+      "tag": "0017_ordinary_zodiak",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "6",
+      "when": 1785405814427,
+      "tag": "0018_square_meteorite",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "6",
+      "when": 1785405968390,
+      "tag": "0019_silky_galactus",
+      "breakpoints": true
     }
   ]
 }

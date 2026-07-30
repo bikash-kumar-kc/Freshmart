@@ -256,7 +256,7 @@ export const products = sqliteTable(
     ),
 
     // local name for the product...
-    localName: text('local_name'),
+    localName: text("local_name"),
 
     // comma-separated search terms, e.g. "potato,aalu"...
     keywords: text("keywords").notNull().default(""),
@@ -319,6 +319,7 @@ export const products = sqliteTable(
     // productlistingid...
     productListingId: integer("product_listing_id").references(
       () => productListing.id,
+      { onDelete: "cascade" },
     ),
 
     createdAt: text("created_at")
@@ -527,6 +528,14 @@ export const orders = sqliteTable(
     totalPriceAfterDiscount: integer("total_price_after_discount"),
 
     totalSave: integer("total_save"),
+    type: text("type", { enum: ["inventory", "display"] })
+      .notNull()
+      .default("inventory"),
+    vendorId: text("vendor_id").references(() => vendors.id),
+    displayOrderStatus: text("display_order_status", {
+      enum: ["pending", "processing", "delivered", "cancelled"],
+    }),
+    vendorConfirmationDeadline: text("vendor_confirmation_deadline"),
 
     totalPrice: integer("total_price"),
 
@@ -585,6 +594,7 @@ export const orderItems = sqliteTable(
     // productlistingid...
     productListingId: integer("product_listing_id").references(
       () => productListing.id,
+      { onDelete: "cascade" },
     ),
 
     isRejectedByAdmin: integer("is_rejected_by_admin", { mode: "boolean" })
@@ -691,7 +701,7 @@ export const quotations = sqliteTable(
       .references(() => users.id),
     productListingId: integer("product_listing_id")
       .notNull()
-      .references(() => productListing.id),
+      .references(() => productListing.id, { onDelete: "cascade" }),
 
     isVendorUpdatedTheQuotation: integer("is_vendor_updated", {
       mode: "boolean",
