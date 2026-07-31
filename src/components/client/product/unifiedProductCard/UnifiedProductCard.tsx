@@ -172,6 +172,8 @@ export function ProductCard({
       thumbnail: product.thumbnail,
       productName: product.name,
       slug: product.slug,
+      vendorId: product.vendorId ?? undefined,
+      type: product.type ?? "inventory",
     });
   }
 
