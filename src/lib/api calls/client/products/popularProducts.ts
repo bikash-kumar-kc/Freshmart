@@ -9,12 +9,15 @@ interface IPopularProduct {
   weightValue: number | null;
   weightUnit: string | null;
   price: number | null;
+  vendorId?: string;
+  type?: "inventory" | "display";
 }
 
 interface IPopularProductApiResponse {
   popularProducts: IPopularProduct[];
   totalPopularProducts: number;
 }
+
 type IPopularProductResponse = IAPIResponseTypes<IPopularProductApiResponse>;
 
 export const getPopularProducts =
