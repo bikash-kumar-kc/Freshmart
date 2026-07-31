@@ -1,4 +1,3 @@
-
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const CART_LOCALSTORAGE_KEY = "cart";
@@ -7,6 +6,8 @@ export const DEBOUNCE_TIME = 300;
 
 export interface ICartItem {
   productId: string;
+  vendorId?: string;
+  type?: "inventory" | "display";
   varient: {
     weightUnit: string;
     weightValue: number;
