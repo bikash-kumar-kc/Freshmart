@@ -13,4 +13,6 @@ export interface IUnifiedProduct {
   isMostPopular?: boolean;
   status?: string;
   stock: number;
+  vendorId?: string | null;
+  type?: "inventory" | "display" | null;
 }
