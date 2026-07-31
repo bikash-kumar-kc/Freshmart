@@ -3,9 +3,7 @@ import { products, productVariants } from "@/src/db/schema";
 import { manageError } from "@/src/utils/response";
 import { eq } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
-import { NextRequest } from "next/server"; 
-
-
+import { NextRequest } from "next/server";
 
 const getCachedProduct = async (slug: string) => {
   "use cache";
@@ -21,6 +19,8 @@ const getCachedProduct = async (slug: string) => {
       isOffered: products.isOffered,
       status: products.status,
       discount: products.discount,
+      vendorId: products.vendorId,
+      type: products.type,
     })
     .from(products)
     .where(eq(products.slug, slug));

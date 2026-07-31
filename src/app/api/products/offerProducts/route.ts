@@ -18,6 +18,8 @@ export interface IOfferedProduct {
   weightUnit: string | null;
   price: number | null;
   stock: number | null;
+  vendorId?: string | null;
+  type?: "inventory" | "display" | null;
 }
 
 const getOfferedproducts = async () => {

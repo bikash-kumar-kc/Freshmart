@@ -10,6 +10,8 @@ export const productInformationRequired = {
   name: products.name,
   description: products.description,
   isOffered: products.isOffered,
+  vendorId: products.vendorId,
+  type: products.type,
 };
 
 export interface IErrorTypes {
@@ -29,6 +31,8 @@ export interface IPopularProduct {
   price: number | null;
   category: string;
   stock: number;
+  vendorId?: string | null;
+  type?: "inventory" | "display" | null;
 }
 
 export async function getPopularProducts() {
@@ -44,6 +48,8 @@ export async function getPopularProducts() {
       description: products.description,
       category: products.category,
       isOffered: products.isOffered,
+      vendorId: products.vendorId,
+      type: products.type,
     })
     .from(products)
     .where(
@@ -91,7 +97,6 @@ export async function getPopularProducts() {
 }
 
 export async function GET() {
-
   try {
     const response = await getPopularProducts();
 

@@ -4,6 +4,8 @@ import { and, eq, inArray } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
 
 export interface IProduct {
+  vendorId?: string;
+  type?: "inventory" | "display";
   weightValue: number | null;
   weightUnit: string | null;
   price: number | null;
@@ -36,6 +38,8 @@ const getFeaturedProducts = async () => {
       discount: products.discount,
       isFeatured: products.isFeatured,
       category: products.category,
+      vendorId: products.vendorId,
+      type: products.type,
     })
     .from(products)
     .where(and(eq(products.isFeatured, true), eq(products.status, "active")));
