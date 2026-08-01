@@ -41,6 +41,9 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const allCartProducts = useAppSelector(getAllItemsFromCart);
   const storeCalled = useRef<boolean | null>(null);
 
+  const [showHeader, setShowHeader] = useState(true);
+  const lastScrollY = useRef(0);
+
   const handleUnreadNotification = useCallback(async () => {
     try {
       if (data?.user.id) {
@@ -100,6 +103,33 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Always show near the top
+      if (currentScrollY < 80) {
+        setShowHeader(true);
+      }
+      // User scrolling down
+      else if (currentScrollY > lastScrollY.current) {
+        setShowHeader(false);
+      }
+      // User scrolling up
+      else {
+        setShowHeader(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   // useEffect(() => {
   //   if (data?.user && data?.user.id) {
   //     updateAuthStatus({
@@ -132,9 +162,11 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
 
   return (
     <div
-      className="relative w-full px-4 py-3 flex items-center justify-between gap-8
-             bg-green-400 backdrop-blur-xl shadow-sm z-80
-             border-b border-white/20"
+      className={`fixed top-0 left-0 right-0 w-full px-4 py-3
+               flex items-center justify-between gap-8
+               bg-green-400 backdrop-blur-xl shadow-sm
+               transition-transform duration-300
+               border-b border-white/20 z-50 ${showHeader ? "translate-y-0" : "-translate-y-full"}`}
     >
       <Link href={"/"}>
         <div className="flex items-center gap-2 mb-1 lg:ml-25">

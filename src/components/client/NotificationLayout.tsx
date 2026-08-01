@@ -31,7 +31,7 @@ export default function NotificationLayout() {
   }, []);
 
   return (
-    <div ref={notificationRef} className="w-full">
+    <div ref={notificationRef} className="w-full mb-15">
       <Header handleNotificationPanelOpen={handleNotificationPanelOpen} />
 
       <NotificationPanel isOpen={isOpen} />
