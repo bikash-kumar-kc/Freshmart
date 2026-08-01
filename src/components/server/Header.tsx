@@ -137,18 +137,18 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
              border-b border-white/20"
     >
       <Link href={"/"}>
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex items-center gap-2 mb-1 lg:ml-25">
           <span className="text-2xl ">🌿</span>
           <span className="text-lg font-extrabold italic text-white tracking-wider">
             FRESHMART
           </span>
         </div>
       </Link>
-      <div className="flex-1">
-        <SearchBar />
-      </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 ">
+        <div>
+          <SearchBar />
+        </div>
         <div className="relative group">
           <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
             <IoIosNotifications
