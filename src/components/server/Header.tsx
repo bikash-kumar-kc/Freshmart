@@ -145,7 +145,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
         </div>
       </Link>
 
-      <div className="flex items-center gap-3 ">
+      <div className="flex items-center gap-3 lg:mr-27 ">
         <div>
           <SearchBar />
         </div>
