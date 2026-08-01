@@ -32,7 +32,7 @@ const SearchBar = () => {
             type="text"
             value={searchTerm}
             placeholder="Search products..."
-            className="w-full p-3 px-5 focus:outline-none text-black placeholder:text-gray-500"
+            className="w-full p-3 px-5 focus:outline-none text-black placeholder:text-gray-500 placeholder:text-[15px] placeholder:tracking-wider"
             onChange={(e) => setSearchTerm(e.target.value)}
             name="search-input"
           />
