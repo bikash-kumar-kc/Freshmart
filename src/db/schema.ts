@@ -4,6 +4,12 @@ import { text, sqliteTable } from "drizzle-orm/sqlite-core";
 import { NotificationType } from "../types/notificationTypes";
 import { roleEnum } from "./utilis/role.constant";
 
+// update the schema for file upload in productlisting...
+export interface IImage {
+  url: string;
+  fileId: string;
+}
+
 // user table...
 // root table every other tables links...
 // export const users = sqliteTable("users", {
@@ -161,7 +167,7 @@ export const productListing = sqliteTable(
     keywords: text("keywords"),
     description: text("description"),
     images: text("images", { mode: "json" })
-      .$type<string[]>()
+      .$type<IImage[]>()
       .default(sql`'[]'`),
 
     originCountry: text("origin_country").notNull(),
