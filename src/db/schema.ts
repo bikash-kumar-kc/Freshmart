@@ -603,6 +603,10 @@ export const orderItems = sqliteTable(
       { onDelete: "cascade" },
     ),
 
+    productVariantId: text("product_variant_id").references(
+      () => productVariants.id,
+    ),
+
     isRejectedByAdmin: integer("is_rejected_by_admin", { mode: "boolean" })
       .notNull()
       .default(false),
