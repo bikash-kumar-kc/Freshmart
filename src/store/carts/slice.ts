@@ -9,6 +9,7 @@ export interface ICartItem {
   vendorId?: string;
   type?: "inventory" | "display";
   varient: {
+    varientId:string;
     weightUnit: string;
     weightValue: number;
     price: number;
