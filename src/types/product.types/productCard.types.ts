@@ -15,4 +15,5 @@ export interface IUnifiedProduct {
   stock: number;
   vendorId?: string | null;
   type?: "inventory" | "display" | null;
+  varientId?: string;
 }

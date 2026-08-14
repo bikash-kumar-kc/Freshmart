@@ -33,7 +33,7 @@ export interface IPRODUCTRESPONSE {
   featuredBanner: string[];
   status: string;
   expireAt: string;
-  type?: "display" | "inventory";
+  type: "display" | "inventory";
 }
 
 export interface IPRODUCTVARIENTS {
@@ -172,7 +172,10 @@ export async function getProductByCategorySlug(
     console.log(product);
 
     return {
-      product,
+      product: {
+        ...product,
+        type: product.type ?? "inventory",
+      },
       relatedProducts: requiredFieldsArray,
       filteredVariantRow,
     };

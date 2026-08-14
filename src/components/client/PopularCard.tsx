@@ -29,12 +29,14 @@ interface IProductTypes {
   discount?: number | null;
   category: string;
   stock: number;
+  varientId?: string;
 }
 
 interface IFavoriteProduct {
   productId: string;
   slug: string;
   category: string;
+  varientId: string;
 }
 
 export function CartIcon() {
@@ -113,12 +115,13 @@ export function ProductCard({
   }, [isProductOnCart]);
 
   const handleFavoriteToggle = ({
+    varientId,
     productId,
     slug,
     category,
   }: IFavoriteProduct) => {
     if (!wished) {
-      dispatch(addFavorite({ productId, slug, category }));
+      dispatch(addFavorite({ productId, slug, category, varientId }));
       console.log(
         `Favorite product added successfully ! productId:${productId}`,
       );
@@ -159,6 +162,7 @@ export function ProductCard({
             e.preventDefault();
             e.stopPropagation();
             handleFavoriteToggle({
+              varientId: product.varientId as string,
               productId: product.id,
               slug: product.slug,
               category: product.category,
@@ -265,6 +269,7 @@ export function ProductCard({
             const requiredDataToAddedOnCart: ICartItem = {
               productId: product.id,
               varient: {
+                varientId: product.varientId as string,
                 weightUnit: product.weightUnit!,
                 weightValue: product.weightValue!,
                 price: product.price!,

@@ -2,7 +2,6 @@
 
 import { useGetPopularProducts } from "@/src/hooks/useGetPopularProducts";
 // import { ProductCard } from "../PopularCard";
-import Link from "next/link";
 import { ProductCard } from "./unifiedProductCard/UnifiedProductCard";
 import { fromFlatProduct } from "./unifiedProductCard/normalizeProduct";
 

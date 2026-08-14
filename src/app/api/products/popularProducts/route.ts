@@ -12,6 +12,7 @@ export const productInformationRequired = {
   isOffered: products.isOffered,
   vendorId: products.vendorId,
   type: products.type,
+  // variantId: productVariants.id,
 };
 
 export interface IErrorTypes {
@@ -64,6 +65,7 @@ export async function getPopularProducts() {
 
   const variants = await db
     .select({
+      id: productVariants.id,
       productId: productVariants.productId,
       weightValue: productVariants.weightValue,
       weightUnit: productVariants.weightUnit,
@@ -92,6 +94,7 @@ export async function getPopularProducts() {
       weightUnit: variant?.weightUnit ?? null,
       price: variant?.price ?? null,
       stock: variant?.stock ?? 0,
+      varientId: variant?.id,
     };
   });
 }

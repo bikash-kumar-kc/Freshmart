@@ -40,27 +40,28 @@ export const RelatedProductCard = ({
   }, [isFavorite]);
 
   
-  const handleFavoriteToggle = ({
-    productId,
-    slug,
-    category,
-  }: IFavoriteProduct) => {
-    if (!wished) {
-      dispatch(addFavorite({ productId, slug, category }));
-      console.log(
-        `Favorite product added successfully ! productId:${productId}`,
-      );
-    }
+  // const handleFavoriteToggle = ({
+  //   varientId,
+  //   productId,
+  //   slug,
+  //   category,
+  // }: IFavoriteProduct) => {
+  //   if (!wished) {
+  //     dispatch(addFavorite({ productId, slug, category,varientId }));
+  //     console.log(
+  //       `Favorite product added successfully ! productId:${productId}`,
+  //     );
+  //   }
 
-    if (wished) {
-      dispatch(removeFavorite({ productId }));
-      console.log(
-        `Favorite product removed successfully ! productId:${productId}`,
-      );
-    }
+  //   if (wished) {
+  //     dispatch(removeFavorite({ productId }));
+  //     console.log(
+  //       `Favorite product removed successfully ! productId:${productId}`,
+  //     );
+  //   }
 
-    setWished((prevs) => !prevs);
-  };
+  //   setWished((prevs) => !prevs);
+  // };
 
   return (
     <Link
@@ -113,11 +114,12 @@ export const RelatedProductCard = ({
             </span>
           )}
         </div>
-        <button
+        {/* <button
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             e.stopPropagation();
             handleFavoriteToggle({
+              varientId:product.va
               productId: product.id,
               slug: product.slug,
               category: product.category,
@@ -136,7 +138,7 @@ export const RelatedProductCard = ({
           "
         >
           <HeartIcon filled={wished} />
-        </button>
+        </button> */}
       </div>
 
       <div className="p-3">

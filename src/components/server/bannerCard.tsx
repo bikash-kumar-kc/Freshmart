@@ -102,7 +102,7 @@ export default function ProductCard({
       </Link>
 
       {/* Add to cart */}
-      <div className="px-4 pb-4">
+      {/* <div className="px-4 pb-4">
         <button
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
@@ -138,7 +138,7 @@ export default function ProductCard({
           <ShoppingCart size={16} />
           {addedToCart ? "Added to cart" : "Add to cart"}
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

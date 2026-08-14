@@ -136,6 +136,7 @@ export function FavoriteCard({
               const requiredDataToAddedOnCart: ICartItem = {
                 productId: product.id,
                 varient: {
+                  varientId: product.varientId as string,
                   weightUnit: product.weightUnit!,
                   weightValue: product.weightValue!,
                   price: product.price!,

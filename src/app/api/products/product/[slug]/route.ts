@@ -33,6 +33,7 @@ const getCachedProduct = async (slug: string) => {
 
   const productVarient = await db
     .select({
+      varientId: productVariants.id,
       price: productVariants.price,
       weightValue: productVariants.weightValue,
       weightUnit: productVariants.weightUnit,

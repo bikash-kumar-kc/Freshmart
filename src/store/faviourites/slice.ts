@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-
 export const FAVIORITE_LOCALSTORAGE_KEY = "favorites";
 
 export interface IFavoriteProduct {
   productId: string;
   slug: string;
   category: string;
+  varientId: string;
 }
 
 interface IFavoriteProducts {

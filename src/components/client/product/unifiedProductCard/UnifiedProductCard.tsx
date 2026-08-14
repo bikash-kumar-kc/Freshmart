@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -139,6 +138,7 @@ export function ProductCard({
           productId: product.id,
           slug: product.slug,
           category: product.category,
+          varientId: product.varientId as string,
         }),
       );
     } else {
@@ -161,6 +161,7 @@ export function ProductCard({
     handleCart({
       productId: product.id,
       varient: {
+        varientId: product.varientId as string,
         weightUnit: product.weightUnit!,
         weightValue: product.weightValue!,
         price: product.price!,

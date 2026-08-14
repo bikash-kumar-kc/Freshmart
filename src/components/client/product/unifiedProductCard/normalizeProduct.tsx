@@ -21,13 +21,14 @@ export function fromCategoryProduct(
     isMostPopular: product.isMostPopular,
     status: product.status,
     stock: variant?.stock ?? 0,
-    vendorId:product.vendorId
+    vendorId: product.vendorId,
   };
 }
 
 // Covers both IFavoriteProductData and IProductTypes — same flat shape
 export function fromFlatProduct(product: {
   id: string;
+  variantId?: string;
   slug: string;
   category: string;
   name: string;
