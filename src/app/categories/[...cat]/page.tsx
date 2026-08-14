@@ -31,7 +31,7 @@ async function PageContent({ params }: PageProps) {
     notFound();
   }
 
-  console.log("just before rendering the product page...");
+  // console.log("just before rendering the product page...");
   return (
     <main className="bg-amber-50 min-h-screen">
       <div className="max-w-7xl mx-auto py-6">
