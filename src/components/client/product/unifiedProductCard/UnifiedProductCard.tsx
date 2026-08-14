@@ -215,12 +215,12 @@ export function ProductCard({
           </button>
 
           <div className="absolute left-2 top-2 flex flex-col gap-1">
-            {product.isMostPopular && (
+            {!isOutOfStock && product.isMostPopular && (
               <span className="bg-amber-400 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
                 Popular
               </span>
             )}
-            {product.isOffered && product.discount ? (
+            {!isOutOfStock && product.isOffered && product.discount ? (
               <span className="bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
                 -{product.discount}%
               </span>
