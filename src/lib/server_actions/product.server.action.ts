@@ -33,6 +33,7 @@ export interface IPRODUCTRESPONSE {
   featuredBanner: string[];
   status: string;
   expireAt: string;
+  type?: "display" | "inventory";
 }
 
 export interface IPRODUCTVARIENTS {
@@ -167,6 +168,8 @@ export async function getProductByCategorySlug(
     const requiredFieldsArray: IRequiredFieldTypes[] = Array.from(
       cheapestByProductId.values(),
     );
+
+    console.log(product);
 
     return {
       product,

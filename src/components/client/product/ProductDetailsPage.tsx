@@ -49,6 +49,7 @@ export default function ProductDetailPage({
     if (isOutOfStock) return;
     if (!data.productId) return;
     if (!addedToCart) {
+      // console.log(data);
       dispatch(addCartItem(data));
       setAddedToCart(true);
       toast.success("To update the quantity, visit cart section ");
@@ -209,6 +210,7 @@ export default function ProductDetailPage({
                     thumbnail: product?.thumbnail as string,
                     productName: product?.name as string,
                     slug: product?.slug as string,
+                    type: product?.type ?? "inventory",
                   };
 
                   handleAddToCart(requiredDataToAddedOnCart);

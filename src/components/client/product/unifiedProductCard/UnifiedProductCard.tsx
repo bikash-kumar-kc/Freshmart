@@ -113,6 +113,7 @@ export function ProductCard({
   function handleCart(data: ICartItem) {
     if (!data.productId) return;
     if (!added) {
+      // console.log(data)
       dispatch(addCartItem(data));
       setAdded(true);
       toast.success("To update the quantity, visit cart section ");

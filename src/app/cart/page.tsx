@@ -69,18 +69,20 @@ export default function CartPage() {
   const [viewMode, setViewMode] = useState<"inventory" | "display">(
     "inventory",
   );
+
   const [placingOrderFor, setPlacingOrderFor] = useState<string | null>(null);
 
   const cartItems: CartItem[] = allCartProducts?.items.cartItems ?? [];
 
   const inventoryItems = cartItems.filter((i) => i.type !== "display");
 
-  console.log(inventoryItems);
+  // console.log(cartItems)
 
   const displayGroups = cartItems
     .filter((i) => i.type === "display")
     .reduce(
       (acc, item) => {
+        console.log("dfghjk")
         const key = item.vendorId ?? "unknown";
         if (!acc[key]) acc[key] = [];
         acc[key].push(item);
@@ -89,7 +91,7 @@ export default function CartPage() {
       {} as Record<string, CartItem[]>,
     );
 
-  console.log(displayGroups);
+
 
   // router
   const router = useRouter();
