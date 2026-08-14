@@ -1,84 +1,57 @@
-
-// import { NextRequest, NextResponse } from 'next/server';
-// import jwt from 'jsonwebtoken';
-// import { getServerSession } from 'next-auth';
-// import { authOptions } from '@/src/lib/auth/auth';
-
-// export async function POST(req: NextRequest) {
-//   const session = await getServerSession(authOptions);
-//   if (!session?.user) {
-//     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-//   }
-
-//   const body = await req.json();
-
-//   const token = jwt.sign(
-//     {
-//       sub: session.user.id,
-//       role: 'user',
-//       vendorId: null,
-//       adminId: null,
-//     },
-//     process.env.JWT_SECRET!,
-//     { algorithm: 'HS256', expiresIn: '1m' },
-//   );
-
-//   const nestResponse = await fetch(`${process.env.NEST_API_URL}/display-order`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       Authorization: `Bearer ${token}`,
-//     },
-//     body: JSON.stringify(body),
-//   });
-
-//   const data = await nestResponse.json();
-//   return NextResponse.json(data, { status: nestResponse.status });
-// }
-
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/src/lib/auth/auth";
 
 export async function POST(req: NextRequest) {
-  // const session = await getServerSession(authOptions);
-  // if (!session?.user) {
-  //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  // }
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
   try {
-    // const body = await req.json();
+    const body = await req.json();
+
+    const isDefined = process.env.JWT_ACCESSTOKEN_SECRET;
+
+    if (!isDefined) {
+      return NextResponse.json(
+        { message: "Failed to generate token" },
+        { status: 400 },
+      );
+    }
 
     const token = jwt.sign(
       {
-        sub: "0097f2fc-ac48-4f79-aeb9-b778456cdfbf",
+        sub: session.user.id,
         role: "user",
         vendorId: null,
         adminId: null,
       },
-      "bikash@accesstoken",
-      { algorithm: "HS256", expiresIn: "3000m" },
+      process.env.JWT_ACCESSTOKEN_SECRET as string,
+      { algorithm: "HS256", expiresIn: "15m" },
     );
+
+    const endPoint =
+      process.env.NEXT_ENV === "production"
+        ? process.env.NEST_API_URL_PRODUCTION
+        : process.env.NEST_API_URL_LOCAL;
 
     // console.log(token)
 
-    // const nestResponse = await fetch(
-    //   `http://localhost:8000/api/v1/display-order`,
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //     body: JSON.stringify(body),
-    //   },
-    // );
+    const nestResponse = await fetch(`${endPoint}/display-order`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    });
 
-    // const data = await nestResponse.json();
-    // return NextResponse.json(data, { status: nestResponse.status });
-    return NextResponse.json({ token: token });
+    const data = await nestResponse.json();
+    return NextResponse.json(data, { status: nestResponse.status });
   } catch (error) {
     console.log(error);
+    throw error;
   }
 }
