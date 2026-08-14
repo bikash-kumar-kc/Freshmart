@@ -37,6 +37,7 @@ type CartItem = {
   vendorId?: string;
   type?: "display" | "inventory";
   varient: {
+    varientId: string;
     weightUnit: string;
     weightValue: number;
     price: number;
@@ -82,7 +83,7 @@ export default function CartPage() {
     .filter((i) => i.type === "display")
     .reduce(
       (acc, item) => {
-        console.log("dfghjk")
+        console.log("dfghjk");
         const key = item.vendorId ?? "unknown";
         if (!acc[key]) acc[key] = [];
         acc[key].push(item);
@@ -90,8 +91,6 @@ export default function CartPage() {
       },
       {} as Record<string, CartItem[]>,
     );
-
-
 
   // router
   const router = useRouter();
@@ -152,7 +151,7 @@ export default function CartPage() {
         body: JSON.stringify({
           vendorId,
           items: items.map((i) => ({
-            productVariantId: i.productId,
+            productVariantId: i.varient.varientId,
             quantity: i.quantity,
           })),
         }),
@@ -170,7 +169,7 @@ export default function CartPage() {
       items.forEach((item) => {
         dispatch(removeCartItem({ productId: item.productId }));
       });
-    } catch{
+    } catch {
       toast.error("Failed to place order — please try again.");
     } finally {
       setPlacingOrderFor(null);
