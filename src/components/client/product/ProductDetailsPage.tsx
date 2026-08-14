@@ -198,6 +198,7 @@ export default function ProductDetailPage({
                   const requiredDataToAddedOnCart: ICartItem = {
                     productId: product?.id as string,
                     varient: {
+                      varientId:filteredVariantRow.id,
                       weightUnit: filteredVariantRow.weightUnit,
                       weightValue: filteredVariantRow.weightValue,
                       price: filteredVariantRow.price,
