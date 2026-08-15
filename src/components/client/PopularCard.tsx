@@ -1,5 +1,4 @@
 "use client";
-
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { selectIsFavorite } from "@/src/store/faviourites/selectors";
 import { addFavorite, removeFavorite } from "@/src/store/faviourites/slice";
