@@ -1,4 +1,3 @@
-// src/types/product-card.types.ts
 export interface IUnifiedProduct {
   id: string;
   slug: string;
