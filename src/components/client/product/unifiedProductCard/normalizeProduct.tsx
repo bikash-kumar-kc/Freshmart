@@ -1,4 +1,3 @@
-// src/utils/normalizeProduct.ts
 import { cheapestVariant } from "@/src/utils/calculateCheapest";
 import { ICategoryProducts } from "@/src/types/product.types/categoryProduct.types";
 import { IUnifiedProduct } from "@/src/types/product.types/productCard.types";
@@ -25,7 +24,6 @@ export function fromCategoryProduct(
   };
 }
 
-// Covers both IFavoriteProductData and IProductTypes — same flat shape
 export function fromFlatProduct(product: {
   id: string;
   variantId?: string;
