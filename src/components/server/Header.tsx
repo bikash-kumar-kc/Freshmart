@@ -49,7 +49,6 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
       if (data?.user.id) {
         const { totalCount } = await countUnreadNotifications(data?.user.id);
         setCount(totalCount);
-        console.log("Successfully, fetched unread notification !");
       }
       return;
     } catch (error: unknown) {
@@ -58,7 +57,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
         return;
       }
       toast.error("Failed to read unread notification !");
-      console.log(error);
+
     }
   }, [data?.user.id]);
 
@@ -68,7 +67,6 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
     try {
       await updateNotificationsStatus(data?.user.id);
       setCount(0);
-      // changeNotificationRef.current = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);

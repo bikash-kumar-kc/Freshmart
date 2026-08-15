@@ -127,8 +127,8 @@ export async function GET() {
       },
       { status: 200 },
     );
-  } catch (error) {
-    console.error("Failed to fetch popular products:", error);
+  } catch {
+    // console.error("Failed to fetch popular products:", error);
     return Response.json(
       {
         success: false,

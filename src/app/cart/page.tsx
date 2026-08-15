@@ -77,7 +77,6 @@ export default function CartPage() {
 
   const inventoryItems = cartItems.filter((i) => i.type !== "display");
 
-  // console.log(cartItems)
 
   const displayGroups = cartItems
     .filter((i) => i.type === "display")
@@ -297,9 +296,7 @@ export default function CartPage() {
           window.location.href = paymentProcessInfo.url;
         }
 
-        // dispatch(clearCartItems()); // clear the store if payment successed
-
-        // handleToggleOpen();
+    
       } catch (error: unknown) {
         if (error instanceof Error) {
           toast.error(error.message);
@@ -331,7 +328,6 @@ export default function CartPage() {
     if (session?.user.id) {
       (async () => {
         const isSubscribed = await isUserSubscribed(session?.user.id as string);
-        console.log("isSubscribed", isSubscribed);
         setSubscribed(!!isSubscribed);
       })();
     }
