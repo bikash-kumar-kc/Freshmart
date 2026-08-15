@@ -1,7 +1,6 @@
 "use client";
 
 import { useGetPopularProducts } from "@/src/hooks/useGetPopularProducts";
-// import { ProductCard } from "../PopularCard";
 import { ProductCard } from "./unifiedProductCard/UnifiedProductCard";
 import { fromFlatProduct } from "./unifiedProductCard/normalizeProduct";
 
