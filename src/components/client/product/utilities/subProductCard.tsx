@@ -3,16 +3,6 @@ import { IRequiredFieldTypes } from "@/src/lib/server_actions/product.server.act
 import { formatWeight } from "./helper.fun";
 import Image from "next/image";
 import Link from "next/link";
-import { HeartIcon } from "../../PopularCard";
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/src/store/hook";
-import { selectIsFavorite } from "@/src/store/faviourites/selectors";
-import {
-  addFavorite,
-  IFavoriteProduct,
-  removeFavorite,
-} from "@/src/store/faviourites/slice";
-// import { isProductInCart } from "@/src/store/carts/selectors";
 
 export function calculateDiscountPercentage(
   price: number,
@@ -30,39 +20,7 @@ export const RelatedProductCard = ({
   product: IRequiredFieldTypes;
   isAnimate: boolean;
 }) => {
-  const [wished, setWished] = useState(false);
   const isOutOfStock = product.stock === 0;
-  const dispatch = useAppDispatch();
-  const isFavorite = useAppSelector(selectIsFavorite(product.id));
-
-  useEffect(() => {
-    setWished(!!isFavorite);
-  }, [isFavorite]);
-
-  
-  // const handleFavoriteToggle = ({
-  //   varientId,
-  //   productId,
-  //   slug,
-  //   category,
-  // }: IFavoriteProduct) => {
-  //   if (!wished) {
-  //     dispatch(addFavorite({ productId, slug, category,varientId }));
-  //     console.log(
-  //       `Favorite product added successfully ! productId:${productId}`,
-  //     );
-  //   }
-
-  //   if (wished) {
-  //     dispatch(removeFavorite({ productId }));
-  //     console.log(
-  //       `Favorite product removed successfully ! productId:${productId}`,
-  //     );
-  //   }
-
-  //   setWished((prevs) => !prevs);
-  // };
-
   return (
     <Link
       href={`/product/${product.category}/${product.slug}`}
