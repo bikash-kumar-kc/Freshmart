@@ -7,7 +7,6 @@ import { ImageGallery } from "./utilities/image.gallary";
 import { FreshnessBadge } from "./utilities/FreshnessBadge";
 import {
   calculateDiscountPercentage,
-  RelatedProductCard,
 } from "./utilities/subProductCard";
 import { GetProductResult } from "@/src/lib/server_actions/product.server.action";
 import GoBackButton from "../buttons/GotoBackBtn";
@@ -283,11 +282,7 @@ export default function ProductDetailPage({
               gap-4"
             >
               {relatedProducts.slice(0, 8).map((rp) => (
-                // <RelatedProductCard
-                //   key={rp.id}
-                //   product={rp}
-                //   isAnimate={animate}
-                // />
+
                 <ProductCard key={rp.id} product={fromFlatProduct(rp)} />
               ))}
             </div>
