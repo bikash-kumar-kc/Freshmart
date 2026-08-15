@@ -9,7 +9,7 @@ export interface ICartItem {
   vendorId?: string;
   type?: "inventory" | "display";
   varient: {
-    varientId:string;
+    varientId: string;
     weightUnit: string;
     weightValue: number;
     price: number;
@@ -39,30 +39,6 @@ interface ISetCartType {
   orderId: string;
   cartItems: ICartItem[];
 }
-
-// export const loadCart = async () => {
-//   try {
-//     const itemsInfo = await userUnfinishedCart();
-
-//     if (itemsInfo.success && itemsInfo.cartItems) {
-//       return {
-//         type: "db",
-//         cartItems: itemsInfo.cartItems ?? [],
-//       };
-//     }
-
-//     const cartItems = loadFromStorage();
-
-//     return {
-//       type: "localstorage",
-//       cartItems: cartItems.cartItems,
-//     };
-//   } catch (error: unknown) {
-//     if (error instanceof Error) {
-//       console.log("Failed to load cart items to store !");
-//     }
-//   }
-// };
 
 export const loadFromStorage = (): ICartItems => {
   try {
