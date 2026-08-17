@@ -23,8 +23,15 @@ export const STATUS_CONFIG = {
     badge: "bg-green-50 border-green-200",
     text: "text-green-700",
   },
+  processing: {
+    ...{
+      label: "Shipped",
+      dot: "bg-blue-400",
+      badge: "bg-blue-50 border-blue-200",
+      text: "text-blue-700",
+    },
+  },
 } as const;
-
 
 export const TABS = [
   { key: "all", label: "All" },
