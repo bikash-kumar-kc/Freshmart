@@ -62,6 +62,7 @@ export async function GET(
         totalItems: count(orderItems.id),
         displayOrderStatus: orders.displayOrderStatus,
         productNames: sql<string>`group_concat(${products.name}, ', ')`,
+        orderStatus: orders.orderStatus,
       })
       .from(orders)
       .innerJoin(orderItems, eq(orderItems.orderId, orders.id))
