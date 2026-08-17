@@ -14,18 +14,31 @@ type IorderStatus =
   | "ontheway"
   | "failed"
   | "pending"
-  | "packaging";
+  | "packaging"
+  | "cancelled";
 
 const OrderRenderPage = ({ orders }: IProps) => {
   const [status, setStatus] = useState<IorderStatus | "all">("all");
 
   const filtered =
-    status === "all" ? orders : orders.filter((o) => o.orderStatus === status);
+    status === "all"
+      ? orders
+      : orders.filter((o) => {
+          const isDisplayed = o.type === "display";
+          return isDisplayed
+            ? o.displayOrderStatus === status
+            : o.orderStatus === status ;
+        });
 
   const countByStatus = (status: string) =>
     status === "all"
       ? orders.length
-      : orders.filter((o) => o.orderStatus === status).length;
+      : orders.filter((o) => {
+          const isDisplayed = o.type === "display";
+          return isDisplayed
+            ? o.displayOrderStatus === status
+            : o.orderStatus === status;
+        }).length;
   return (
     <div className="w-full min-h-screen bg-amber-50">
       <div>
