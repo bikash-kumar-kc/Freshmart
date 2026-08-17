@@ -21,9 +21,19 @@ export const OrderCard = ({ order }: { order: IOrderType }) => {
             {config.label}
           </span>
         </div>
-        <span className="text-xs text-gray-600">
-          {formatDate(order.updatedTime)} · {formatTime(order.updatedTime)}
-        </span>
+        <div className="flex items-center gap-2">
+          <span
+            className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-0.5 rounded-sm border ${order.type === "inventory" ? "bg-green-50 border-green-200" : '"bg-yellow-50 border-green-200"'} ${order.type === "inventory" ? "text-green-700" : config.text}`}
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${order.type === "inventory" ? "bg-green-500" : config.dot}`}
+            />
+            {order.type}
+          </span>
+          <span className="text-xs text-gray-600">
+            {formatDate(order.updatedTime)} · {formatTime(order.updatedTime)}
+          </span>
+        </div>
       </div>
 
       {/* Card body */}
