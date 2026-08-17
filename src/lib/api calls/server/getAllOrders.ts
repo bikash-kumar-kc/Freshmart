@@ -3,12 +3,16 @@ import { IAPIResponseTypes } from "./getPopularProducts";
 export interface IOrderType {
   type: "display" | "inventory";
   orderId: string;
-  orderStatus: "pending" | "delivered" | "shipped" | "packaging";
-  displayOrderStatus: "pending" | "cancelled" | "processing" | "delivered";
+  orderStatus?: "pending" | "delivered" | "shipped" | "packaging" | 'processing'
+  displayOrderStatus?: "pending" | "cancelled" | "processing" | "delivered" ;
   updatedTime: string;
-  totalCost: number | null;
+  totalCost?: number | null;
   totalItems: number;
   productNames: string;
+  farmName?: string;
+  location?: string;
+  phone?: string;
+  email?: string;
 }
 
 type IOrderTypes = {
