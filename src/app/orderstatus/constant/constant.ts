@@ -31,11 +31,22 @@ export const STATUS_CONFIG = {
       text: "text-blue-700",
     },
   },
+  cancelled: {
+    label: "Cancelled",
+    dot: "bg-red-400",
+    badge: "bg-red-50 border-red-200",
+    text: "text-red-700",
+  },
 } as const;
 
 export const TABS = [
   { key: "all", label: "All" },
+  {
+    key: "pending",
+    label: "Pending",
+  },
   { key: "packaging", label: "Packaging" },
-  { key: "shipped", label: "Shipped" },
+  { key: "processing", label: "Processing" },
+  { key: "cancelled", label: "Cancelled" },
   { key: "delivered", label: "Delivered" },
 ];
