@@ -1,4 +1,5 @@
 export function formatDate(iso: string) {
+  if (!iso) return;
   return new Date(iso).toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",
@@ -7,6 +8,7 @@ export function formatDate(iso: string) {
 }
 
 export function formatTime(iso: string) {
+  if (!iso) return;
   return new Date(iso).toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
@@ -14,5 +16,6 @@ export function formatTime(iso: string) {
 }
 
 export function formatCurrency(amount: number) {
+  if (!amount) return;
   return `Rs. ${amount.toLocaleString()}`;
 }
