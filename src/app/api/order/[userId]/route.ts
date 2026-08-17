@@ -55,11 +55,12 @@ export async function GET(
 
     const ordersInfo = await db
       .select({
+        type: orders.type,
         orderId: orders.id,
-        orderStatus: orders.orderStatus,
         updatedTime: orders.updatedAt,
         totalCost: orders.totalPriceAfterDiscount,
         totalItems: count(orderItems.id),
+        displayOrderStatus: orders.displayOrderStatus,
         productNames: sql<string>`group_concat(${products.name}, ', ')`,
       })
       .from(orders)
@@ -71,6 +72,7 @@ export async function GET(
           eq(orders.isOrdered, true),
           eq(orders.isPayment, true),
           eq(orders.isPaymentProcess, false),
+          eq(orders.type, "inventory"),
         ),
       )
       .groupBy(orders.id)
