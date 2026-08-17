@@ -107,7 +107,7 @@ export async function GET(
         and(
           eq(orders.userId, userId),
           eq(orders.isOrdered, true),
-          eq(orders.isPayment, true),
+          eq(orders.isPayment, false),
           eq(orders.isPaymentProcess, false),
           eq(orders.type, "display"),
         ),
