@@ -17,8 +17,8 @@ export const getTotalOrdersCount = async ({ userId }: { userId: string }) => {
       return;
     }
 
-    const [response] = await db
-      .select({ totalOrders: count(orders.id) })
+    const [{ totalInventoryOrders }] = await db
+      .select({ totalInventoryOrders: count(orders.id) })
       .from(orders)
       .where(
         and(
@@ -26,11 +26,24 @@ export const getTotalOrdersCount = async ({ userId }: { userId: string }) => {
           eq(orders.isOrdered, true),
           eq(orders.isPayment, true),
           eq(orders.isPaymentProcess, false),
+          eq(orders.type, "inventory"),
+        ),
+      );
+
+    const [{ totalDisplayOrders }] = await db
+      .select({ totalDisplayOrders: count(orders.id) })
+      .from(orders)
+      .where(
+        and(
+          eq(orders.userId, userId),
+          eq(orders.isOrdered, true),
+          eq(orders.isPaymentProcess, false),
+          eq(orders.type, "display"),
         ),
       );
 
     return {
-      totalOrders: response.totalOrders,
+      totalOrders: totalInventoryOrders + totalDisplayOrders,
     };
   } catch (error: unknown) {
     if (error instanceof Error) {
