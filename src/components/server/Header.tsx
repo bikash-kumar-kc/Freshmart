@@ -22,6 +22,7 @@ import {
 import { userUnfinishedCart } from "@/src/lib/server_actions/loadcart.server.action";
 import { ICartItem, setCart } from "@/src/store/carts/slice";
 import { getTotalOrdersCount } from "@/src/lib/server_actions/orders.server";
+import { usePathname } from "next/navigation";
 // import { useAuthContext } from "@/src/context/AuthContext";
 
 interface IStateHandler {
@@ -44,6 +45,8 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = useRef(0);
 
+  const pathname = usePathname();
+
   const handleUnreadNotification = useCallback(async () => {
     try {
       if (data?.user.id) {
@@ -57,7 +60,6 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
         return;
       }
       toast.error("Failed to read unread notification !");
-
     }
   }, [data?.user.id]);
 
@@ -127,6 +129,12 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (pathname) {
+      setShowHeader(true);
+    }
+  }, [pathname]);
 
   // useEffect(() => {
   //   if (data?.user && data?.user.id) {
