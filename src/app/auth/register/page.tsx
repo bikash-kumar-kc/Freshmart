@@ -87,7 +87,11 @@ const RegisterForm = () => {
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log("Failed to create user ! msg: ", error.message);
-        toast.error(error.message);
+        toast.error(
+          process.env.NEXT_ENV === "development"
+            ? error.message
+            : "Account with this information already exist. Try new one.",
+        );
         return;
       }
       console.log(error);
