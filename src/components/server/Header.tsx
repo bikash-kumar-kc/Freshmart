@@ -23,7 +23,6 @@ import { userUnfinishedCart } from "@/src/lib/server_actions/loadcart.server.act
 import { ICartItem, setCart } from "@/src/store/carts/slice";
 import { getTotalOrdersCount } from "@/src/lib/server_actions/orders.server";
 import { usePathname } from "next/navigation";
-// import { useAuthContext } from "@/src/context/AuthContext";
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
@@ -31,11 +30,8 @@ interface IStateHandler {
 
 const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const { data } = useSession();
-  // const { user, updateAuthStatus } = useAuthContext();
-  // console.log(data);
   const [count, setCount] = useState<number>(0);
   const [totalOrders, setTotalOrders] = useState(0);
-  // const changeNotificationRef = useRef<boolean | null>(null);
   const favoriteItems = useAppSelector(selectFavoriteCount) ?? 0;
   const itemsInCart = useAppSelector(totalItemsCart);
   const dispatch = useAppDispatch();
@@ -64,7 +60,6 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   }, [data?.user.id]);
 
   const handleNotificationStatusUpdate = async () => {
-    // if (changeNotificationRef.current) return;
     if (!data?.user.id) return;
     try {
       await updateNotificationsStatus(data?.user.id);
