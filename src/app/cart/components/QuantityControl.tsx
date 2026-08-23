@@ -55,7 +55,6 @@ function QuantityControl({
     }
   };
 
-
   const isFromDb = statusCart ? statusCart.type === "db" : false;
 
   useEffect(() => {
@@ -84,7 +83,7 @@ function QuantityControl({
           type="number"
           value={quantity}
           max={maxStock}
-          
+          onWheel={(e) => e.currentTarget.blur()}
           onChange={(e) => {
             const value = e.target.value;
             const refinedValue = Math.max(1, Math.min(Number(value), maxStock));
