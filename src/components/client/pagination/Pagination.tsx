@@ -11,7 +11,8 @@ import { useSearchParams } from "next/navigation";
 
 const PaginationComponent = () => {
   const searchParams = useSearchParams();
-  const page = Number(searchParams.get("page")) ?? 1;
+  const page = searchParams.get("page") ?? 1;
+  console.log(page);
   const { data: categoriesInfo, isLoading: loadingCategories } =
     useGetCategories();
 
