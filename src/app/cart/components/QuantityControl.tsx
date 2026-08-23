@@ -3,6 +3,7 @@ import { updateCartItem, removeCartItem } from "@/src/store/carts/slice";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 function QuantityControl({
   value,
@@ -36,7 +37,7 @@ function QuantityControl({
     if (quantityInfo?.productId === id) {
       if (quantity === "1") {
         dispatch(removeCartItem({ productId }));
-
+        toast.success("Product removed from cart successfully !");
         return;
       }
       dispatch(updateCartItem({ productId: productId, type: "decrement" }));
