@@ -84,6 +84,7 @@ function QuantityControl({
           type="number"
           value={quantity}
           max={maxStock}
+          
           onChange={(e) => {
             const value = e.target.value;
             const refinedValue = Math.max(1, Math.min(Number(value), maxStock));
@@ -113,7 +114,7 @@ function QuantityControl({
             );
           }}
           disabled={isFromDb}
-          className="w-9 py-1.5 text-center"
+          className="w-9 py-1.5 text-center no-spinner"
         />
       </div>
       <button
