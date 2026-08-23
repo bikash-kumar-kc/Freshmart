@@ -20,7 +20,7 @@ export default function HoverRevealCard({
   
   return (
     <Link href={`/categories/${slug}/${productId}`}>
-      <div className="group relative w-60 overflow-hidden rounded-sm">
+      <div className="group relative w-60 overflow-hidden rounded-sm flex flex-col gap-1">
        
         <div className="relative h-60 w-full">
           <Image
@@ -37,16 +37,17 @@ export default function HoverRevealCard({
 
         {/* Sliding Box */}
         <div
-          className="
-          absolute inset-x-0 bottom-0
-          translate-y-full
-          bg-green-800 backdrop-blur-sm
-          px-3 py-2
-          transition-transform duration-300 ease-out
-          group-hover:translate-y-0
-        "
+        //   className="
+        //   absolute inset-x-0 bottom-0
+        //   translate-y-full
+        //   bg-green-800 backdrop-blur-sm
+        //   px-3 py-2
+        //   transition-transform duration-300 ease-out
+        //   group-hover:translate-y-0
+        // "
+        // className=""
         >
-          <h3 className="text-md font-semibold text-center text-gray-100 line-clamp-1">
+          <h3 className="text-lg font-semibold text-center text-green-700 line-clamp-1">
             {name}
           </h3>
         </div>

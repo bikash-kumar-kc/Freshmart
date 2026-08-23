@@ -115,7 +115,7 @@ export function ProductCard({
       // console.log(data)
       dispatch(addCartItem(data));
       setAdded(true);
-      toast.success("To update the quantity, visit cart section ");
+      toast.success("Product Added Successfully to the cart.");
     } else {
       dispatch(removeCartItem({ productId: data.productId }));
       setAdded(false);
@@ -261,9 +261,13 @@ export function ProductCard({
             value={productInfo.quantity}
             maxStock={productInfo.stock}
             id={productInfo.productId}
+            // handleCart={(e: React.MouseEvent<HTMLButtonElement>) =>
+            //   handleAddToCart(e)
+            // }
           />
         )}
 
+        {/* {!added && ( */}
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock}
@@ -275,6 +279,7 @@ export function ProductCard({
         >
           {added ? <CheckIcon /> : <CartIcon />}
         </button>
+        {/* )} */}
       </div>
     </div>
   );

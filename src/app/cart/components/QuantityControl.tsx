@@ -1,17 +1,20 @@
 import { productQuantity, statusOfCart } from "@/src/store/carts/selectors";
-import { updateCartItem } from "@/src/store/carts/slice";
+import { updateCartItem, removeCartItem } from "@/src/store/carts/slice";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 function QuantityControl({
   value,
   maxStock,
   id,
+  // handleCart,
 }: {
   value: number;
   maxStock: number;
   id: string;
+  // handleCart?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }) {
   const [quantity, setQuantity] = useState(String(value ?? 1));
   const dispatch = useAppDispatch();
@@ -32,6 +35,11 @@ function QuantityControl({
   const handleDecrement = (productId: string) => {
     if (!productId) return;
     if (quantityInfo?.productId === id) {
+      if (quantity === "1") {
+        dispatch(removeCartItem({ productId }));
+        toast.success("Product removed from cart successfully !");
+        return;
+      }
       dispatch(updateCartItem({ productId: productId, type: "decrement" }));
       setQuantity((prevs) => String(Number(prevs) - 1));
     }
@@ -55,7 +63,6 @@ function QuantityControl({
     }
   };
 
-
   const isFromDb = statusCart ? statusCart.type === "db" : false;
 
   useEffect(() => {
@@ -72,7 +79,7 @@ function QuantityControl({
           border border-gray-200 bg-white text-gray-500 hover:bg-green-50
           hover:border-green-300 hover:text-green-700 transition-colors
           disabled:opacity-40 disabled:cursor-not-allowed"
-        disabled={value <= 1 || isFromDb}
+        disabled={isFromDb}
       >
         <Minus size={12} />
       </button>
@@ -84,6 +91,7 @@ function QuantityControl({
           type="number"
           value={quantity}
           max={maxStock}
+          onWheel={(e) => e.currentTarget.blur()}
           onChange={(e) => {
             const value = e.target.value;
             const refinedValue = Math.max(1, Math.min(Number(value), maxStock));
@@ -98,9 +106,16 @@ function QuantityControl({
           onBlur={() => {
             let value = Number(quantity);
 
-            if (Number.isNaN(value) || value < 1) {
+            if (Number.isNaN(value)) {
               value = 1;
             }
+
+            // if (value < 1) {
+            //   if (handleCart) {
+            //     handleCart();
+            //   }
+            //   return;
+            // }
 
             setQuantity(String(value));
 
@@ -113,7 +128,7 @@ function QuantityControl({
             );
           }}
           disabled={isFromDb}
-          className="w-9 py-1.5 text-center"
+          className="w-9 py-1.5 text-center no-spinner"
         />
       </div>
       <button
