@@ -218,7 +218,7 @@ const PasswordReset = () => {
             <p className="text-red-500 text-sm mt-6 text-center">
               Failed to reset?{" "}
               <Link
-                href="/login"
+                href="/auth/login"
                 className="text-green-600 hover:text-green-700 font-medium transition-colors"
               >
                 Try again
