@@ -1,9 +1,9 @@
-'use client'
+"use client";
 import usePasswordReset from "@/src/hooks/auth/usePasswordReset";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import z from "zod";
@@ -231,4 +231,12 @@ const PasswordReset = () => {
   );
 };
 
-export default PasswordReset;
+const Page = () => {
+  return (
+    <Suspense fallback={<p>loading...</p>}>
+      <PasswordReset />
+    </Suspense>
+  );
+};
+
+export default Page;
