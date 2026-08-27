@@ -5,6 +5,13 @@ class AuthServices {
       body: JSON.stringify({ email }),
     });
   }
+
+  async passwordReset(email: string, token: string, newPassword: string) {
+    await fetch(`${process.env.NEXT_FRESHMART_BACKEND}/auth/reset-password`, {
+      method: "POST",
+      body: JSON.stringify({ email, token, password: newPassword }),
+    });
+  }
 }
 
 export const authservice = new AuthServices();
