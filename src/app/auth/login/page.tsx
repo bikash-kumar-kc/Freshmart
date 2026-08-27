@@ -138,7 +138,7 @@ const SignInForm = () => {
                 Password
               </label>
               <Link
-                href="/forgot-password"
+                href="/auth/requestPasswordReset"
                 className="text-xs text-green-600 hover:text-green-700 transition-colors"
               >
                 Forgot password?
@@ -156,7 +156,11 @@ const SignInForm = () => {
 
               <button
                 type="button"
-                onClick={() => setShowPassword((prev)=> getValues("password").trim() ? !prev : prev)}
+                onClick={() =>
+                  setShowPassword((prev) =>
+                    getValues("password").trim() ? !prev : prev,
+                  )
+                }
                 className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
