@@ -54,7 +54,7 @@ const ReqeustForPasswordReset = () => {
                 </span>
               </div>
             </Link>
-            <p className="text-gray-400 text-sm">Sign in to your account</p>
+            {/* <p className="text-gray-400 text-sm">Sign in to your account</p> */}
           </div>
 
           <form
