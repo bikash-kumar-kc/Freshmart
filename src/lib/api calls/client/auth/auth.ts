@@ -30,7 +30,7 @@ class AuthServices {
     newPassword: string;
   }): Promise<void> {
     const response = await fetch(
-      `${process.env.NEXT_FRESHMART_BACKEND}/auth/reset-password`,
+      `${process.env.NEXT_PUBLIC_FRESHMART_BACKEND}/auth/reset-password`,
       {
         method: "POST",
         headers: {
