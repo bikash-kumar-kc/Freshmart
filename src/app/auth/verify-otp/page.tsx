@@ -7,10 +7,12 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
-import { VENDOR_CONSTANT } from "./constant";
-import useVerifyOtp from "@/hooks/auth/useVerifyOtp";
-import useResendOtp from "@/hooks/auth/useResendOtp";
-import { toast } from "sonner";
+
+import { toast } from "react-toastify";
+import { AUTH_CONSTANT } from "@/src/utils/auth.constant";
+import useVerifyOtp from "@/src/hooks/auth/useVerifyOtp";
+import useResendOtp from "@/src/hooks/auth/useResendOtp";
+import { useRouter, useSearchParams } from "next/navigation";
 
 function formatTime(totalSeconds: number) {
   const m = Math.floor(totalSeconds / 60);
@@ -19,22 +21,20 @@ function formatTime(totalSeconds: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-interface VerifyEmailProps {
-  submitted: {
-    email: string;
-  } | null;
-}
-
-function VerifyEmail({ submitted }: VerifyEmailProps) {
+function VerifyEmail() {
   const [otp, setOtp] = useState("");
   const [rateLimit, setRateLimit] = useState(false);
 
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+
+  const router = useRouter();
   const [secondsLeft, setSecondsLeft] = useState(
-    VENDOR_CONSTANT.OTP_LIFETIME_SECONDS,
+    AUTH_CONSTANT.OTP_LIFETIME_SECONDS,
   );
 
   const [resendCooldown, setResendCooldown] = useState(
-    VENDOR_CONSTANT.RESEND_COOLDOWN_SECONDS,
+    AUTH_CONSTANT.RESEND_COOLDOWN_SECONDS,
   );
 
   const verifyOtp = useVerifyOtp();
@@ -44,8 +44,8 @@ function VerifyEmail({ submitted }: VerifyEmailProps) {
   const canResend = resendCooldown <= 0;
 
   useEffect(() => {
-    setSecondsLeft(VENDOR_CONSTANT.OTP_LIFETIME_SECONDS);
-    setResendCooldown(VENDOR_CONSTANT.RESEND_COOLDOWN_SECONDS);
+    setSecondsLeft(AUTH_CONSTANT.OTP_LIFETIME_SECONDS);
+    setResendCooldown(AUTH_CONSTANT.RESEND_COOLDOWN_SECONDS);
     setOtp("");
     setRateLimit(false);
   }, []);
@@ -71,16 +71,17 @@ function VerifyEmail({ submitted }: VerifyEmailProps) {
   }, [canResend]);
 
   const handleVerify = () => {
-    if (!otp || !submitted?.email) return;
+    if (!otp || !email) return;
 
     verifyOtp.mutate(
       {
-        email: submitted.email,
+        email,
         otp,
       },
       {
         onSuccess: () => {
           toast.success("Your email is verified successfully.");
+          router.push("/auth/login");
         },
 
         onError: (error: any) => {
@@ -105,16 +106,16 @@ function VerifyEmail({ submitted }: VerifyEmailProps) {
   };
 
   const handleResend = () => {
-    if (!submitted?.email) return;
+    if (!email) return;
 
     resendOtp.mutate(
       {
-        email: submitted.email,
+        email: email,
       },
       {
         onSuccess: () => {
-          setSecondsLeft(VENDOR_CONSTANT.OTP_LIFETIME_SECONDS);
-          setResendCooldown(VENDOR_CONSTANT.RESEND_COOLDOWN_SECONDS);
+          setSecondsLeft(AUTH_CONSTANT.OTP_LIFETIME_SECONDS);
+          setResendCooldown(AUTH_CONSTANT.RESEND_COOLDOWN_SECONDS);
           setOtp("");
           setRateLimit(false);
 
