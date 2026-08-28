@@ -138,9 +138,9 @@ function VerifyEmail() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-amber-50 px-4">
-      <div className="w-full max-w-md rounded-[10px] bg-white p-8 shadow-sm">
-        <div className="space-y-3">
+    <div className="min-h-screen flex items-center justify-center bg-amber-50 px-4  transition-all">
+      <div className="w-full max-w-md rounded-[10px] bg-white p-8 shadow-sm hover:shadow-md">
+        <div className="space-y-1">
           <h1 className="text-center text-2xl font-semibold tracking-wider text-gray-700">
             Verify your email
           </h1>
@@ -196,7 +196,7 @@ function VerifyEmail() {
             className="
               h-12
               flex-1
-              rounded-[10px]
+              rounded-[6px]
               bg-green-600
               text-base
               font-medium
@@ -204,7 +204,7 @@ function VerifyEmail() {
               text-white
               transition-all
               duration-200
-              hover:bg-green-400
+              hover:bg-green-700
               hover:shadow-md
               disabled:opacity-60
             "
@@ -221,7 +221,7 @@ function VerifyEmail() {
               className="
                 h-12
                 flex-1
-                rounded-[10px]
+                rounded-[6px]
                 border
                 border-gray-200
                 bg-cta
