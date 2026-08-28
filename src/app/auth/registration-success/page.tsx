@@ -16,7 +16,7 @@ function RegistrationSuccess() {
       return;
     }
 
-    router.push(`auth/verify-otp?email=${encodeURIComponent(email)}`);
+    router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`);
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-amber-50 px-4">
