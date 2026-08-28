@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
   InputOTP,
   InputOTPGroup,
@@ -252,4 +252,12 @@ function VerifyEmail() {
   );
 }
 
-export default VerifyEmail;
+const page = () => {
+  return (
+    <Suspense fallback={"loading..."}>
+      <VerifyEmail />
+    </Suspense>
+  );
+};
+
+export default page;
