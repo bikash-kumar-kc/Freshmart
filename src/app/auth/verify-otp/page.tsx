@@ -141,7 +141,7 @@ function VerifyEmail() {
     <div className="min-h-screen flex items-center justify-center bg-amber-50 px-4  transition-all">
       <div className="w-full max-w-md rounded-[10px] bg-white p-8 shadow-sm hover:shadow-md">
         <div className="space-y-1">
-          <h1 className="text-center text-2xl font-semibold tracking-wider text-gray-700">
+          <h1 className="text-center text-2xl font-semibold tracking-wide text-gray-700">
             Verify your email
           </h1>
 
@@ -231,6 +231,7 @@ function VerifyEmail() {
                 text-gray-700
                 transition-colors
                 duration-200
+                hover:bg-cta
                 hover:border-gray-400
                 disabled:opacity-60
               "
