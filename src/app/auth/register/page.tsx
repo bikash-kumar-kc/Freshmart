@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { Suspense, useEffect, useState } from "react";
 import { registerUser } from "@/src/lib/server_actions/auth.server.action";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import useRegister from "@/src/hooks/auth/useRegister";
 
 const schemaForRegister = z
   .object({
@@ -69,11 +70,17 @@ const RegisterForm = () => {
     resolver: zodResolver(schemaForRegister),
   });
 
+  const registerUser = useRegister();
+
   const handleSubmitHandler = async (data: IREGISTERTYPES) => {
     setLoading(true);
     try {
-      const user = await registerUser(data);
-      console.log("User created successfully! userId: ", user.id);
+      await registerUser.mutateAsync({
+        email: data.email,
+        password: data.password,
+        isVendor: false,
+      });
+
       saveLocally({
         type: "auth",
         data: { auth: { email: data.email, password: data.password } },
@@ -82,16 +89,20 @@ const RegisterForm = () => {
         router.push(`/auth/login/?redirect=${redirect}`);
         return;
       }
-      router.push("/auth/login");
+      router.push(`/auth/registration-success?email=${data.email}`);
       reset();
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log("Failed to create user ! msg: ", error.message);
+<<<<<<< HEAD
         toast.error(
           process.env.NEXT_ENV === "development"
             ? error.message
             : "Account with this information already exist. Try new one.",
         );
+=======
+        toast.error("User already exists with this email");
+>>>>>>> staging
         return;
       }
       console.log(error);

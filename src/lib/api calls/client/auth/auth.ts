@@ -1,5 +1,68 @@
 "use client";
+
+export interface ISetupAccountPayload {
+  email: string;
+  password: string;
+  isVendor: boolean;
+}
+
 class AuthServices {
+  async createAccount(payload: ISetupAccountPayload) {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_FRESHMART_BACKEND}/auth/setup-account`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error();
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async verifyOtp(payload: { email: string; otp: string }) {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_FRESHMART_BACKEND}/auth/verify-otp`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error();
+    }
+  }
+
+  async resendOtp(payload: { email: string }) {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_FRESHMART_BACKEND}/auth/resend-otp`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error();
+    }
+  }
+
   async requestPasswordReset({ email }: { email: string }) {
     try {
       const response = await fetch(
