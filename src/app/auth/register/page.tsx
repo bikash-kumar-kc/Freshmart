@@ -8,7 +8,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getLocally, saveLocally } from "@/src/lib/localstorage/localstorage";
 import { toast } from "react-toastify";
 import { Suspense, useEffect, useState } from "react";
-import { registerUser } from "@/src/lib/server_actions/auth.server.action";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import useRegister from "@/src/hooks/auth/useRegister";
 
@@ -94,15 +93,7 @@ const RegisterForm = () => {
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log("Failed to create user ! msg: ", error.message);
-<<<<<<< HEAD
-        toast.error(
-          process.env.NEXT_ENV === "development"
-            ? error.message
-            : "Account with this information already exist. Try new one.",
-        );
-=======
         toast.error("User already exists with this email");
->>>>>>> staging
         return;
       }
       console.log(error);
