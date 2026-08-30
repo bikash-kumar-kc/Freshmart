@@ -322,6 +322,9 @@ export const products = sqliteTable(
     // popularity check -------------
     popularityScore: real("popularity_score").notNull().default(0),
 
+    // to denote whether the product has varients or not...
+    hasVarient: integer("has_varient", { mode: "boolean" }).default(false),
+
     // productlistingid...
     productListingId: integer("product_listing_id").references(
       () => productListing.id,
