@@ -413,7 +413,6 @@ import { text, sqliteTable } from "drizzle-orm/sqlite-core";
 import { NotificationType } from "../types/notificationTypes";
 // import { roleEnum } from "./utilis/role.constant";
 
-
 // user table...
 // root table every other tables links...
 // export const users = sqliteTable("users", {
@@ -729,6 +728,9 @@ export const products = sqliteTable(
 
     // popularity check -------------
     popularityScore: real("popularity_score").notNull().default(0),
+
+    // to denote whether the product has varients or not...
+    hasVarient: integer("has_varient", { mode: "boolean" }).default(false),
 
     // productlistingid...
     productListingId: integer("product_listing_id").references(
