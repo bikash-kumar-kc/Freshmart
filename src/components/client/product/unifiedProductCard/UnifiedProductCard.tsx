@@ -207,8 +207,8 @@ export function ProductCard({
                   ? "Remove from wishlist"
                   : "Add to wishlist"
             }
-            className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90
-            flex items-center justify-center text-[#555] cursor-pointer p-0"
+            className={`absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90
+            flex items-center justify-center text-[#555] cursor-pointer p-0 ${mode === "favorite" ? "hover:bg-red-500 hover:text-white" : "hover:bg-green-500 hover:text-white"} transition-colors`}
           >
             {mode === "favorite" ? (
               <Trash2 size={14} />
@@ -246,7 +246,7 @@ export function ProductCard({
         </div>
       </Link>
 
-      <SaveBanner amount={100} />
+      {/* <SaveBanner amount={100} /> */}
       {/* )} */}
       <div className="px-3.5 py-3 flex items-center justify-between gap-2">
         <div className="min-w-0">
