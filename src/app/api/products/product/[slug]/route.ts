@@ -21,6 +21,7 @@ const getCachedProduct = async (slug: string) => {
       discount: products.discount,
       vendorId: products.vendorId,
       type: products.type,
+      hasVarients: products.hasVarient,
     })
     .from(products)
     .where(eq(products.slug, slug));
