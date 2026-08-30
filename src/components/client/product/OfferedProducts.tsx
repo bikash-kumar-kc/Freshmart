@@ -2,7 +2,7 @@
 
 import { useGetOfferedProducts } from "@/src/hooks/useGetOfferedProducts";
 // import { ProductCard } from "../PopularCard";
-import Link from "next/link";
+// import Link from "next/link";
 import { ProductCard } from "./unifiedProductCard/UnifiedProductCard";
 import { fromFlatProduct } from "./unifiedProductCard/normalizeProduct";
 
