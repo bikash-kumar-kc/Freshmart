@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Trash2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
@@ -19,7 +19,6 @@ import {
 } from "@/src/store/carts/selectors";
 import { IUnifiedProduct } from "@/src/types/product.types/productCard.types";
 import QuantityControl from "@/src/app/cart/components/QuantityControl";
-import SaveBanner from "@/src/components/server/varientBanner";
 import { useRouter } from "next/navigation";
 
 export function CartIcon() {
@@ -105,7 +104,7 @@ export function ProductCard({
 
   const router = useRouter();
 
-  const handleVarientsSearch = (e: Event) => {
+  const handleVarientsSearch = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     if (!product.id) return;
@@ -244,14 +243,16 @@ export function ProductCard({
               </span>
             )}
           </div>
-          <div
-            className="absolute bottom-8.5 right-2.5 hidden group-hover:block "
-            onClick={handleVarientsSearch}
-          >
-            <span className="bg-[rgba(0,37,14,0.6)] text-[#EAF3DE] text-[10px] px-2.25 py-0.75 rounded-full">
-              Explore Varients
-            </span>
-          </div>
+          {product.hasVarients && (
+            <div
+              className="absolute bottom-8.5 right-2.5 hidden group-hover:block "
+              onClick={handleVarientsSearch}
+            >
+              <span className="bg-[rgba(0,37,14,0.6)] text-[#EAF3DE] text-[10px] px-2.25 py-0.75 rounded-full">
+                Explore Varients
+              </span>
+            </div>
+          )}
 
           {product.weightValue && product.weightUnit && (
             <div className="absolute bottom-2.5 right-2.5">
