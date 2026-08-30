@@ -234,6 +234,14 @@ export function ProductCard({
               </span>
             )}
           </div>
+          <div
+            className="absolute bottom-8.5 right-2.5 hidden group-hover:block "
+
+          >
+            <span className="bg-[rgba(0,37,14,0.6)] text-[#EAF3DE] text-[10px] px-2.25 py-0.75 rounded-full">
+              Explore Varients
+            </span>
+          </div>
 
           {product.weightValue && product.weightUnit && (
             <div className="absolute bottom-2.5 right-2.5">
