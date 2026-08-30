@@ -18,6 +18,7 @@ export interface IProduct {
   isFeatured: boolean;
   category: string;
   stock: number;
+  hasVarients: boolean | null;
 }
 export interface IFeaturedProductsData {
   featuredProducts: IProduct[];
@@ -40,6 +41,7 @@ const getFeaturedProducts = async () => {
       category: products.category,
       vendorId: products.vendorId,
       type: products.type,
+      hasVareints: products.hasVarient,
     })
     .from(products)
     .where(and(eq(products.isFeatured, true), eq(products.status, "active")));
