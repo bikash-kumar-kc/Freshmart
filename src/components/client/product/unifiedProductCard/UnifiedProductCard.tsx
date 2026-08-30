@@ -19,6 +19,7 @@ import {
 } from "@/src/store/carts/selectors";
 import { IUnifiedProduct } from "@/src/types/product.types/productCard.types";
 import QuantityControl from "@/src/app/cart/components/QuantityControl";
+import SaveBanner from "@/src/components/server/varientBanner";
 
 export function CartIcon() {
   return (
@@ -244,6 +245,9 @@ export function ProductCard({
           )}
         </div>
       </Link>
+
+      <SaveBanner amount={100} />
+      {/* )} */}
       <div className="px-3.5 py-3 flex items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="m-0 text-sm font-medium text-[#1a1a1a] line-clamp-1">
