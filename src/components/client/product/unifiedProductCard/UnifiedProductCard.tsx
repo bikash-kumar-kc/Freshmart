@@ -20,6 +20,7 @@ import {
 import { IUnifiedProduct } from "@/src/types/product.types/productCard.types";
 import QuantityControl from "@/src/app/cart/components/QuantityControl";
 import SaveBanner from "@/src/components/server/varientBanner";
+import { useRouter } from "next/navigation";
 
 export function CartIcon() {
   return (
@@ -101,6 +102,15 @@ export function ProductCard({
   const productInfo = useAppSelector(productQuantity(product.id));
 
   const isOutOfStock = product.status === "out_of_stock" || product.stock === 0;
+
+  const router = useRouter();
+
+  const handleVarientsSearch = (e: Event) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!product.id) return;
+    router.push(`/varientsView?productId=${product.id}`);
+  };
 
   useEffect(() => {
     if (mode === "default") setWished(!!isFavorite);
@@ -236,7 +246,7 @@ export function ProductCard({
           </div>
           <div
             className="absolute bottom-8.5 right-2.5 hidden group-hover:block "
-
+            onClick={handleVarientsSearch}
           >
             <span className="bg-[rgba(0,37,14,0.6)] text-[#EAF3DE] text-[10px] px-2.25 py-0.75 rounded-full">
               Explore Varients
