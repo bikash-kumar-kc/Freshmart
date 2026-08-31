@@ -46,6 +46,7 @@ const productInfo = {
   status: products.status,
   expireAt: products.expireAt,
   type: products.type,
+  icon: products.icon,
 };
 
 export interface IProductVarients {
@@ -59,7 +60,7 @@ export interface IProductVarients {
 export interface GetAvailableVarients {
   product: IProductResponse | null;
   vendorProducts: IRequiredFieldTypes[];
-  productVarients: IProductVarients;
+  productVarients: IProductVarients[];
 }
 
 export interface IRequiredFields {
@@ -94,13 +95,15 @@ export async function getProductByCategorySlug(
       return {
         product: null,
         vendorProducts: [],
-        productVarients: {
-          id: "",
-          weightValue: 0,
-          weightUnit: "",
-          price: 0,
-          stock: 0,
-        },
+        productVarients: [
+          {
+            id: "",
+            weightValue: 0,
+            weightUnit: "",
+            price: 0,
+            stock: 0,
+          },
+        ],
       };
     }
 
@@ -114,18 +117,20 @@ export async function getProductByCategorySlug(
       return {
         product: null,
         vendorProducts: [],
-        productVarients: {
-          id: "",
-          weightValue: 0,
-          weightUnit: "",
-          price: 0,
-          stock: 0,
-        },
+        productVarients: [
+          {
+            id: "",
+            weightValue: 0,
+            weightUnit: "",
+            price: 0,
+            stock: 0,
+          },
+        ],
       };
     }
 
     // varients...
-    const variantRows = await db
+    const productVarients = await db
       .select({
         id: productVariants.id,
         weightValue: productVariants.weightValue,
@@ -135,11 +140,6 @@ export async function getProductByCategorySlug(
       })
       .from(productVariants)
       .where(eq(productVariants.productId, product.id));
-
-    // const row1 = variantRows[0];
-    // const row2 = variantRows[1];
-    // const filteredVariantRow =
-    //   row1.weightValue < row2.weightValue ? row1 : row2; // todo improve it. . .
 
     const requiredFields = {
       id: products.id,
@@ -154,23 +154,23 @@ export async function getProductByCategorySlug(
       isOffered: products.isOffered,
       isMostPopular: products.isMostPopular,
       price: productVariants.price,
+      hasVarients: products.hasVarient,
     };
 
-    const relatedProducts = await db
+    const vendorProducts = await db
       .select(requiredFields)
       .from(products)
       .innerJoin(productVariants, eq(productVariants.productId, products.id))
       .where(
         and(
-          eq(products.category, category),
+          eq(products.vendorId, vendorId),
           ne(products.id, product.id),
           eq(products.status, "active"),
         ),
       );
-    // .limit(8);
 
     const cheapestByProductId = new Map<string, IRequiredFieldTypes>();
-    for (const v of relatedProducts) {
+    for (const v of vendorProducts) {
       const existing = cheapestByProductId.get(v.id);
       if (!existing || v.weightValue < existing.weightValue) {
         const isOutOfStock = v.stock === 0;
@@ -182,28 +182,32 @@ export async function getProductByCategorySlug(
       cheapestByProductId.values(),
     );
 
-    console.log(product);
-
     return {
       product: {
         ...product,
+        name: product.name as string,
         type: product.type ?? "inventory",
       },
       vendorProducts: requiredFieldsArray,
-      filteredVariantRow,
+      productVarients,
     };
   } catch (err) {
-    console.error("[getProductByCategorySlug] failed", err);
+    console.error(
+      "[getvarientsofaproductandvendorrelatedproducts] failed",
+      err,
+    );
     return {
       product: null,
       vendorProducts: [],
-      productVarients: {
-        id: "",
-        weightValue: 0,
-        weightUnit: "",
-        price: 0,
-        stock: 0,
-      },
+      productVarients: [
+        {
+          id: "",
+          weightValue: 0,
+          weightUnit: "",
+          price: 0,
+          stock: 0,
+        },
+      ],
     };
   }
 }
