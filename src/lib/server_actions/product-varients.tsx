@@ -83,7 +83,7 @@ export type IRequiredFieldTypes = {
   hasVarients: boolean | null;
 };
 
-export async function getProductByCategorySlug(
+export async function getProductVarients(
   vendorId: string,
   slug: string,
 ): Promise<GetAvailableVarients> {
