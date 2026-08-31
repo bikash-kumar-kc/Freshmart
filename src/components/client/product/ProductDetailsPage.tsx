@@ -5,9 +5,7 @@ import { ShoppingCart, MapPin, ChevronDown, Home } from "lucide-react";
 import { formatWeight } from "./utilities/helper.fun";
 import { ImageGallery } from "./utilities/image.gallary";
 import { FreshnessBadge } from "./utilities/FreshnessBadge";
-import {
-  calculateDiscountPercentage,
-} from "./utilities/subProductCard";
+import { calculateDiscountPercentage } from "./utilities/subProductCard";
 import { GetProductResult } from "@/src/lib/server_actions/product.server.action";
 import GoBackButton from "../buttons/GotoBackBtn";
 import { usePathname } from "next/navigation";
@@ -31,6 +29,9 @@ export default function ProductDetailPage({
   product,
   filteredVariantRow,
   relatedProducts,
+  vendorProducts,
+  productVarients,
+  isFromProductVarients,
 }: GetProductResult) {
   const pathname = usePathname();
   const [addedToCart, setAddedToCart] = useState(false);
@@ -40,6 +41,8 @@ export default function ProductDetailPage({
   const isProductOnCart = useAppSelector(isProductInCart(product?.id));
   const isAllowed = useAppSelector(isAllowedToAddedInCart);
   const productInfo = useAppSelector(productQuantity(product?.id));
+
+  const [selectedVarientId, setSelectedVarientId] = useState<string>("");
 
   const isOutOfStock =
     product?.status === "inactive" || filteredVariantRow?.stock === 0;
@@ -125,53 +128,185 @@ export default function ProductDetailPage({
               </div>
             )}
 
-            <div className="bg-white rounded-sm border border-gray-100 p-4 mb-4">
-              <div className="relative">
-                {product?.isOffered && (
-                  <span
-                    className="
+            <div className="flex gap-3 ">
+              <div className="bg-white rounded-sm border border-gray-100 p-4 mb-4 ">
+                <div className="relative">
+                  {product?.isOffered && (
+                    <span
+                      className="
         absolute top-0 right-0
         bg-orange-500 text-white text-xs font-bold
         px-2 py-1 rounded-bl-lg
         shadow-md
       "
-                  >
-                    -
-                    {calculateDiscountPercentage(
-                      filteredVariantRow?.price as number,
-                      product?.discount as number,
+                    >
+                      -
+                      {calculateDiscountPercentage(
+                        filteredVariantRow?.price as number,
+                        product?.discount as number,
+                      )}
+                      %
+                    </span>
+                  )}
+
+                  {product?.isMostPopular && (
+                    <span
+                      className="
+        absolute top-0 right-0
+        bg-orange-500 text-white text-xs font-bold
+        px-2 py-1 rounded-bl-lg
+        shadow-md
+      "
+                    >
+                      popular
+                    </span>
+                  )}
+
+                  <div className="flex items-end gap-3 mb-1">
+                    <span className="text-xl font-bold text-gray-900">
+                      Rs {filteredVariantRow?.price?.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-[10px] text-gray-600">
+                  Price per{" "}
+                  {formatWeight(
+                    filteredVariantRow?.weightValue,
+                    filteredVariantRow?.weightUnit,
+                  )}{" "}
+                  · Inclusive of all taxes
+                </p>
+              </div>
+              <div
+                className={`bg-white rounded-sm border flex gap-4 flex-col border-gray-100 p-4 mb-4 shadow-sm ${selectedVarientId === filteredVariantRow.id ? "border border-green-500" : ""}`}
+                onClick={() => setSelectedVarientId(filteredVariantRow.id)}
+              >
+                <div>
+                  <div className="relative">
+                    {product?.isOffered && (
+                      <span
+                        className="
+        absolute top-0 right-0
+        bg-orange-500 text-white text-xs font-bold
+        px-2 py-1 rounded-bl-lg
+        shadow-md
+      "
+                      >
+                        -
+                        {calculateDiscountPercentage(
+                          filteredVariantRow?.price as number,
+                          product?.discount as number,
+                        )}
+                        %
+                      </span>
                     )}
-                    %
-                  </span>
-                )}
 
-                {product?.isMostPopular && (
-                  <span
-                    className="
+                    {product?.isMostPopular && (
+                      <span
+                        className="
         absolute top-0 right-0
         bg-orange-500 text-white text-xs font-bold
         px-2 py-1 rounded-bl-lg
         shadow-md
       "
-                  >
-                    popular
-                  </span>
-                )}
+                      >
+                        popular
+                      </span>
+                    )}
 
-                <div className="flex items-end gap-3 mb-1">
-                  <span className="text-3xl font-bold text-gray-900">
-                    Rs {filteredVariantRow?.price?.toFixed(2)}
-                  </span>
+                    <div className="flex items-end gap-3 mb-1">
+                      <span className="text-xl font-bold text-gray-900">
+                        Rs {filteredVariantRow?.price?.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-gray-600">
+                    Price per{" "}
+                    {formatWeight(
+                      filteredVariantRow?.weightValue,
+                      filteredVariantRow?.weightUnit,
+                    )}{" "}
+                    · Inclusive of all taxes
+                  </p>
+                </div>
+                <div>
+                  <div className="flex flex-col sm:flex-row items-center gap-3">
+                    {isProductOnCart && !!productInfo && (
+                      <QuantityControl
+                        value={productInfo.quantity}
+                        maxStock={productInfo.stock}
+                        id={productInfo.productId}
+                      />
+                    )}
+                    <button
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        if (isAllowed) {
+                          toast.info(
+                            "Your cart is saved , please checkout before creating new cart",
+                          );
+                          return;
+                        }
+
+                        const requiredDataToAddedOnCart: ICartItem = {
+                          productId: product?.id as string,
+                          varient: {
+                            varientId: filteredVariantRow.id,
+                            weightUnit: filteredVariantRow.weightUnit,
+                            weightValue: filteredVariantRow.weightValue,
+                            price: filteredVariantRow.price,
+                            stock: filteredVariantRow.stock,
+                          },
+                          isOffered: product?.isOffered as boolean,
+                          discountAmount: product?.discount as number,
+                          quantity: 1,
+                          category: product?.category as string,
+                          thumbnail: product?.thumbnail as string,
+                          productName: product?.name as string,
+                          slug: product?.slug as string,
+                          type: product?.type ?? "inventory",
+                        };
+
+                        handleAddToCart(requiredDataToAddedOnCart);
+                      }}
+                      // disabled={isOutOfStock || (isAllowed ? isAllowed : false)}
+                      className={`
+                  flex-1 flex items-center justify-center gap-2
+                  py-1 px-2 rounded-sm font-semibold text-sm
+                  border-2 transition-all duration-200
+                  ${
+                    isOutOfStock
+                      ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : addedToCart
+                        ? "border-green-600 bg-green-50 text-green-700"
+                        : "border-green-600 bg-white text-green-700 hover:bg-green-50"
+                  }
+                `}
+                    >
+                      <ShoppingCart size={16} />
+                      {/* {addedToCart ? "Added ✓" : "Add to cart"} */}
+                    </button>
+
+                    {/* <button
+                disabled={isOutOfStock}
+                className={`
+                  flex-1 flex items-center justify-center gap-2
+                  py-3.5 px-5 rounded-sm font-semibold text-sm
+                  transition-all duration-200
+                  ${
+                    isOutOfStock
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-[#C8742A] hover:bg-[#A85E1C] text-white shadow-md hover:shadow-lg"
+                  }
+                `}
+              >
+                Buy now
+              </button> */}
+                  </div>
                 </div>
               </div>
-              <p className="text-xs text-gray-600">
-                Price per{" "}
-                {formatWeight(
-                  filteredVariantRow?.weightValue,
-                  filteredVariantRow?.weightUnit,
-                )}{" "}
-                · Inclusive of all taxes
-              </p>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-3 mb-5">
@@ -197,7 +332,7 @@ export default function ProductDetailPage({
                   const requiredDataToAddedOnCart: ICartItem = {
                     productId: product?.id as string,
                     varient: {
-                      varientId:filteredVariantRow.id,
+                      varientId: filteredVariantRow.id,
                       weightUnit: filteredVariantRow.weightUnit,
                       weightValue: filteredVariantRow.weightValue,
                       price: filteredVariantRow.price,
@@ -282,7 +417,6 @@ export default function ProductDetailPage({
               gap-4"
             >
               {relatedProducts.slice(0, 8).map((rp) => (
-
                 <ProductCard key={rp.id} product={fromFlatProduct(rp)} />
               ))}
             </div>
