@@ -27,6 +27,27 @@ export interface IProductResponse {
   type: "display" | "inventory";
 }
 
+const productInfo = {
+  id: products.id,
+  name: products.localName,
+  slug: products.slug,
+  category: products.category,
+  description: products.description,
+  thumbnail: products.thumbnail,
+  images: products.images,
+  isMostPopular: products.isMostPopular,
+  isFeatured: products.isFeatured,
+  isOffered: products.isOffered,
+  discount: products.discount,
+  originCountry: products.originCountry,
+  farmName: products.farmName,
+  freshnessTags: products.freshnessTags,
+  featuredBanner: products.featuredBanner,
+  status: products.status,
+  expireAt: products.expireAt,
+  type: products.type,
+};
+
 export interface IProductVarients {
   id: string;
   weightValue: number;
@@ -62,18 +83,18 @@ export type IRequiredFieldTypes = {
 };
 
 export async function getProductByCategorySlug(
-  category: string,
+  vendorId: string,
   slug: string,
 ): Promise<GetAvailableVarients> {
   "use cache";
   cacheLife("hours");
-  cacheTag(`product:${category}:${slug}`);
+  cacheTag(`product:${vendorId}:${slug}`);
   try {
-    if (!category?.trim() || !slug?.trim()) {
+    if (!vendorId?.trim() || !slug?.trim()) {
       return {
         product: null,
-        relatedProducts: [],
-        filteredVariantRow: {
+        vendorProducts: [],
+        productVarients: {
           id: "",
           weightValue: 0,
           weightUnit: "",
@@ -84,7 +105,7 @@ export async function getProductByCategorySlug(
     }
 
     const product = await db
-      .select()
+      .select({ ...productInfo })
       .from(products)
       .where(eq(products.slug, slug))
       .get();
@@ -92,8 +113,8 @@ export async function getProductByCategorySlug(
     if (!product || product.status === "inactive") {
       return {
         product: null,
-        relatedProducts: [],
-        filteredVariantRow: {
+        vendorProducts: [],
+        productVarients: {
           id: "",
           weightValue: 0,
           weightUnit: "",
@@ -115,10 +136,10 @@ export async function getProductByCategorySlug(
       .from(productVariants)
       .where(eq(productVariants.productId, product.id));
 
-    const row1 = variantRows[0];
-    const row2 = variantRows[1];
-    const filteredVariantRow =
-      row1.weightValue < row2.weightValue ? row1 : row2; // todo improve it. . .
+    // const row1 = variantRows[0];
+    // const row2 = variantRows[1];
+    // const filteredVariantRow =
+    //   row1.weightValue < row2.weightValue ? row1 : row2; // todo improve it. . .
 
     const requiredFields = {
       id: products.id,
@@ -168,15 +189,15 @@ export async function getProductByCategorySlug(
         ...product,
         type: product.type ?? "inventory",
       },
-      relatedProducts: requiredFieldsArray,
+      vendorProducts: requiredFieldsArray,
       filteredVariantRow,
     };
   } catch (err) {
     console.error("[getProductByCategorySlug] failed", err);
     return {
       product: null,
-      relatedProducts: [],
-      filteredVariantRow: {
+      vendorProducts: [],
+      productVarients: {
         id: "",
         weightValue: 0,
         weightUnit: "",
