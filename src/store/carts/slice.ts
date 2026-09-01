@@ -111,6 +111,32 @@ const cartSlice = createSlice({
       }
     },
 
+
+    addCartItemVarient: (state, actions: PayloadAction<ICartItem>) => {
+      if (!actions.payload.varient.varientId) return;
+      if (
+        state.cartItems.cartItems.some(
+          (i) => i.varient.varientId === actions.payload.varient.varientId,
+        )
+      )
+        return;
+      state.cartItems.cartItems.push(actions.payload);
+      saveToLocalStorage({ cartItems: state.cartItems.cartItems });
+    },
+
+     removeCartItemByVarientId: (state, actions: PayloadAction<{ varientId: string }>) => {
+      if (!actions.payload.varientId) return;
+      const isExist = state.cartItems.cartItems.some(
+        (i) => i.varient.varientId === actions.payload.varientId,
+      );
+      if (isExist) {
+        state.cartItems.cartItems = state.cartItems.cartItems.filter(
+          (c) => c.varient.varientId !== actions.payload.varientId,
+        );
+        saveToLocalStorage({ cartItems: state.cartItems.cartItems });
+      }
+    },
+
     // update item/s to cart...
     updateCartItem: (state, actions: PayloadAction<IUpdateTypes>) => {
       console.log("here at update cart item");
@@ -184,6 +210,8 @@ export const {
   updateCartItem,
   clearCartItems,
   setCart,
+  removeCartItemByVarientId,
+  addCartItemVarient
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
