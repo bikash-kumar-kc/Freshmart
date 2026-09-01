@@ -108,7 +108,7 @@ export function ProductCard({
     e.preventDefault();
     e.stopPropagation();
     if (!product.id) return;
-    router.push(`/varientsView?productId=${product.id}`);
+    router.push(`/productVarients/${product.vendorId}/${product.slug}`);
   };
 
   useEffect(() => {
