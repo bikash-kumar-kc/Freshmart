@@ -243,7 +243,7 @@ export function ProductCard({
               </span>
             )}
           </div>
-          {product.hasVarients && (
+          {true && (
             <div
               className="absolute bottom-8.5 right-2.5 hidden group-hover:block "
               onClick={handleVarientsSearch}
