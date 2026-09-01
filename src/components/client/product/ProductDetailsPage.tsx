@@ -11,13 +11,16 @@ import GoBackButton from "../buttons/GotoBackBtn";
 import { usePathname } from "next/navigation";
 import {
   addCartItem,
+  addCartItemVarient,
   ICartItem,
   removeCartItem,
+  removeCartItemByVarientId,
 } from "@/src/store/carts/slice";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import {
   isAllowedToAddedInCart,
   isProductInCart,
+  isVarientsExists,
   productQuantity,
 } from "@/src/store/carts/selectors";
 import { toast } from "react-toastify";
@@ -42,6 +45,7 @@ export default function ProductDetailPage({
   const isAllowed = useAppSelector(isAllowedToAddedInCart);
   const productInfo = useAppSelector(productQuantity(product?.id));
 
+  const isVarientExist = useAppSelector(isVarientsExists);
 
   const suggestedProducts = isFromProductVarients
     ? (vendorProducts ?? [])
@@ -54,15 +58,21 @@ export default function ProductDetailPage({
   const isOutOfStock =
     product?.status === "inactive" || filteredVariantRow?.stock === 0;
 
-  const handleAddToCart = (data: ICartItem) => {
+
+
+console.log(varients)
+
+  const handleAddVarient = (data: ICartItem) => {
     if (isOutOfStock) return;
-    if (!data.productId) return;
+    if (!data.varient.varientId) return;
     if (!addedToCart) {
-      dispatch(addCartItem(data));
+      dispatch(addCartItemVarient(data));
       setAddedToCart(true);
       toast.success("To update the quantity, visit cart section ");
     } else {
-      dispatch(removeCartItem({ productId: data.productId }));
+      dispatch(
+        removeCartItemByVarientId({ varientId: data.varient.varientId }),
+      );
       setAddedToCart(false);
       toast.success("Product removed from cart successfully !");
     }
@@ -194,7 +204,7 @@ export default function ProductDetailPage({
                       </div>
                       <div>
                         <div className="flex flex-col sm:flex-row items-center gap-3">
-                          {isProductOnCart && !!productInfo && (
+                          {isVarientExist(v.id) && !!productInfo && (
                             <QuantityControl
                               value={productInfo.quantity}
                               maxStock={productInfo.stock}
@@ -234,7 +244,7 @@ export default function ProductDetailPage({
                                 type: product?.type ?? "inventory",
                               };
 
-                              handleAddToCart(requiredDataToAddedOnCart);
+                              handleAddVarient(requiredDataToAddedOnCart);
                             }}
                             className={`
                   flex-1 flex items-center justify-center gap-2
@@ -243,7 +253,7 @@ export default function ProductDetailPage({
                   ${
                     isOutOfStock
                       ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : addedToCart
+                      : isVarientExist(v.id)
                         ? "border-green-600 bg-green-50 text-green-700"
                         : "border-green-600 bg-white text-green-700 hover:bg-green-50"
                   }
@@ -273,10 +283,12 @@ export default function ProductDetailPage({
           <div className="mt-12">
             <div className="flex items-center justify-between mb-5">
               <h2 className="font-serif text-xl font-medium text-gray-900">
-              {isFromProductVarients ? 'Related Vendor Products':'Similar Products'}
+                {isFromProductVarients
+                  ? "Related Vendor Products"
+                  : "Similar Products"}
               </h2>
               <Link
-                href={`/categories/${product?.category?.toLocaleLowerCase().split(' ').join('-')}`}
+                href={`/categories/${product?.category?.toLocaleLowerCase().split(" ").join("-")}`}
                 className="text-xs font-medium text-green-700
                   hover:text-green-900 transition-colors flex items-center gap-1"
               >
