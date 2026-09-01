@@ -27,6 +27,14 @@ export const isProductInCart =
     );
   };
 
+// export const isVarientExists =
+//   (varientId: string | undefined) => (state: RootState) => {
+//     if (!productId) return;
+//     return state.carts.cartItems.cartItems.some(
+//       (i) => i.productId === productId,
+//     );
+//   };
+
 export const fetchProductFromCart =
   (productId: string | undefined) => (state: RootState) => {
     if (!productId) return;
