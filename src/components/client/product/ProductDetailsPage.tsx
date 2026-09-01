@@ -42,7 +42,6 @@ export default function ProductDetailPage({
   const isAllowed = useAppSelector(isAllowedToAddedInCart);
   const productInfo = useAppSelector(productQuantity(product?.id));
 
-  // const [selectedVarientId, setSelectedVarientId] = useState<string>("");
 
   const suggestedProducts = isFromProductVarients
     ? (vendorProducts ?? [])
@@ -274,10 +273,10 @@ export default function ProductDetailPage({
           <div className="mt-12">
             <div className="flex items-center justify-between mb-5">
               <h2 className="font-serif text-xl font-medium text-gray-900">
-                Similar Products
+              {isFromProductVarients ? 'Related Vendor Products':'Similar Products'}
               </h2>
               <Link
-                href={`/products?category=${product?.category}`}
+                href={`/categories/${product?.category?.toLocaleLowerCase().split(' ').join('-')}`}
                 className="text-xs font-medium text-green-700
                   hover:text-green-900 transition-colors flex items-center gap-1"
               >
