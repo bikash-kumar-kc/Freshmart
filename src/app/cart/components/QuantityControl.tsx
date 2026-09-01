@@ -75,7 +75,7 @@ function QuantityControl({
         onClick={() => {
           handleDecrement(id);
         }}
-        className="w-8 h-8 flex items-center justify-center rounded-l-lg
+        className="w-8 h-7 flex items-center justify-center rounded-l-lg
           border border-gray-200 bg-white text-gray-500 hover:bg-green-50
           hover:border-green-300 hover:text-green-700 transition-colors
           disabled:opacity-40 disabled:cursor-not-allowed"
@@ -84,7 +84,7 @@ function QuantityControl({
         <Minus size={12} />
       </button>
       <div
-        className="w-10 h-8 flex items-center justify-center border-y
+        className="w-10 h-7 flex items-center justify-center border-y
         border-gray-200 bg-white text-sm font-semibold text-gray-900"
       >
         <input
@@ -136,7 +136,7 @@ function QuantityControl({
           e.stopPropagation();
           handleIncrement(id);
         }}
-        className="w-8 h-8 flex items-center justify-center rounded-r-lg
+        className="w-8 h-7 flex items-center justify-center rounded-r-lg
           border border-gray-200 bg-white text-gray-500 hover:bg-green-50
           hover:border-green-300 hover:text-green-700 transition-colors
           disabled:opacity-40 disabled:cursor-not-allowed"
