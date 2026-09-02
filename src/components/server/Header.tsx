@@ -31,13 +31,12 @@ interface IStateHandler {
 
 const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const { data } = useSession();
-  // const { user, updateAuthStatus } = useAuthContext();
-  // console.log(data);
   const [count, setCount] = useState<number>(0);
   const [totalOrders, setTotalOrders] = useState(0);
-  // const changeNotificationRef = useRef<boolean | null>(null);
+
   const favoriteItems = useAppSelector(selectFavoriteCount) ?? 0;
   const itemsInCart = useAppSelector(totalItemsCart);
+  console.log(itemsInCart)
   const dispatch = useAppDispatch();
   const allCartProducts = useAppSelector(getAllItemsFromCart);
   const storeCalled = useRef<boolean | null>(null);
@@ -64,7 +63,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   }, [data?.user.id]);
 
   const handleNotificationStatusUpdate = async () => {
-    // if (changeNotificationRef.current) return;
+  
     if (!data?.user.id) return;
     try {
       await updateNotificationsStatus(data?.user.id);
@@ -136,15 +135,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
     }
   }, [pathname]);
 
-  // useEffect(() => {
-  //   if (data?.user && data?.user.id) {
-  //     updateAuthStatus({
-  //       isLoggedIn: true,
-  //       userId: data?.user.id as string,
-  //       email: data?.user.email as string,
-  //     });
-  //   }
-  // }, [data?.user]);
+
 
   useEffect(() => {
     if (!storeCalled.current) {
