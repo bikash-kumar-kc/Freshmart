@@ -19,6 +19,7 @@ export interface IProduct {
   category: string;
   stock: number;
   hasVarients: boolean | null;
+  varientId: string;
 }
 export interface IFeaturedProductsData {
   featuredProducts: IProduct[];
@@ -59,6 +60,7 @@ const getFeaturedProducts = async () => {
       weightUnit: productVariants.weightUnit,
       price: productVariants.price,
       stock: productVariants.stock,
+      varientId: productVariants.id,
     })
     .from(productVariants)
     .where(inArray(productVariants.productId, arrayOfFeaturedProductIds));
@@ -83,6 +85,7 @@ const getFeaturedProducts = async () => {
       weightUnit: variant?.weightUnit ?? null,
       price: variant?.price ?? null,
       stock: variant?.stock ?? null,
+      varientId: variant?.varientId,
     };
   });
 
