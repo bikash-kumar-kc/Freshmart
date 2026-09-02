@@ -98,7 +98,8 @@ export function ProductCard({
   const isFavorite = useAppSelector(selectIsFavorite(product.id));
   const isProductOnCart = useAppSelector(isProductInCart(product.id));
   const isAllowed = useAppSelector(isAllowedToAddedInCart);
-  const productInfo = useAppSelector(productQuantity(product.id));
+  const productInfoVarient = useAppSelector(productQuantity);
+  const productInfo = productInfoVarient(product.varientId as string);
 
   const isOutOfStock = product.status === "out_of_stock" || product.stock === 0;
 
@@ -127,7 +128,7 @@ export function ProductCard({
       setAdded(true);
       toast.success("Product Added Successfully to the cart.");
     } else {
-      dispatch(removeCartItem({ productId: data.productId }));
+      dispatch(removeCartItem({ varientId: data.varient.varientId }));
       setAdded(false);
       toast.success("Product removed from cart successfully !");
     }
@@ -283,14 +284,10 @@ export function ProductCard({
           <QuantityControl
             value={productInfo.quantity}
             maxStock={productInfo.stock}
-            id={productInfo.productId}
-            // handleCart={(e: React.MouseEvent<HTMLButtonElement>) =>
-            //   handleAddToCart(e)
-            // }
+            id={productInfo.varientId}
           />
         )}
 
-        {/* {!added && ( */}
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock}
@@ -302,7 +299,6 @@ export function ProductCard({
         >
           {added ? <CheckIcon /> : <CartIcon />}
         </button>
-        {/* )} */}
       </div>
     </div>
   );
