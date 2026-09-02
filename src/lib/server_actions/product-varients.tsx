@@ -29,7 +29,7 @@ export interface IProductResponse {
 
 const productInfo = {
   id: products.id,
-  name: products.localName,
+  name: products.name,
   slug: products.slug,
   category: products.category,
   description: products.description,
