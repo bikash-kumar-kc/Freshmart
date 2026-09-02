@@ -99,7 +99,7 @@ export function ProductCard({
       setAdded(true);
       toast.success("To update the quantity, visit cart section ");
     } else {
-      dispatch(removeCartItem({ productId: data.productId }));
+      dispatch(removeCartItem({ varientId: data.varient.varientId }));
       setAdded(false);
       toast.success("Product removed from cart successfully !");
     }
