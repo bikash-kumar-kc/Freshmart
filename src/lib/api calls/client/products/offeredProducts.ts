@@ -13,6 +13,7 @@ interface IOfferedProduct {
   price: number | null;
   category: string;
   stock: number;
+  varientId: string;
   hasVarients: boolean | null;
 }
 
