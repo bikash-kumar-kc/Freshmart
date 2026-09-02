@@ -11,15 +11,12 @@ import GoBackButton from "../buttons/GotoBackBtn";
 import { usePathname } from "next/navigation";
 import {
   addCartItem,
-  addCartItemVarient,
   ICartItem,
   removeCartItem,
-  removeCartItemByVarientId,
 } from "@/src/store/carts/slice";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import {
   isAllowedToAddedInCart,
-  isProductInCart,
   isVarientsExists,
   productQuantity,
 } from "@/src/store/carts/selectors";
@@ -37,13 +34,12 @@ export default function ProductDetailPage({
   isFromProductVarients,
 }: GetProductResult) {
   const pathname = usePathname();
-  const [addedToCart, setAddedToCart] = useState(false);
   const [animate, setAnimate] = useState(false);
 
   const dispatch = useAppDispatch();
-  const isProductOnCart = useAppSelector(isProductInCart(product?.id));
+
   const isAllowed = useAppSelector(isAllowedToAddedInCart);
-  const productInfo = useAppSelector(productQuantity(product?.id));
+  const productInfoVarient = useAppSelector(productQuantity);
 
   const isVarientExist = useAppSelector(isVarientsExists);
 
@@ -63,14 +59,11 @@ export default function ProductDetailPage({
     if (isOutOfStock) return;
     if (!data.varient.varientId) return;
     if (!isVarientExist(data.varient.varientId)) {
-      dispatch(addCartItemVarient(data));
-      setAddedToCart(true);
+      dispatch(addCartItem(data));
+
       toast.success("To update the quantity, visit cart section ");
     } else {
-      dispatch(
-        removeCartItemByVarientId({ varientId: data.varient.varientId }),
-      );
-      setAddedToCart(false);
+      dispatch(removeCartItem({ varientId: data.varient.varientId }));
       toast.success("Product removed from cart successfully !");
     }
   };
@@ -84,13 +77,6 @@ export default function ProductDetailPage({
       sessionStorage.setItem(key, "1");
     }
   }, [pathname]);
-
-  useEffect(() => {
-    if (!isProductOnCart) {
-      return;
-    }
-    setAddedToCart(isProductOnCart);
-  }, [isProductOnCart]);
 
   return (
     <main className="flex flex-col bg-[#F5F9F0] min-h-screen">
@@ -149,6 +135,8 @@ export default function ProductDetailPage({
                     return;
                   }
 
+                  const productInfo = productInfoVarient(v.id);
+
                   return (
                     <div
                       key={v.id}
@@ -205,7 +193,7 @@ export default function ProductDetailPage({
                             <QuantityControl
                               value={productInfo.quantity}
                               maxStock={productInfo.stock}
-                              id={productInfo.productId}
+                              id={v.id}
                             />
                           )}
                           <button
