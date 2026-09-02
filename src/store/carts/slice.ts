@@ -29,9 +29,10 @@ export interface ICartItems {
 }
 
 interface IUpdateTypes {
-  productId: string;
+
   type: "increment" | "decrement" | "onchange";
   value?: number;
+  varientId: string;
 }
 
 interface ISetCartType {
@@ -62,7 +63,6 @@ export const loadFromStorage = (): ICartItems => {
 
 export const saveToLocalStorage = ({ cartItems }: ICartItems) => {
   try {
-    console.log("saved to local storage");
     const parsedCartItems = JSON.stringify(
       cartItems.length === 0 ? [] : cartItems,
     );
@@ -86,10 +86,10 @@ const cartSlice = createSlice({
   reducers: {
     // add item/s to cart...
     addCartItem: (state, actions: PayloadAction<ICartItem>) => {
-      if (!actions.payload.productId) return;
+      if (!actions.payload.varient.varientId) return;
       if (
         state.cartItems.cartItems.some(
-          (i) => i.productId === actions.payload.productId,
+          (i) => i.varient.varientId === actions.payload.varient.varientId,
         )
       )
         return;
@@ -98,19 +98,18 @@ const cartSlice = createSlice({
     },
 
     // remove item/s to cart...
-    removeCartItem: (state, actions: PayloadAction<{ productId: string }>) => {
-      if (!actions.payload.productId) return;
+    removeCartItem: (state, actions: PayloadAction<{ varientId: string }>) => {
+      if (!actions.payload.varientId) return;
       const isExist = state.cartItems.cartItems.some(
-        (i) => i.productId === actions.payload.productId,
+        (i) => i.varient.varientId === actions.payload.varientId,
       );
       if (isExist) {
         state.cartItems.cartItems = state.cartItems.cartItems.filter(
-          (c) => c.productId !== actions.payload.productId,
+          (c) => c.varient.varientId !== actions.payload.varientId,
         );
         saveToLocalStorage({ cartItems: state.cartItems.cartItems });
       }
     },
-
 
     addCartItemVarient: (state, actions: PayloadAction<ICartItem>) => {
       if (!actions.payload.varient.varientId) return;
@@ -124,7 +123,10 @@ const cartSlice = createSlice({
       saveToLocalStorage({ cartItems: state.cartItems.cartItems });
     },
 
-     removeCartItemByVarientId: (state, actions: PayloadAction<{ varientId: string }>) => {
+    removeCartItemByVarientId: (
+      state,
+      actions: PayloadAction<{ varientId: string }>,
+    ) => {
       if (!actions.payload.varientId) return;
       const isExist = state.cartItems.cartItems.some(
         (i) => i.varient.varientId === actions.payload.varientId,
@@ -139,15 +141,13 @@ const cartSlice = createSlice({
 
     // update item/s to cart...
     updateCartItem: (state, actions: PayloadAction<IUpdateTypes>) => {
-      console.log("here at update cart item");
       try {
-        if (!actions.payload.productId || !actions.payload.type) return;
+        if (!actions.payload.varientId || !actions.payload.type) return;
 
         switch (actions.payload.type) {
           case "increment": {
-            console.log("here at increment");
             state.cartItems.cartItems = state.cartItems.cartItems.map((c) =>
-              c.productId === actions.payload.productId
+              c.varient.varientId === actions.payload.varientId
                 ? { ...c, quantity: c.quantity + 1 }
                 : c,
             );
@@ -155,7 +155,7 @@ const cartSlice = createSlice({
           }
           case "decrement": {
             state.cartItems.cartItems = state.cartItems.cartItems.map((c) =>
-              c.productId === actions.payload.productId
+              c.varient.varientId === actions.payload.varientId
                 ? { ...c, quantity: c.quantity - 1 }
                 : c,
             );
@@ -164,7 +164,7 @@ const cartSlice = createSlice({
           case "onchange": {
             if (!actions.payload.value) return;
             state.cartItems.cartItems = state.cartItems.cartItems.map((c) =>
-              c.productId === actions.payload.productId
+              c.varient.varientId === actions.payload.varientId
                 ? { ...c, quantity: actions.payload.value! }
                 : c,
             );
@@ -172,13 +172,9 @@ const cartSlice = createSlice({
           }
         }
 
-        // if (globalTimer) {
-        //   clearTimeout(globalTimer);
-        // }
 
-        // globalTimer = setTimeout(() => {
         saveToLocalStorage({ cartItems: state.cartItems.cartItems });
-        // }, DEBOUNCE_TIME);
+      
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.log(error.message);
@@ -186,6 +182,7 @@ const cartSlice = createSlice({
         console.log("Failed to update cartItems !");
       }
     },
+
 
     // clear cart ...
     clearCartItems: (state) => {
@@ -211,7 +208,8 @@ export const {
   clearCartItems,
   setCart,
   removeCartItemByVarientId,
-  addCartItemVarient
+  addCartItemVarient,
+ 
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
