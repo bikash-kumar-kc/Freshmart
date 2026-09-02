@@ -166,7 +166,7 @@ export default function CartPage() {
       toast.success("Order placed! The vendor has been notified.");
 
       items.forEach((item) => {
-        dispatch(removeCartItem({ productId: item.productId }));
+        dispatch(removeCartItem({ varientId: item.varient.varientId }));
       });
     } catch {
       toast.error("Failed to place order — please try again.");

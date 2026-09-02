@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Trash2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
@@ -19,6 +19,7 @@ import {
 } from "@/src/store/carts/selectors";
 import { IUnifiedProduct } from "@/src/types/product.types/productCard.types";
 import QuantityControl from "@/src/app/cart/components/QuantityControl";
+import { useRouter } from "next/navigation";
 
 export function CartIcon() {
   return (
@@ -97,9 +98,19 @@ export function ProductCard({
   const isFavorite = useAppSelector(selectIsFavorite(product.id));
   const isProductOnCart = useAppSelector(isProductInCart(product.id));
   const isAllowed = useAppSelector(isAllowedToAddedInCart);
-  const productInfo = useAppSelector(productQuantity(product.id));
+  const productInfoVarient = useAppSelector(productQuantity);
+  const productInfo = productInfoVarient(product.varientId as string);
 
   const isOutOfStock = product.status === "out_of_stock" || product.stock === 0;
+
+  const router = useRouter();
+
+  const handleVarientsSearch = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!product.id) return;
+    router.push(`/productVarients/${product.vendorId}/${product.slug}`);
+  };
 
   useEffect(() => {
     if (mode === "default") setWished(!!isFavorite);
@@ -117,7 +128,7 @@ export function ProductCard({
       setAdded(true);
       toast.success("Product Added Successfully to the cart.");
     } else {
-      dispatch(removeCartItem({ productId: data.productId }));
+      dispatch(removeCartItem({ varientId: data.varient.varientId }));
       setAdded(false);
       toast.success("Product removed from cart successfully !");
     }
@@ -206,8 +217,8 @@ export function ProductCard({
                   ? "Remove from wishlist"
                   : "Add to wishlist"
             }
-            className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90
-            flex items-center justify-center text-[#555] cursor-pointer p-0"
+            className={`absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90
+            flex items-center justify-center text-[#555] cursor-pointer p-0 ${mode === "favorite" ? "hover:bg-red-500 hover:text-white" : "hover:bg-green-500 hover:text-white"} transition-colors`}
           >
             {mode === "favorite" ? (
               <Trash2 size={14} />
@@ -233,6 +244,16 @@ export function ProductCard({
               </span>
             )}
           </div>
+          {true && (
+            <div
+              className="absolute bottom-8.5 right-2.5 hidden group-hover:block "
+              onClick={handleVarientsSearch}
+            >
+              <span className="bg-[rgba(0,37,14,0.6)] text-[#EAF3DE] text-[10px] px-2.25 py-0.75 rounded-full">
+                Explore Varients
+              </span>
+            </div>
+          )}
 
           {product.weightValue && product.weightUnit && (
             <div className="absolute bottom-2.5 right-2.5">
@@ -244,6 +265,9 @@ export function ProductCard({
           )}
         </div>
       </Link>
+
+      {/* <SaveBanner amount={100} /> */}
+      {/* )} */}
       <div className="px-3.5 py-3 flex items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="m-0 text-sm font-medium text-[#1a1a1a] line-clamp-1">
@@ -260,14 +284,10 @@ export function ProductCard({
           <QuantityControl
             value={productInfo.quantity}
             maxStock={productInfo.stock}
-            id={productInfo.productId}
-            // handleCart={(e: React.MouseEvent<HTMLButtonElement>) =>
-            //   handleAddToCart(e)
-            // }
+            id={productInfo.varientId}
           />
         )}
 
-        {/* {!added && ( */}
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock}
@@ -279,7 +299,6 @@ export function ProductCard({
         >
           {added ? <CheckIcon /> : <CartIcon />}
         </button>
-        {/* )} */}
       </div>
     </div>
   );

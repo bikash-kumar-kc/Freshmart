@@ -21,6 +21,7 @@ export function fromCategoryProduct(
     status: product.status,
     stock: variant?.stock ?? 0,
     vendorId: product.vendorId,
+    varientId: variant?.varientId,
   };
 }
 

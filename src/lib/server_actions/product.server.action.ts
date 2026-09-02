@@ -46,8 +46,11 @@ export interface IPRODUCTVARIENTS {
 
 export interface GetProductResult {
   product: IPRODUCTRESPONSE | null;
-  relatedProducts: IRequiredFieldTypes[];
-  filteredVariantRow: IPRODUCTVARIENTS;
+  relatedProducts?: IRequiredFieldTypes[];
+  filteredVariantRow?: IPRODUCTVARIENTS;
+  productVarients?: IPRODUCTVARIENTS[];
+  vendorProducts?: IRequiredFieldTypes[];
+  isFromProductVarients?: boolean;
 }
 
 export interface IRequiredFields {

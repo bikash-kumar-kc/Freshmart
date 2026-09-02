@@ -12,6 +12,7 @@ export const productInformationRequired = {
   isOffered: products.isOffered,
   vendorId: products.vendorId,
   type: products.type,
+  hasVarients: products.hasVarient,
   // variantId: productVariants.id,
 };
 
@@ -51,6 +52,7 @@ export async function getPopularProducts() {
       isOffered: products.isOffered,
       vendorId: products.vendorId,
       type: products.type,
+      hasVarients: products.hasVarient,
     })
     .from(products)
     .where(

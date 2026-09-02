@@ -21,6 +21,7 @@ const getCachedCategoryProducts = async (
       thumbnail: products.thumbnail,
       categoryName: products.category,
       stock: productVariants.stock,
+      hasVarients: products.hasVarient,
     })
     .from(products)
     .innerJoin(productVariants, eq(productVariants.productId, products.id))

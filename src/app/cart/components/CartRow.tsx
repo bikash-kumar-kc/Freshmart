@@ -77,14 +77,14 @@ function CartRow({ item }: { item: ICartItem }) {
             <QuantityControl
               value={item.quantity}
               maxStock={item.varient.stock}
-              id={item.productId}
+              id={item.varient.varientId}
             />
           </div>
 
           {/* remove */}
           <button
             onClick={() =>
-              dispatch(removeCartItem({ productId: item.productId }))
+              dispatch(removeCartItem({ varientId: item.varient.varientId }))
             }
             className="shrink-0 p-1.5 rounded-lg text-gray-300
               hover:text-red-500 hover:bg-red-50 transition-colors"

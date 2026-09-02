@@ -37,7 +37,7 @@ export function FavoriteCard({
       setAddedToCart(true);
       toast.success("To update the quantity, visit cart section ");
     } else {
-      dispatch(removeCartItem({ productId: data.productId }));
+      dispatch(removeCartItem({ varientId: data.varient.varientId }));
       setAddedToCart(false);
       toast.success("Product removed from cart successfully !");
     }

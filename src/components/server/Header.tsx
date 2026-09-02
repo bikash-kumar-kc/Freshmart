@@ -60,6 +60,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   }, [data?.user.id]);
 
   const handleNotificationStatusUpdate = async () => {
+  
     if (!data?.user.id) return;
     try {
       await updateNotificationsStatus(data?.user.id);
@@ -131,15 +132,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
     }
   }, [pathname]);
 
-  // useEffect(() => {
-  //   if (data?.user && data?.user.id) {
-  //     updateAuthStatus({
-  //       isLoggedIn: true,
-  //       userId: data?.user.id as string,
-  //       email: data?.user.email as string,
-  //     });
-  //   }
-  // }, [data?.user]);
+
 
   useEffect(() => {
     if (!storeCalled.current) {

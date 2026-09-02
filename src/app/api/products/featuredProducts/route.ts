@@ -18,6 +18,8 @@ export interface IProduct {
   isFeatured: boolean;
   category: string;
   stock: number;
+  hasVarients: boolean | null;
+  varientId: string;
 }
 export interface IFeaturedProductsData {
   featuredProducts: IProduct[];
@@ -40,6 +42,7 @@ const getFeaturedProducts = async () => {
       category: products.category,
       vendorId: products.vendorId,
       type: products.type,
+      hasVareints: products.hasVarient,
     })
     .from(products)
     .where(and(eq(products.isFeatured, true), eq(products.status, "active")));
@@ -57,6 +60,7 @@ const getFeaturedProducts = async () => {
       weightUnit: productVariants.weightUnit,
       price: productVariants.price,
       stock: productVariants.stock,
+      varientId: productVariants.id,
     })
     .from(productVariants)
     .where(inArray(productVariants.productId, arrayOfFeaturedProductIds));
@@ -81,6 +85,7 @@ const getFeaturedProducts = async () => {
       weightUnit: variant?.weightUnit ?? null,
       price: variant?.price ?? null,
       stock: variant?.stock ?? null,
+      varientId: variant?.varientId,
     };
   });
 

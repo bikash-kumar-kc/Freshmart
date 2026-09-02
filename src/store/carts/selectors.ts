@@ -27,6 +27,13 @@ export const isProductInCart =
     );
   };
 
+export const isVarientsExists = (state: RootState) => {
+  return (variantId: string): boolean => {
+    return state.carts.cartItems.cartItems.some(
+      (i) => i.varient.varientId === variantId,
+    );
+  };
+};
 export const fetchProductFromCart =
   (productId: string | undefined) => (state: RootState) => {
     if (!productId) return;
@@ -35,19 +42,20 @@ export const fetchProductFromCart =
     );
   };
 
-export const productQuantity =
-  (productId: string | undefined) => (state: RootState) => {
-    if (!productId) return;
-    const product = state.carts.cartItems.cartItems.filter(
-      (i) => i.productId === productId,
+export const productQuantity = (state: RootState) => {
+    return (varientId:string)=>{
+       if (!varientId) return;
+    const [product] = state.carts.cartItems.cartItems.filter(
+      (i) => i.varient.varientId === varientId,
     );
-    if (product.length === 0) return null;
+    if (!product) return null;
 
     return {
-      productId: product[0].productId,
-      quantity: product[0].quantity,
-      stock: product[0].varient.stock,
+      varientId: product.varient.varientId,
+      quantity: product.quantity,
+      stock: product.varient.stock,
     };
+    }
   };
 
 export const statusOfCart = createSelector(

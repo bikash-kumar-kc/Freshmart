@@ -1,5 +1,4 @@
-
-"use client"
+"use client";
 import { IAPIResponseTypes } from "../../server/getPopularProducts";
 interface IOfferedProduct {
   id: string;
@@ -14,6 +13,8 @@ interface IOfferedProduct {
   price: number | null;
   category: string;
   stock: number;
+  varientId: string;
+  hasVarients: boolean | null;
 }
 
 interface IOfferedProductApiResponse {
@@ -25,15 +26,9 @@ type IOfferedProductResponse = IAPIResponseTypes<IOfferedProductApiResponse>;
 export const getOfferedProducts =
   async (): Promise<IOfferedProductApiResponse> => {
     try {
-      const response = await fetch(
-        `/api/products/offerProducts`,
-      );
+      const response = await fetch(`/api/products/offerProducts`);
       if (!response.ok) {
-        
-
-        throw new Error(
-         "failed to get offered products"
-        );
+        throw new Error("failed to get offered products");
       }
       const data: IOfferedProductResponse = await response.json();
       return {
