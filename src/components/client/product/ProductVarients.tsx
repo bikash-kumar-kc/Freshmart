@@ -10,6 +10,7 @@ interface Props {
 
 export default function ProductVarientsDetails({ productPromise }: Props) {
   const { product, vendorProducts, productVarients } = use(productPromise);
+
   if (!product) notFound();
 
   return (
