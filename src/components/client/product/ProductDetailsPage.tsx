@@ -58,14 +58,11 @@ export default function ProductDetailPage({
   const isOutOfStock =
     product?.status === "inactive" || filteredVariantRow?.stock === 0;
 
-
-
-console.log(varients)
-
   const handleAddVarient = (data: ICartItem) => {
+    console.log(data);
     if (isOutOfStock) return;
     if (!data.varient.varientId) return;
-    if (!addedToCart) {
+    if (!isVarientExist(data.varient.varientId)) {
       dispatch(addCartItemVarient(data));
       setAddedToCart(true);
       toast.success("To update the quantity, visit cart section ");
