@@ -17,6 +17,7 @@ interface IPopularProducts {
   category: string;
   stock: number;
   hasVarients: boolean | null;
+  varientId: string;
 }
 
 interface IPopularProductsData {
