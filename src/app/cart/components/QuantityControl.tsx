@@ -19,43 +19,44 @@ function QuantityControl({
   const [quantity, setQuantity] = useState(String(value ?? 1));
   const dispatch = useAppDispatch();
   const statusCart = useAppSelector(statusOfCart);
-  const quantityInfo = useAppSelector(productQuantity(id));
+  const quantityInfoVarient = useAppSelector(productQuantity);
+  const quantityInfo = quantityInfoVarient(id);
 
-  const handleIncrement = (productId: string) => {
-    if (!productId) return;
-    if (quantityInfo?.productId === id) {
+  const handleIncrement = (varientId: string) => {
+    if (!varientId) return;
+    if (quantityInfo?.varientId === id) {
       const isStockAvailable = quantityInfo.quantity < maxStock;
       if (isStockAvailable) {
-        dispatch(updateCartItem({ productId: productId, type: "increment" }));
+        dispatch(updateCartItem({ varientId, type: "increment" }));
         setQuantity((prevs) => String(Number(prevs) + 1));
       }
     }
   };
 
-  const handleDecrement = (productId: string) => {
-    if (!productId) return;
-    if (quantityInfo?.productId === id) {
+  const handleDecrement = (varientId: string) => {
+    if (!varientId) return;
+    if (quantityInfo?.varientId === id) {
       if (quantity === "1") {
-        dispatch(removeCartItem({ productId }));
+        dispatch(removeCartItem({ varientId }));
         toast.success("Product removed from cart successfully !");
         return;
       }
-      dispatch(updateCartItem({ productId: productId, type: "decrement" }));
+      dispatch(updateCartItem({ varientId, type: "decrement" }));
       setQuantity((prevs) => String(Number(prevs) - 1));
+      console.log(quantity);
     }
   };
 
-  const handleChange = (productId: string, value: number) => {
-    if (!productId) return;
+  const handleChange = (varientId: string, value: number) => {
+    if (!varientId) return;
 
-    if (quantityInfo?.productId === id) {
+    if (quantityInfo?.varientId === id) {
       const isValueMoreThanStock = value > maxStock;
-      console.log("isValueMoreThanStock", isValueMoreThanStock);
       if (isValueMoreThanStock) return;
 
       dispatch(
         updateCartItem({
-          productId,
+          varientId,
           type: "onchange",
           value,
         }),
@@ -110,18 +111,11 @@ function QuantityControl({
               value = 1;
             }
 
-            // if (value < 1) {
-            //   if (handleCart) {
-            //     handleCart();
-            //   }
-            //   return;
-            // }
-
             setQuantity(String(value));
 
             dispatch(
               updateCartItem({
-                productId: id,
+                varientId: id,
                 type: "onchange",
                 value,
               }),
