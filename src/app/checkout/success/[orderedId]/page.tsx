@@ -63,7 +63,7 @@ const SuccessPage = () => {
         {orderId ? (
           <div className="flex gap-3 mt-2">
             <Link
-              href="/orders"
+              href="/orderstatus"
               className="px-4 py-2 bg-black text-white text-sm rounded-lg hover:bg-gray-800 transition"
             >
               View orders
