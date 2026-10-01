@@ -734,7 +734,12 @@ export const quotations = sqliteTable(
     isDelivered: integer("is_delivered", { mode: "boolean" })
       .notNull()
       .default(false),
+
     isLived: integer("is_lived", { mode: "boolean" }).notNull().default(false),
+
+    isCancelledByAdmin: integer("is_cancelled_by_admin", { mode: "boolean" })
+      .notNull()
+      .default(false),
 
     createdAt: text("created_at")
       .notNull()

@@ -1,0 +1,1 @@
+ALTER TABLE `quotations` ADD `is_cancelled_by_admin` integer DEFAULT false NOT NULL;
