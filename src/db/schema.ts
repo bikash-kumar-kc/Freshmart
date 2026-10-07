@@ -90,6 +90,10 @@ export const vendors = sqliteTable("vendors", {
     .notNull()
     .default(false),
 
+  isDeleted: integer("is_deleted", { mode: "boolean" })
+    .notNull()
+    .default(false),
+
   createdAt: text("created_at")
     .notNull()
     .default(sql`(current_timestamp)`),
