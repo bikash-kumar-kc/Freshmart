@@ -254,15 +254,23 @@ export const products = sqliteTable(
     id: text("id").primaryKey(),
 
     // vendor id...
-    vendorId: text("vendor_id").references(() => vendors.id),
+    // vendorId: text("vendor_id").references(() => vendors.id),
+    vendorId: text("vendor_id").references(() => vendors.id, {
+      onDelete: "cascade",
+    }),
     type: text("type", { enum: ["display", "inventory"] }),
     name: text("name").notNull(),
     slug: text("slug").notNull().unique(), // unique — see index below
-    categoryId: integer("category_id").references(() => category.id),
-    productNameId: integer("product_name_id").references(() => productName.id),
+    categoryId: integer("category_id").references(() => category.id, {
+      onDelete: "cascade",
+    }),
+    productNameId: integer("product_name_id").references(() => productName.id, {
+      onDelete: "cascade",
+    }),
     category: text("category").notNull(),
     packagingTypeId: integer("packaging_type_id").references(
       () => packagingType.id,
+      { onDelete: "cascade" },
     ),
 
     // local name for the product...
@@ -322,6 +330,9 @@ export const products = sqliteTable(
 
     status: text("status").notNull().default("active"),
     expireAt: text("expire_at").notNull(),
+    stockStatus: text("stock_status", {
+      enum: ["out_of_stock", "on_stock", "low_stock"]
+    }).default("on_stock"),
 
     // popularity check -------------
     popularityScore: real("popularity_score").notNull().default(0),
@@ -357,6 +368,7 @@ export const productVariants = sqliteTable(
     productId: text("product_id")
       .notNull()
       .references(() => products.id, { onDelete: "cascade" }),
+
     measurementTypeId: integer("measurement_type_id").references(
       () => measurementType.id,
     ),
