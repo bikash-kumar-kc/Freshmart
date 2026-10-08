@@ -176,6 +176,13 @@
       "when": 1791362495692,
       "tag": "0024_perpetual_black_bird",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "6",
+      "when": 1791465755471,
+      "tag": "0025_wet_omega_red",
+      "breakpoints": true
     }
   ]
 }
