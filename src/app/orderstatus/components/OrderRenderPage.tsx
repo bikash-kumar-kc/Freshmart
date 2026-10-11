@@ -18,6 +18,7 @@ type IorderStatus =
   | "cancelled";
 
 const OrderRenderPage = ({ orders }: IProps) => {
+  console.log(orders)
   const [status, setStatus] = useState<IorderStatus | "all">("all");
 
   const filtered =
