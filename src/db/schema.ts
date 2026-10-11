@@ -331,7 +331,7 @@ export const products = sqliteTable(
     status: text("status").notNull().default("active"),
     expireAt: text("expire_at").notNull(),
     stockStatus: text("stock_status", {
-      enum: ["out_of_stock", "on_stock", "low_stock"]
+      enum: ["out_of_stock", "on_stock", "low_stock"],
     }).default("on_stock"),
 
     // popularity check -------------
@@ -684,6 +684,7 @@ export const notificationSubTypeEnum = [
   "product_rejected",
   "admin_filed_quotation",
   "display_order_request",
+  "stock_update_requested",
 ] as const;
 
 export const notificationsVendorAdmin = sqliteTable(
