@@ -16,9 +16,15 @@ export const OrderCard = ({ order }: { order: IOrderType }) => {
 
   if (order.type === "inventory") {
     config =
-      STATUS_CONFIG[
-        order?.orderStatus as "pending" | "delivered" | "shipped" | "packaging"
-      ];
+      order?.orderStatus === "ontheway"
+        ? STATUS_CONFIG["shipped"]
+        : STATUS_CONFIG[
+            order?.orderStatus as
+              | "pending"
+              | "delivered"
+              | "shipped"
+              | "packaging"
+          ];
   } else {
     config =
       order.orderStatus === "packaging"
