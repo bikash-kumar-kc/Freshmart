@@ -6,6 +6,7 @@ import ToastContainerProvider from "./providers/ToastContainer";
 import Footer from "../components/server/Footer";
 import SessionProviderWrapper from "./providers/SessionProvider";
 import ReduxProvider from "./providers/ReduxProvider";
+import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default function RootLayout({
               <ToastContainerProvider>
                 {/* <NotificationLayout /> */}
                 {children}
+                <Analytics />
                 <Footer />
               </ToastContainerProvider>
             </ReduxProvider>
