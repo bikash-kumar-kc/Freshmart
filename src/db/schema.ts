@@ -411,20 +411,7 @@ import { relations, sql } from "drizzle-orm";
 import { real, integer, index } from "drizzle-orm/sqlite-core";
 import { text, sqliteTable } from "drizzle-orm/sqlite-core";
 import { NotificationType } from "../types/notificationTypes";
-// import { roleEnum } from "./utilis/role.constant";
 
-// user table...
-// root table every other tables links...
-// export const users = sqliteTable("users", {
-//   id: text("id").primaryKey(),
-//   email: text("email").notNull().unique(),
-//   name: text("name"),
-//   password: text("password").notNull(),
-//   pushSubscription: text("push_subscription"),
-//   createdAt: text("created_at")
-//     .notNull()
-//     .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
-// });
 
 export const roleEnum = ["user", "admin", "vendor"] as const;
 
