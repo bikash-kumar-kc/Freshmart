@@ -419,7 +419,6 @@ export interface IImage {
   fileId: string;
 }
 
-<<<<<<< HEAD
 // user table...
 // root table every other tables links...
 // export const users = sqliteTable("users", {
@@ -432,12 +431,6 @@ export interface IImage {
 //     .notNull()
 //     .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
 // });
-=======
-
-export const roleEnum = ["user", "admin", "vendor"] as const;
-
-export type Role = (typeof roleEnum)[number];
->>>>>>> a0fe7d2f2254c8d67fc67f921dc6cfd2bd4a4d9a
 
 // user-table-with-update-columns
 export const users = sqliteTable(
@@ -506,13 +499,10 @@ export const vendors = sqliteTable("vendors", {
     .notNull()
     .default(false),
 
-<<<<<<< HEAD
   isDeleted: integer("is_deleted", { mode: "boolean" })
     .notNull()
     .default(false),
 
-=======
->>>>>>> a0fe7d2f2254c8d67fc67f921dc6cfd2bd4a4d9a
   createdAt: text("created_at")
     .notNull()
     .default(sql`(current_timestamp)`),
@@ -590,11 +580,7 @@ export const productListing = sqliteTable(
     keywords: text("keywords"),
     description: text("description"),
     images: text("images", { mode: "json" })
-<<<<<<< HEAD
       .$type<IImage[]>()
-=======
-      .$type<string[]>()
->>>>>>> a0fe7d2f2254c8d67fc67f921dc6cfd2bd4a4d9a
       .default(sql`'[]'`),
 
     originCountry: text("origin_country").notNull(),
@@ -677,7 +663,6 @@ export const products = sqliteTable(
     id: text("id").primaryKey(),
 
     // vendor id...
-<<<<<<< HEAD
     // vendorId: text("vendor_id").references(() => vendors.id),
     vendorId: text("vendor_id").references(() => vendors.id, {
       onDelete: "cascade",
@@ -695,17 +680,6 @@ export const products = sqliteTable(
     packagingTypeId: integer("packaging_type_id").references(
       () => packagingType.id,
       { onDelete: "cascade" },
-=======
-    vendorId: text("vendor_id").references(() => vendors.id),
-    type: text("type", { enum: ["display", "inventory"] }),
-    name: text("name").notNull(),
-    slug: text("slug").notNull().unique(), // unique — see index below
-    categoryId: integer("category_id").references(() => category.id),
-    productNameId: integer("product_name_id").references(() => productName.id),
-    category: text("category").notNull(),
-    packagingTypeId: integer("packaging_type_id").references(
-      () => packagingType.id,
->>>>>>> a0fe7d2f2254c8d67fc67f921dc6cfd2bd4a4d9a
     ),
 
     // local name for the product...
@@ -807,9 +781,9 @@ export const productVariants = sqliteTable(
       () => measurementType.id,
     ),
 
-    measurementTypeId: integer("measurement_type_id").references(
-      () => measurementType.id,
-    ),
+    // measurementTypeId: integer("measurement_type_id").references(
+    //   () => measurementType.id,
+    // ),
 
     weightValue: real("weight_value").notNull(),
     weightUnit: text("weight_unit").notNull(),
@@ -1054,7 +1028,6 @@ export const orderItems = sqliteTable(
     // vendor id...
     vendorId: text("vendor_id").references(() => vendors.id),
 
-<<<<<<< HEAD
     // productlistingid...
     productListingId: integer("product_listing_id").references(
       () => productListing.id,
@@ -1068,17 +1041,6 @@ export const orderItems = sqliteTable(
     isRejectedByAdmin: integer("is_rejected_by_admin", { mode: "boolean" })
       .notNull()
       .default(false),
-=======
-    // // productlistingid...
-    // productListingId: integer("product_listing_id").references(
-    //   () => productListing.id,
-    //   { onDelete: "cascade" },
-    // ),
-
-    // isRejectedByAdmin: integer("is_rejected_by_admin", { mode: "boolean" })
-    //   .notNull()
-    //   .default(false),
->>>>>>> a0fe7d2f2254c8d67fc67f921dc6cfd2bd4a4d9a
   },
   (table) => [
     index("order_items_order_idx").on(table.orderId),
@@ -1134,10 +1096,7 @@ export const notificationSubTypeEnum = [
   "product_rejected",
   "admin_filed_quotation",
   "display_order_request",
-<<<<<<< HEAD
   "stock_update_requested",
-=======
->>>>>>> a0fe7d2f2254c8d67fc67f921dc6cfd2bd4a4d9a
 ] as const;
 
 export const notificationsVendorAdmin = sqliteTable(
@@ -1204,7 +1163,6 @@ export const quotations = sqliteTable(
     isDelivered: integer("is_delivered", { mode: "boolean" })
       .notNull()
       .default(false),
-<<<<<<< HEAD
 
     isLived: integer("is_lived", { mode: "boolean" }).notNull().default(false),
 
@@ -1212,10 +1170,6 @@ export const quotations = sqliteTable(
       .notNull()
       .default(false),
 
-=======
-    isLived: integer("is_lived", { mode: "boolean" }).notNull().default(false),
-
->>>>>>> a0fe7d2f2254c8d67fc67f921dc6cfd2bd4a4d9a
     createdAt: text("created_at")
       .notNull()
       .default(sql`(current_timestamp)`),
