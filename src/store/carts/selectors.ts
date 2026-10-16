@@ -27,6 +27,13 @@ export const isProductInCart =
     );
   };
 
+export const isVarientsExists = (state: RootState) => {
+  return (variantId: string): boolean => {
+    return state.carts.cartItems.cartItems.some(
+      (i) => i.varient.varientId === variantId,
+    );
+  };
+};
 export const fetchProductFromCart =
   (productId: string | undefined) => (state: RootState) => {
     if (!productId) return;
@@ -35,29 +42,21 @@ export const fetchProductFromCart =
     );
   };
 
-export const productQuantity =
-  (productId: string | undefined) => (state: RootState) => {
-    if (!productId) return;
-    const product = state.carts.cartItems.cartItems.filter(
-      (i) => i.productId === productId,
+export const productQuantity = (state: RootState) => {
+    return (varientId:string)=>{
+       if (!varientId) return;
+    const [product] = state.carts.cartItems.cartItems.filter(
+      (i) => i.varient.varientId === varientId,
     );
-    console.log("i am here..............")
-    if (product.length === 0) return null;
-    console.log("i am here too...")
-    return {
-      productId: product[0].productId,
-      quantity: product[0].quantity,
-      stock: product[0].varient.stock,
-    };
-  };
+    if (!product) return null;
 
-// export const statusOfCart = (state: RootState) => {
-//   if (!state) return;
-//   return {
-//     type: state.carts.type,
-//     orderId: state.carts.orderId,
-//   };
-// };
+    return {
+      varientId: product.varient.varientId,
+      quantity: product.quantity,
+      stock: product.varient.stock,
+    };
+    }
+  };
 
 export const statusOfCart = createSelector(
   [
@@ -98,30 +97,3 @@ export const totalCalculation = createSelector(
     };
   },
 );
-
-// export const totalCalculation = (state: RootState) => {
-//   if (!state) return;
-
-//   const totalPriceWithoutDiscount = state.carts.cartItems.cartItems.reduce(
-//     (totalPrice, i) => totalPrice + i.varient.price * i.quantity,
-//     0,
-//   );
-
-//   const totalDiscountAmount = state.carts.cartItems.cartItems.reduce(
-//     (totalDiscount, i) => {
-//       console.log(i.discountAmount);
-//       return totalDiscount + (i.discountAmount ?? 0) * i.quantity;
-//     },
-//     0,
-//   );
-
-//   return {
-//     tpwod: totalPriceWithoutDiscount,
-//     tda: totalDiscountAmount,
-//     tpwd: totalPriceWithoutDiscount - totalDiscountAmount,
-//     totalSaving:
-//       totalPriceWithoutDiscount -
-//       (totalPriceWithoutDiscount - totalDiscountAmount),
-//     isDeliveryCharged: totalPriceWithoutDiscount <= DELIVERYCHARGEDLIMIT,
-//   };
-// };

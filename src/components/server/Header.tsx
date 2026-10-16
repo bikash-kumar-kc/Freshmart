@@ -22,7 +22,7 @@ import {
 import { userUnfinishedCart } from "@/src/lib/server_actions/loadcart.server.action";
 import { ICartItem, setCart } from "@/src/store/carts/slice";
 import { getTotalOrdersCount } from "@/src/lib/server_actions/orders.server";
-// import { useAuthContext } from "@/src/context/AuthContext";
+import { usePathname } from "next/navigation";
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
@@ -30,23 +30,24 @@ interface IStateHandler {
 
 const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   const { data } = useSession();
-  // const { user, updateAuthStatus } = useAuthContext();
-  // console.log(data);
   const [count, setCount] = useState<number>(0);
   const [totalOrders, setTotalOrders] = useState(0);
-  // const changeNotificationRef = useRef<boolean | null>(null);
   const favoriteItems = useAppSelector(selectFavoriteCount) ?? 0;
   const itemsInCart = useAppSelector(totalItemsCart);
   const dispatch = useAppDispatch();
   const allCartProducts = useAppSelector(getAllItemsFromCart);
   const storeCalled = useRef<boolean | null>(null);
 
+  const [showHeader, setShowHeader] = useState(true);
+  const lastScrollY = useRef(0);
+
+  const pathname = usePathname();
+
   const handleUnreadNotification = useCallback(async () => {
     try {
       if (data?.user.id) {
         const { totalCount } = await countUnreadNotifications(data?.user.id);
         setCount(totalCount);
-        console.log("Successfully, fetched unread notification !");
       }
       return;
     } catch (error: unknown) {
@@ -55,17 +56,15 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
         return;
       }
       toast.error("Failed to read unread notification !");
-      console.log(error);
     }
   }, [data?.user.id]);
 
   const handleNotificationStatusUpdate = async () => {
-    // if (changeNotificationRef.current) return;
+  
     if (!data?.user.id) return;
     try {
       await updateNotificationsStatus(data?.user.id);
       setCount(0);
-      // changeNotificationRef.current = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -100,15 +99,40 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
     setMounted(true);
   }, []);
 
-  // useEffect(() => {
-  //   if (data?.user && data?.user.id) {
-  //     updateAuthStatus({
-  //       isLoggedIn: true,
-  //       userId: data?.user.id as string,
-  //       email: data?.user.email as string,
-  //     });
-  //   }
-  // }, [data?.user]);
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Always show near the top
+      if (currentScrollY < 80) {
+        setShowHeader(true);
+      }
+      // User scrolling down
+      else if (currentScrollY > lastScrollY.current) {
+        setShowHeader(false);
+      }
+      // User scrolling up
+      else {
+        setShowHeader(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (pathname) {
+      setShowHeader(true);
+    }
+  }, [pathname]);
+
+
 
   useEffect(() => {
     if (!storeCalled.current) {
@@ -132,23 +156,25 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
 
   return (
     <div
-      className="relative w-full px-4 py-3 flex items-center justify-between gap-8
-             bg-green-400 backdrop-blur-xl shadow-sm z-80
-             border-b border-white/20"
+      className={`fixed top-0 left-0 right-0 w-full px-4 py-3
+               flex items-center justify-between gap-8
+               bg-green-400 backdrop-blur-xl shadow-sm
+               transition-transform duration-300
+               border-b border-white/20 z-50 ${showHeader ? "translate-y-0" : "-translate-y-full"}`}
     >
       <Link href={"/"}>
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex items-center gap-2 mb-1 lg:ml-25">
           <span className="text-2xl ">🌿</span>
           <span className="text-lg font-extrabold italic text-white tracking-wider">
             FRESHMART
           </span>
         </div>
       </Link>
-      <div className="flex-1">
-        <SearchBar />
-      </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 lg:mr-27 ">
+        <div>
+          <SearchBar />
+        </div>
         <div className="relative group">
           <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
             <IoIosNotifications

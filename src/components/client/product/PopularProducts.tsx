@@ -1,8 +1,6 @@
 "use client";
 
 import { useGetPopularProducts } from "@/src/hooks/useGetPopularProducts";
-// import { ProductCard } from "../PopularCard";
-import Link from "next/link";
 import { ProductCard } from "./unifiedProductCard/UnifiedProductCard";
 import { fromFlatProduct } from "./unifiedProductCard/normalizeProduct";
 
@@ -10,7 +8,6 @@ const PopularProducts = () => {
   const { data: popularProductsInfo, isError, error } = useGetPopularProducts();
 
   const popularProducts = popularProductsInfo?.popularProducts;
-
 
   if (isError) {
     return <p className="text-red-600 text-center">{error.message}</p>;
@@ -31,10 +28,7 @@ const PopularProducts = () => {
         }}
       >
         {popularProducts.map((p) => (
-          <Link key={p.id} href={`/product/${p.category}/${p.slug}`}>
-            {/* <ProductCard product={p} type="Popular" /> */}
-            <ProductCard product={fromFlatProduct(p)} />
-          </Link>
+          <ProductCard key={p.id} product={fromFlatProduct(p)} />
         ))}
       </div>
     </div>

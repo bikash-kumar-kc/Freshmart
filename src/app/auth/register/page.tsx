@@ -8,7 +8,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getLocally, saveLocally } from "@/src/lib/localstorage/localstorage";
 import { toast } from "react-toastify";
 import { Suspense, useEffect, useState } from "react";
-import { registerUser } from "@/src/lib/server_actions/auth.server.action";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import useRegister from "@/src/hooks/auth/useRegister";
 
 const schemaForRegister = z
   .object({
@@ -32,6 +33,9 @@ const RegisterForm = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
 
@@ -54,6 +58,7 @@ const RegisterForm = () => {
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -64,11 +69,17 @@ const RegisterForm = () => {
     resolver: zodResolver(schemaForRegister),
   });
 
+  const registerUser = useRegister();
+
   const handleSubmitHandler = async (data: IREGISTERTYPES) => {
     setLoading(true);
     try {
-      const user = await registerUser(data);
-      console.log("User created successfully! userId: ", user.id);
+      await registerUser.mutateAsync({
+        email: data.email,
+        password: data.password,
+        isVendor: false,
+      });
+
       saveLocally({
         type: "auth",
         data: { auth: { email: data.email, password: data.password } },
@@ -77,12 +88,12 @@ const RegisterForm = () => {
         router.push(`/auth/login/?redirect=${redirect}`);
         return;
       }
-      router.push("/auth/login");
+      router.push(`/auth/registration-success?email=${data.email}`);
       reset();
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log("Failed to create user ! msg: ", error.message);
-        toast.error(error.message);
+        toast.error("User already exists with this email");
         return;
       }
       console.log(error);
@@ -95,12 +106,14 @@ const RegisterForm = () => {
     <>
       <div className="w-full lg:w-[40%] flex flex-col justify-center px-8 sm:px-12 bg-amber-50">
         <div className="mb-10 flex flex-col items-center">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl">🌿</span>
-            <span className="text-lg font-bold text-green-700 tracking-wider">
-              FRESHMART
-            </span>
-          </div>
+          <Link href={"/"}>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-2xl">🌿</span>
+              <span className="text-lg font-bold text-green-700 tracking-wider">
+                FRESHMART
+              </span>
+            </div>
+          </Link>
           <p className="text-gray-400 text-sm">Create your account</p>
         </div>
 
@@ -118,10 +131,10 @@ const RegisterForm = () => {
             <input
               type="text"
               id="email"
-              placeholder="enter your email..."
+              placeholder="Enter your email..."
               {...register("email")}
               autoComplete={"off"}
-              className="w-full border border-gray-200 rounded-sm px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+              className="w-full border border-gray-200 rounded-sm px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-300 outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
             />
             {errors.email?.message && (
               <p className="text-red-500 text-xs">{errors.email.message}</p>
@@ -129,40 +142,81 @@ const RegisterForm = () => {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="enter your password..."
-              {...register("password")}
-              autoComplete={"off"}
-              className="w-full border border-gray-200 rounded-sm px-3.5 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
-            />
+            <div className="flex justify-between items-center">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+            </div>
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                placeholder="Enter your password..."
+                {...register("password")}
+                className="w-full border border-gray-200 rounded-sm px-3.5 py-2.5 pr-11 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition placeholder:text-gray-300"
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setShowPassword((prev) =>
+                    getValues("password").trim() ? !prev : prev,
+                  )
+                }
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </button>
+            </div>
+
             {errors.password?.message && (
               <p className="text-red-500 text-xs">{errors.password.message}</p>
             )}
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="confirmPassword"
-              className="text-sm font-medium text-gray-700"
-            >
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              placeholder="confirm your password"
-              {...register("confirmPassword")}
-              autoComplete={"off"}
-              className="w-full border border-gray-200 rounded-sm px-3.5 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
-            />
+            <div className="flex justify-between items-center">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
+                Confirm Password
+              </label>
+            </div>
+
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                placeholder="Confirm your password"
+                {...register("confirmPassword")}
+                autoComplete={"off"}
+                className="w-full border border-gray-200 rounded-sm px-3.5 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition placeholder:text-gray-300"
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setShowConfirmPassword((prev) =>
+                    getValues("confirmPassword").trim() ? !prev : prev,
+                  )
+                }
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showConfirmPassword ? (
+                  <FaEyeSlash size={18} />
+                ) : (
+                  <FaEye size={18} />
+                )}
+              </button>
+            </div>
+
             {errors.confirmPassword?.message && (
               <p className="text-red-500 text-xs">
                 {errors.confirmPassword.message}

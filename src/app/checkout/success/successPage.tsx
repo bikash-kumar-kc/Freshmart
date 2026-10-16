@@ -78,7 +78,7 @@ export default async function SuccessPage(orderId:string) {
         {orderId ? (
           <div className="flex gap-3 mt-2">
             <Link
-              href="/orders"
+              href="/orderstatus"
               className="px-4 py-2 bg-black text-white text-sm rounded-lg hover:bg-gray-800 transition"
             >
               View orders
@@ -94,7 +94,7 @@ export default async function SuccessPage(orderId:string) {
           <div>
             <p>Your order is processing...</p>
             <Link
-              href="/orders"
+              href="/orderstatus"
               className="px-4 py-2 bg-orange-400 text-white text-sm rounded-lg hover:bg-orange-300 transition"
             >
               Visit to order history

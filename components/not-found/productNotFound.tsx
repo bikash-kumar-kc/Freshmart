@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const ProductNotFound = () => {
   return (
-    <div className="w-full max-w-7xl  mx-auto bg-amber-50">
+    <div className="w-full   mx-auto bg-amber-50">
       <div className=" min-h-screen flex justify-center items-center">
         <div className="flex flex-col gap-2">
           <p className="text-black text-bold text-xl text-center tracking-wider">Products not found</p>

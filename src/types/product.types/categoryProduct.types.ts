@@ -33,4 +33,6 @@ export interface ICategoryProducts {
   popularityScore: number;
   createdAt: string;
   updatedAt: string;
+  vendorId?: string | null;
+  type?: "inventory" | "display" | null;
 }

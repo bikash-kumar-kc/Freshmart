@@ -1,4 +1,3 @@
-// src/types/product-card.types.ts
 export interface IUnifiedProduct {
   id: string;
   slug: string;
@@ -13,4 +12,8 @@ export interface IUnifiedProduct {
   isMostPopular?: boolean;
   status?: string;
   stock: number;
+  vendorId?: string | null;
+  type?: "inventory" | "display" | null;
+  varientId?: string;
+  hasVarients?: boolean | null;
 }

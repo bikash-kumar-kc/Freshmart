@@ -84,18 +84,19 @@ const FooterColumn = ({
 const Footer = () => {
   return (
     <footer className=" w-full   bg-[#0a1502] text-green-200">
-      {/* ── Main grid ────────────────────────────────────────────────── */}
       <div className=" px-6 pt-12 pb-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center place-items-center gap-10">
           {/* Brand + social */}
           <div className="flex flex-col gap-4">
             {/* Logo */}
-            <div className="flex items-center gap-2">
-              <span className="text-xl">🌿</span>
-              <span className="text-[17px] font-medium text-green-50 tracking-tight">
-                FreshMart
-              </span>
-            </div>
+            <Link href="/">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🌿</span>
+                <span className="text-[17px] font-medium text-green-50 tracking-tight">
+                  FreshMart
+                </span>
+              </div>
+            </Link>
 
             {/* Tagline */}
             <p className="text-[13px] text-green-400 leading-relaxed max-w-55">

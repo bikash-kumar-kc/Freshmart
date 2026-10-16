@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Header from "../server/Header";
 import NotificationPanel from "../server/notificationPanel";
+// import { usePathname } from "next/navigation";
 
 export default function NotificationLayout() {
   const [isOpen, setIsOpen] = useState(false);
+  // const pathname = usePathname();
 
   const notificationRef = useRef<HTMLDivElement>(null);
 
@@ -30,8 +32,14 @@ export default function NotificationLayout() {
     };
   }, []);
 
+  // useEffect(() => {
+  //   if (pathname) {
+  //     setIsOpen(true);
+  //   }
+  // }, [pathname]);
+
   return (
-    <div ref={notificationRef} className="w-full">
+    <div ref={notificationRef} className="w-full mb-15">
       <Header handleNotificationPanelOpen={handleNotificationPanelOpen} />
 
       <NotificationPanel isOpen={isOpen} />

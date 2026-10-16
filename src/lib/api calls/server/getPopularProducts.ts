@@ -1,4 +1,4 @@
-"use client"
+"use client";
 export interface IAPIResponseTypes<T> {
   success: boolean;
   data: T;
@@ -14,8 +14,10 @@ interface IPopularProducts {
   weightValue: number;
   weightUnit: string;
   price: number | null;
-  category:string;
-  stock:number;
+  category: string;
+  stock: number;
+  hasVarients: boolean | null;
+  varientId: string;
 }
 
 interface IPopularProductsData {
@@ -27,8 +29,8 @@ type IPopularProductResponse = IAPIResponseTypes<IPopularProductsData>;
 
 export const getPopularProducts = async (): Promise<IPopularProductsData> => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  if(!API_URL){
-    throw new Error("Failed to get Base api url")
+  if (!API_URL) {
+    throw new Error("Failed to get Base api url");
   }
   const res = await fetch(`${API_URL}api/products/popularProducts`);
 
@@ -38,8 +40,6 @@ export const getPopularProducts = async (): Promise<IPopularProductsData> => {
 
   const data: IPopularProductResponse = await res.json();
 
-  console.log("data")
-  console.log(data)
   return {
     popularProducts: data.data.popularProducts,
     totalPopularProducts: data.data.totalPopularProducts,

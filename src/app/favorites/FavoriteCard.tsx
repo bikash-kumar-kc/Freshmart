@@ -37,7 +37,7 @@ export function FavoriteCard({
       setAddedToCart(true);
       toast.success("To update the quantity, visit cart section ");
     } else {
-      dispatch(removeCartItem({ productId: data.productId }));
+      dispatch(removeCartItem({ varientId: data.varient.varientId }));
       setAddedToCart(false);
       toast.success("Product removed from cart successfully !");
     }
@@ -136,6 +136,7 @@ export function FavoriteCard({
               const requiredDataToAddedOnCart: ICartItem = {
                 productId: product.id,
                 varient: {
+                  varientId: product.varientId as string,
                   weightUnit: product.weightUnit!,
                   weightValue: product.weightValue!,
                   price: product.price!,

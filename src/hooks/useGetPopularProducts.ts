@@ -9,9 +9,4 @@ export const useGetPopularProducts = () => {
   });
 };
 
-// export const useGetPopularProducts = () => {
-//   return useQuery({
-//     queryKey: [QUERY_KEYS.POPULAR_PRODUCTS],
-//     queryFn: getPopularProducts,
-//   });
-// };
+

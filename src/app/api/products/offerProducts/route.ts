@@ -18,6 +18,9 @@ export interface IOfferedProduct {
   weightUnit: string | null;
   price: number | null;
   stock: number | null;
+  vendorId?: string | null;
+  type?: "inventory" | "display" | null;
+  varientId: string;
 }
 
 const getOfferedproducts = async () => {
@@ -47,6 +50,7 @@ const getOfferedproducts = async () => {
       weightUnit: productVariants.weightUnit,
       price: productVariants.price,
       stock: productVariants.stock,
+      varientId: productVariants.id,
     })
     .from(productVariants)
     .where(inArray(productVariants.productId, productIds));
@@ -69,6 +73,7 @@ const getOfferedproducts = async () => {
       price: variant?.price ?? null,
       isOutOfStock: variant?.stock === 0 ? true : false,
       stock: variant?.stock ?? null,
+      varientId: variant?.varientId as string,
     };
   });
 

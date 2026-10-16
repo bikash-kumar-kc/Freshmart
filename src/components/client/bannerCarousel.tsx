@@ -32,16 +32,16 @@ const BannerCarousel = () => {
           return (
             <CarouselItem
   key={index}
-  className="basis-full w-300 h-125 rounded-2xl"
+  className="basis-full w-300 h-125 rounded-[10px]"
 >
-  <div className="relative w-full h-full rounded-2xl overflow-hidden">
+  <div className="relative w-full h-full rounded-[10px] overflow-hidden">
     <Image
       src="/pic_2_banner.jpg"
       alt={prod.thumbnail as string}
       fill
       priority={index === 0}
       sizes="1200px"
-      className="object-cover rounded-2xl"
+      className="object-cover rounded-[10px]"
     />
 
     <div className="absolute left-8 top-1/2 -translate-y-8 z-10">

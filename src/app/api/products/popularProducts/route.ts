@@ -10,6 +10,10 @@ export const productInformationRequired = {
   name: products.name,
   description: products.description,
   isOffered: products.isOffered,
+  vendorId: products.vendorId,
+  type: products.type,
+  hasVarients: products.hasVarient,
+  // variantId: productVariants.id,
 };
 
 export interface IErrorTypes {
@@ -29,6 +33,8 @@ export interface IPopularProduct {
   price: number | null;
   category: string;
   stock: number;
+  vendorId?: string | null;
+  type?: "inventory" | "display" | null;
 }
 
 export async function getPopularProducts() {
@@ -44,6 +50,9 @@ export async function getPopularProducts() {
       description: products.description,
       category: products.category,
       isOffered: products.isOffered,
+      vendorId: products.vendorId,
+      type: products.type,
+      hasVarients: products.hasVarient,
     })
     .from(products)
     .where(
@@ -58,6 +67,7 @@ export async function getPopularProducts() {
 
   const variants = await db
     .select({
+      id: productVariants.id,
       productId: productVariants.productId,
       weightValue: productVariants.weightValue,
       weightUnit: productVariants.weightUnit,
@@ -86,12 +96,12 @@ export async function getPopularProducts() {
       weightUnit: variant?.weightUnit ?? null,
       price: variant?.price ?? null,
       stock: variant?.stock ?? 0,
+      varientId: variant?.id,
     };
   });
 }
 
 export async function GET() {
-
   try {
     const response = await getPopularProducts();
 
@@ -119,8 +129,8 @@ export async function GET() {
       },
       { status: 200 },
     );
-  } catch (error) {
-    console.error("Failed to fetch popular products:", error);
+  } catch {
+    // console.error("Failed to fetch popular products:", error);
     return Response.json(
       {
         success: false,

@@ -4,4 +4,5 @@ export interface ICategoriesProductReponse {
   productName: string;
   thumbnail: string;
   categoryName: string;
+  hasVarients: boolean | null;
 }

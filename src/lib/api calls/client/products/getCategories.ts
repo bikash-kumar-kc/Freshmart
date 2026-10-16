@@ -1,5 +1,3 @@
-
-
 import { IAPIResponseTypes } from "../../server/getPopularProducts";
 import { manageError } from "@/src/utils/response";
 
@@ -22,9 +20,7 @@ type ICategoriesResponse = IAPIResponseTypes<ICategoriesResponseTypes>;
 
 export const getCategories = async (): Promise<CategoriesResult> => {
   try {
-    console.log("here in getcategories !");
     const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL;
-    console.log("Base_api_url: ", BASE_API_URL);
 
     if (!BASE_API_URL) throw new Error("Failed to get base url !");
     const response = await fetch(`/api/products/categories`);
@@ -48,7 +44,6 @@ export const getCategories = async (): Promise<CategoriesResult> => {
     }
 
     const filteredCategories = categories.map((c) => c.category);
-    console.log(filteredCategories);
     return {
       categories: filteredCategories,
       total: data.data.total,
@@ -56,6 +51,6 @@ export const getCategories = async (): Promise<CategoriesResult> => {
   } catch (error: unknown) {
     const errRes = manageError(error);
     console.log(errRes ? errRes : "Failed to fetch categories");
-    throw new Error(errRes?? "Failed to fetch categories");
+    throw new Error(errRes ?? "Failed to fetch categories");
   }
 };

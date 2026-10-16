@@ -8,7 +8,11 @@ export interface ISuggestionTypes {
   showLoading: boolean;
   RemoveSuggestion: () => void;
 }
-const Suggestion = ({ suggestions, showLoading,RemoveSuggestion }: ISuggestionTypes) => {
+const Suggestion = ({
+  suggestions,
+  showLoading,
+  RemoveSuggestion,
+}: ISuggestionTypes) => {
   const router = useRouter();
   const handleOnClick = useCallback(
     (slug: string, category: string) => {
@@ -55,7 +59,9 @@ const Suggestion = ({ suggestions, showLoading,RemoveSuggestion }: ISuggestionTy
             >
               <div className="relative w-8 h-8">
                 <Image
-                  src={suggestion.thumbnail}
+                  src={
+                    "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=600&q=80"
+                  }
                   alt={suggestion.productName}
                   fill
                   className="rounded-full"

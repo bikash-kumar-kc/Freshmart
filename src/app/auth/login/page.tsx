@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getLocally } from "@/src/lib/localstorage/localstorage";
 import { toast } from "react-toastify";
 import { Suspense, useEffect, useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 
 const schemaForSession = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -26,6 +27,8 @@ const SignInForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [localAuth, setLocalAuth] = useState<{
@@ -46,6 +49,7 @@ const SignInForm = () => {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: { email: localEmail ?? "", password: localPassword ?? "" },
@@ -89,21 +93,21 @@ const SignInForm = () => {
     <>
       <div className="w-full lg:w-[40%] flex flex-col justify-center px-8 sm:px-12 bg-amber-50">
         <div className="mb-10 flex flex-col items-center">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl">🌿</span>
-            <span className="text-lg font-bold text-green-700 tracking-wider">
-              FRESHMART
-            </span>
-          </div>
+          <Link href={"/"}>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-2xl">🌿</span>
+              <span className="text-lg font-bold text-green-700 tracking-wider">
+                FRESHMART
+              </span>
+            </div>
+          </Link>
           <p className="text-gray-400 text-sm">Sign in to your account</p>
         </div>
 
-        {/* Form */}
         <form
           onSubmit={handleSubmit(handleSubmitHandler)}
           className="flex flex-col gap-5"
         >
-          {/* Email */}
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="email"
@@ -114,9 +118,9 @@ const SignInForm = () => {
             <input
               type="text"
               id="email"
-              placeholder="enter your email..."
+              placeholder="Enter your email..."
               {...register("email")}
-              className="w-full border border-gray-200 rounded-sm px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+              className="w-full border border-gray-200 rounded-sm px-3.5 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition placeholder:text-gray-300"
             />
             {errors.email?.message && (
               <p className="text-red-500 text-xs text-center">
@@ -125,7 +129,6 @@ const SignInForm = () => {
             )}
           </div>
 
-          {/* Password */}
           <div className="flex flex-col gap-1.5">
             <div className="flex justify-between items-center">
               <label
@@ -135,25 +138,41 @@ const SignInForm = () => {
                 Password
               </label>
               <Link
-                href="/forgot-password"
+                href="/auth/requestPasswordReset"
                 className="text-xs text-green-600 hover:text-green-700 transition-colors"
               >
                 Forgot password?
               </Link>
             </div>
-            <input
-              type="password"
-              id="password"
-              placeholder="enter your password..."
-              {...register("password")}
-              className="w-full border border-gray-200 rounded-sm px-3.5 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
-            />
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                placeholder="Enter your password..."
+                {...register("password")}
+                className="w-full border border-gray-200 rounded-sm px-3.5 py-2.5 pr-11 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition placeholder:text-gray-300"
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setShowPassword((prev) =>
+                    getValues("password").trim() ? !prev : prev,
+                  )
+                }
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </button>
+            </div>
+
             {errors.password?.message && (
               <p className="text-red-500 text-xs">{errors.password.message}</p>
             )}
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white text-sm font-semibold py-2.5 rounded-sm transition-colors duration-200 mt-1"
@@ -162,7 +181,6 @@ const SignInForm = () => {
           </button>
         </form>
 
-        {/* Register link */}
         <p className="text-gray-500 text-sm mt-6 text-center">
           Don&apos;t have an account?{" "}
           <Link
@@ -179,7 +197,7 @@ const SignInForm = () => {
 const Page = () => {
   return (
     <Suspense fallback={<p>Signin form loading...</p>}>
-        <SignInForm />
+      <SignInForm />
     </Suspense>
   );
 };

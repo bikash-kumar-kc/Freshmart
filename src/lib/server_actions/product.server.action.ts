@@ -33,6 +33,7 @@ export interface IPRODUCTRESPONSE {
   featuredBanner: string[];
   status: string;
   expireAt: string;
+  type: "display" | "inventory";
 }
 
 export interface IPRODUCTVARIENTS {
@@ -45,8 +46,11 @@ export interface IPRODUCTVARIENTS {
 
 export interface GetProductResult {
   product: IPRODUCTRESPONSE | null;
-  relatedProducts: IRequiredFieldTypes[];
-  filteredVariantRow: IPRODUCTVARIENTS;
+  relatedProducts?: IRequiredFieldTypes[];
+  filteredVariantRow?: IPRODUCTVARIENTS;
+  productVarients?: IPRODUCTVARIENTS[];
+  vendorProducts?: IRequiredFieldTypes[];
+  isFromProductVarients?: boolean;
 }
 
 export interface IRequiredFields {
@@ -168,8 +172,13 @@ export async function getProductByCategorySlug(
       cheapestByProductId.values(),
     );
 
+    console.log(product);
+
     return {
-      product,
+      product: {
+        ...product,
+        type: product.type ?? "inventory",
+      },
       relatedProducts: requiredFieldsArray,
       filteredVariantRow,
     };
