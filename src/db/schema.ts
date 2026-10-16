@@ -784,7 +784,7 @@ export const productVariants = sqliteTable(
     // measurementTypeId: integer("measurement_type_id").references(
     //   () => measurementType.id,
     // ),
-
+    // checking whether it deploy or skip deploy
     weightValue: real("weight_value").notNull(),
     weightUnit: text("weight_unit").notNull(),
 
