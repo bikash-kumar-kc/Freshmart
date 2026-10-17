@@ -11,7 +11,7 @@ export const ImageGallery = ({
 }: {
   images: string[];
   name: string;
-  id:string;
+  id: string;
 }) => {
   const [activeIdx, setActiveIdx] = useState(0);
   const [zoomed, setZoomed] = useState(false);
@@ -26,16 +26,14 @@ export const ImageGallery = ({
     setZoomPos({ x, y });
   };
 
-const spinachImages = [
-  "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80",
-  "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=600&q=80",
-  "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80",
- 
-];
-const isFavorite = useAppSelector(selectIsFavorite(id));
+  const spinachImages = [
+    "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80",
+  ];
+  const isFavorite = useAppSelector(selectIsFavorite(id));
   return (
     <div className="flex flex-col gap-3">
-
       <div
         ref={mainRef}
         className="relative w-full aspect-4/3 rounded-md overflow-hidden
@@ -49,7 +47,7 @@ const isFavorite = useAppSelector(selectIsFavorite(id));
           alt={`${name} — image ${activeIdx + 1}`}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          priority
+          priority={activeIdx === 0}
           className="object-cover transition-transform duration-200"
           style={{
             transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
@@ -57,13 +55,13 @@ const isFavorite = useAppSelector(selectIsFavorite(id));
           }}
         />
 
-         {isFavorite && (
-                  <span
-                    className={`absolute top-0 right-1  text-white text-xs font-boldpx-2 py-1 rounded-bl-lgshadow-md`}
-                  >
-                    <HeartIcon filled={true} />
-                  </span>
-                )}
+        {isFavorite && (
+          <span
+            className={`absolute top-0 right-1  text-white text-xs font-boldpx-2 py-1 rounded-bl-lgshadow-md`}
+          >
+            <HeartIcon filled={true} />
+          </span>
+        )}
 
         {/* zoom hint */}
         {!zoomed && (
