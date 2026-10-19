@@ -26,48 +26,30 @@ const BannerCarousel = () => {
         }),
       ]}
     >
-      <CarouselContent>
+      <CarouselContent className="ml-0 sm:-ml-4">
         {FeaturedProducts?.map((prod, index) => {
-        
           return (
-            <CarouselItem
-  key={index}
-  className="basis-full w-300 h-125 rounded-[10px]"
->
-  <div className="relative w-full h-full rounded-[10px] overflow-hidden">
-    <Image
-      src="/pic_2_banner.jpg"
-      alt={prod.thumbnail as string}
-      fill
-      priority={index === 0}
-      sizes="1200px"
-      className="object-cover rounded-[10px]"
-    />
+            <CarouselItem key={index} className="basis-full pl-0 sm:pl-4 h-125">
+              <div className="relative w-full h-full overflow-hidden rounded-none lg:rounded-[10px]">
+                <Image
+                  src="/pic_2_banner.jpg"
+                  alt={prod.thumbnail as string}
+                  fill
+                  priority={index === 0}
+                  sizes="(max-width: 1280px) 100vw, 1280px"
+                  className="object-cover rounded-none lg:rounded-[10px]"
+                />
 
-    <div className="absolute left-8 top-1/2 -translate-y-8 z-10">
-      {/* <BannerProductCard
-        thumbnail=""
-        productName={prod.name}
-        category={prod.category}
-        slug={prod.slug}
-        isFeatured={prod.isFeatured}
-        weightValue={prod.weightValue!}
-        weightUnit={prod.weightUnit!}
-        price={prod.price!}
-        productId={prod.productId}
-        stock={prod.stock}
-      /> */}
-
-      <ProductCard product={fromFlatProduct(prod)} />
-    </div>
-  </div>
-</CarouselItem>
+                <div className="z-10 origin-bottom-left  absolute left-8 bottom-5 flex gap-4">
+                  <ProductCard product={fromFlatProduct(prod)} />
+                </div>
+              </div>
+            </CarouselItem>
           );
         })}
       </CarouselContent>
-      <CarouselPrevious className="border-green-200 bg-green-50 text-green-700 hover:bg-green-100 hover:border-green-300" />
-
-      <CarouselNext className="border-green-200 bg-green-50 text-green-700 hover:bg-green-100 hover:border-green-300" />
+      <CarouselPrevious className="hidden md:inline-flex border-green-200 bg-green-50 text-green-700 hover:bg-green-100 hover:border-green-300" />
+      <CarouselNext className="hidden md:inline-flex border-green-200 bg-green-50 text-green-700 hover:bg-green-100 hover:border-green-300" />
     </Carousel>
   );
 };
