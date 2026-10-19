@@ -14,7 +14,7 @@ export default function ImageSlider() {
   const [current, setCurrent] = useState(0);
 
   return (
-    <div className="relative w-full my-8 ">
+    <div className="relative w-full hidden lg:block my-8 ">
       {/* Image */}
       <div className="relative w-full h-37.5 shadow-md">
         <Image
