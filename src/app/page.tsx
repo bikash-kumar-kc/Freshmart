@@ -16,7 +16,7 @@ export default function Home() {
     <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 ">
        
           {/* <NotificationLayout /> */}
-          <main className="w-full max-w-7xl mx-auto mt-10">
+          <main className="w-full max-w-7xl mx-auto lg:mt-10">
             <Suspense fallback={<BannerCarouselSkeleton />}>
               <BannerCarousel />
             </Suspense>
