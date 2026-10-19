@@ -224,3 +224,41 @@
     -moz-appearance: textfield;
   }
 }
+
+
+
+.h-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 0 16px 8px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.h-scroll::-webkit-scrollbar {
+  display: none;
+}
+.h-scroll > * {
+  flex: 0 0 70%;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 640px) {
+  .h-scroll {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    overflow: visible;
+    padding: 0 16px;
+  }
+  .h-scroll > * {
+    flex: initial;
+  }
+}
+
+@media (min-width: 1024px) {
+  .h-scroll {
+    padding: 0;
+  }
+}
