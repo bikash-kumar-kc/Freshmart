@@ -83,7 +83,7 @@ const FooterColumn = ({
 
 const Footer = () => {
   return (
-    <footer className=" w-full   bg-[#0a1502] text-green-200">
+    <footer className=" w-full   bg-[#0a1502] text-green-200 pb-20 lg:pb-0">
       <div className=" px-6 pt-12 pb-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center place-items-center gap-10">
           {/* Brand + social */}
