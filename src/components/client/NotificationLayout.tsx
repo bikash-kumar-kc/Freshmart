@@ -39,7 +39,7 @@ export default function NotificationLayout() {
   // }, [pathname]);
 
   return (
-    <div ref={notificationRef} className="w-full mb-15">
+    <div ref={notificationRef} className="w-full mb-28 lg:mb-15">
       <Header handleNotificationPanelOpen={handleNotificationPanelOpen} />
 
       <NotificationPanel isOpen={isOpen} />
