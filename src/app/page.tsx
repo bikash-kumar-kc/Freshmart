@@ -13,7 +13,7 @@ import NotificationLayout from "../components/client/NotificationLayout";
 
 export default function Home() {
   return (
-    <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 ">
+    <div className="w-full flex flex-col flex-1 items-center  bg-amber-50 pb-20 lg:pb-0 ">
        
           <NotificationLayout />
           <main className="w-full max-w-7xl mx-auto mt-10">
