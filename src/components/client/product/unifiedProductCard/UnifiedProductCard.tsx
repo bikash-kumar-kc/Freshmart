@@ -193,8 +193,8 @@ export function ProductCard({
   return (
     <div
       className={`group bg-white border rounded-md overflow-hidden flex flex-col
-        transition-transform duration-200 ease-out hover:scale-[1.02]
-        ${specialId === product.id ? "border-purple-500" : "border-black/10"}`}
+  transition-transform duration-200 ease-out lg:hover:scale-[1.02]
+  ${specialId === product.id ? "border-purple-500" : "border-black/10"}`}
     >
       <Link href={`/product/${product.category}/${product.slug}`}>
         <div className="relative h-50 overflow-hidden">
@@ -205,7 +205,7 @@ export function ProductCard({
             alt={product.name}
             fill
             className={`object-cover ${isOutOfStock ? "opacity-60" : ""}`}
-            sizes="240px"
+            sizes="(max-width: 640px) 70vw, 240px"
           />
 
           <button
@@ -246,7 +246,7 @@ export function ProductCard({
           </div>
           {true && (
             <div
-              className="absolute bottom-8.5 right-2.5 hidden group-hover:block "
+              className="absolute bottom-8.5 right-2.5 hidden lg:group-hover:block "
               onClick={handleVarientsSearch}
             >
               <span className="bg-[rgba(0,37,14,0.6)] text-[#EAF3DE] text-[10px] px-2.25 py-0.75 rounded-full">
@@ -268,7 +268,7 @@ export function ProductCard({
 
       {/* <SaveBanner amount={100} /> */}
       {/* )} */}
-      <div className="px-3.5 py-3 flex items-center justify-between gap-2">
+      <div className="px-2.5 py-2 sm:px-3.5 sm:py-3 flex items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="m-0 text-sm font-medium text-[#1a1a1a] line-clamp-1">
             {product.name}
