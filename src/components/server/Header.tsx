@@ -23,6 +23,8 @@ import { userUnfinishedCart } from "@/src/lib/server_actions/loadcart.server.act
 import { ICartItem, setCart } from "@/src/store/carts/slice";
 import { getTotalOrdersCount } from "@/src/lib/server_actions/orders.server";
 import { usePathname } from "next/navigation";
+import MobileBottomNav from "../client/MobileBottomNav";
+ 
 
 interface IStateHandler {
   handleNotificationPanelOpen: () => void;
@@ -155,12 +157,14 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
   }, [dispatch, allCartProducts?.totalItems]);
 
   return (
-    <div
+
+    <>
+ <div
       className={`fixed top-0 left-0 right-0 w-full px-4 py-3
-               flex items-center justify-between gap-8
-               bg-green-400 backdrop-blur-xl shadow-sm
-               transition-transform duration-300
-               border-b border-white/20 z-50 ${showHeader ? "translate-y-0" : "-translate-y-full"}`}
+  flex flex-wrap lg:flex-nowrap items-center justify-between gap-x-8 gap-y-2
+  bg-green-400 backdrop-blur-xl shadow-sm
+  transition-transform duration-300
+  border-b border-white/20 z-50 ${showHeader ? "translate-y-0" : "-translate-y-full"}`}
     >
       <Link href={"/"}>
         <div className="flex items-center gap-2 mb-1 lg:ml-25">
@@ -171,8 +175,8 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
         </div>
       </Link>
 
-      <div className="flex items-center gap-3 lg:mr-27 ">
-        <div>
+      <div className="contents lg:flex lg:items-center lg:gap-3 lg:mr-27">
+        <div className="order-last w-full lg:order-none lg:w-auto">
           <SearchBar />
         </div>
         <div className="relative group">
@@ -195,7 +199,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
           )}
         </div>
 
-        <Link href={"/cart"}>
+        <Link href={"/cart"} className="hidden lg:block">
           <div className="relative group">
             <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
               <ShoppingCart className="text-black group-hover:text-white transition-colors" />
@@ -211,7 +215,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
           </div>
         </Link>
 
-        <Link href={"/favorites"}>
+        <Link href={"/favorites"} className="hidden lg:block">
           <div className="relative group">
             <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
               <Heart className="text-black group-hover:text-white transition-colors" />
@@ -224,7 +228,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
           </div>
         </Link>
 
-        <Link href={"/orderstatus"}>
+        <Link href={"/orderstatus"} className="hidden lg:block">
           <div className="relative group">
             <button className="p-2 rounded-full bg-white/80 transition-all hover:bg-transparent hover:scale-110">
               <Truck className="text-black group-hover:text-white transition-colors" />
@@ -238,7 +242,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
         </Link>
 
         {data?.user.id ? (
-          <div>
+          <div className="hidden lg:block">
             <button className="group p-2 rounded-full bg-white/80 text-black shadow-md backdrop-blur-sm transition-all hover:bg-transparent hover:scale-110">
               <MdOutlinePersonRemoveAlt1
                 size={24}
@@ -249,7 +253,7 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
           </div>
         ) : (
           <>
-            <Link href={"/auth/register"}>
+            <Link href={"/auth/register"} className="hidden lg:block">
               <button className="group p-2 rounded-full bg-white/80 text-black shadow-md backdrop-blur-sm transition-all hover:bg-transparent hover:scale-110">
                 <IoPersonAddSharp
                   size={24}
@@ -261,6 +265,15 @@ const Header = ({ handleNotificationPanelOpen }: IStateHandler) => {
         )}
       </div>
     </div>
+
+    <MobileBottomNav
+      cartCount={mounted ? itemsInCart.totalItemsCart : 0}
+      favoriteCount={mounted ? favoriteItems : 0}
+      orderCount={totalOrders}
+      isLoggedIn={!!data?.user.id}
+    />
+    </>
+   
   );
 };
 
