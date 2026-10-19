@@ -17,7 +17,6 @@ import {
   markedNotification,
 } from "@/src/lib/server_actions/notifications.server";
 
-
 type NotificationPanelProps = {
   isOpen: boolean;
 };
@@ -26,31 +25,24 @@ const NotificationPanel = ({ isOpen }: NotificationPanelProps) => {
   const [notifis, setNotifis] = useState<NotificationTypes[]>([]);
   const [isAllMarked, setIsAllMarked] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
- 
 
   const { data } = useSession();
 
   const markAllRead = () => {
-    setNotifis((prev) =>
-      prev.map((n) => ({ ...n, isMarked: true })),
-    );
+    setNotifis((prev) => prev.map((n) => ({ ...n, isMarked: true })));
     setIsAllMarked(true);
   };
 
   const handleDelete = (id: string) => {
     if (!id) return;
-    setNotifis((prev) =>
-      prev.filter((p) => p.id !== id),
-    );
+    setNotifis((prev) => prev.filter((p) => p.id !== id));
   };
 
   const handleClick = (n: NotificationTypes) => {
     if (!n.isMarked) {
       setNotifis((prev) =>
         prev.map((item) =>
-          item.id === n.id
-            ? { ...item, isMarked: true }
-            : item,
+          item.id === n.id ? { ...item, isMarked: true } : item,
         ),
       );
     }
@@ -62,15 +54,11 @@ const NotificationPanel = ({ isOpen }: NotificationPanelProps) => {
     error,
   } = useGetAllNotifications(data?.user.id);
 
-  const {
-    mutate: markedNotifications,
-    isPending: marking,
-  } = useMarkedNotification();
+  const { mutate: markedNotifications, isPending: marking } =
+    useMarkedNotification();
 
-  const {
-    mutate: deletedNotifications,
-    isPending: deleting,
-  } = useDeleteNotification();
+  const { mutate: deletedNotifications, isPending: deleting } =
+    useDeleteNotification();
 
   const handleNotificationsMarked = () => {
     try {
@@ -108,26 +96,18 @@ const NotificationPanel = ({ isOpen }: NotificationPanelProps) => {
     window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener(
-        "scroll",
-        handleScroll,
-      );
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   useEffect(() => {
-    if (
-      notifications &&
-      notifications.notifications?.length > 0
-    ) {
+    if (notifications && notifications.notifications?.length > 0) {
       setNotifis(notifications.notifications);
     }
   }, [notifications]);
 
   useEffect(() => {
-    setIsAllMarked(
-      !notifis.some((n) => !n.isMarked),
-    );
+    setIsAllMarked(!notifis.some((n) => !n.isMarked));
   }, [notifis]);
 
   if (!isOpen) return null;
@@ -135,9 +115,7 @@ const NotificationPanel = ({ isOpen }: NotificationPanelProps) => {
   if (isLoading) {
     return (
       <div className="w-full min-h-screen">
-        <p className="text-gray-500">
-          It's loading...
-        </p>
+        <p className="text-gray-500">It's loading...</p>
       </div>
     );
   }
@@ -145,9 +123,7 @@ const NotificationPanel = ({ isOpen }: NotificationPanelProps) => {
   if (error) {
     return (
       <div className="w-full min-h-screen">
-        <p className="text-red-500">
-          {error.message}
-        </p>
+        <p className="text-red-500">{error.message}</p>
       </div>
     );
   }
@@ -155,64 +131,51 @@ const NotificationPanel = ({ isOpen }: NotificationPanelProps) => {
   return (
     <aside
       className={`
-        w-100 h-screen bg-[#f7f7f7] border-l z-10
-        fixed right-0 flex flex-col
-        transition-transform duration-300 ease-in-out
-        ${isSticky ? "top-0" : "top-20"}
-        ${
-          isOpen
-            ? "translate-x-0"
-            : "translate-x-full"
-        }
-      `}
+    w-full sm:w-100 bg-[#f7f7f7] border-l z-10
+    fixed right-0 bottom-0 flex flex-col
+    pb-20 lg:pb-0
+    transition-transform duration-300 ease-in-out
+    ${isSticky ? "top-0" : "top-28 lg:top-20"}
+    ${isOpen ? "translate-x-0" : "translate-x-full"}
+  `}
     >
       {/* Header */}
       <div className="flex items-center justify-end px-5 py-4 gap-3 border-[#262626]">
-        {notifications &&
-          notifications.totalNotifications > 0 && (
-            <>
-              {!isAllMarked && (
-                <button
-                  onClick={() => {
-                    markAllRead();
-                    handleNotificationsMarked();
-                  }}
-                  disabled={marking}
-                  className="text-[13px] text-white rounded-[5px] px-2 py-1 bg-green-600 hover:bg-green-800 transition-colors duration-200"
-                >
-                  {marking
-                    ? "marking..."
-                    : "Mark all read"}
-                </button>
-              )}
-
+        {notifications && notifications.totalNotifications > 0 && (
+          <>
+            {!isAllMarked && (
               <button
                 onClick={() => {
-                  handleNotificationsDeleted();
-                  setNotifis([]);
+                  markAllRead();
+                  handleNotificationsMarked();
                 }}
-                disabled={deleting}
-                className="text-[13px] text-white rounded-[5px] px-2 py-1 bg-red-600 hover:bg-red-800 transition-colors duration-200"
+                disabled={marking}
+                className="text-[13px] text-white rounded-[5px] px-2 py-1 bg-green-600 hover:bg-green-800 transition-colors duration-200"
               >
-                {deleting
-                  ? "deleting..."
-                  : "Delete All"}
+                {marking ? "marking..." : "Mark all read"}
               </button>
-            </>
-          )}
+            )}
+
+            <button
+              onClick={() => {
+                handleNotificationsDeleted();
+                setNotifis([]);
+              }}
+              disabled={deleting}
+              className="text-[13px] text-white rounded-[5px] px-2 py-1 bg-red-600 hover:bg-red-800 transition-colors duration-200"
+            >
+              {deleting ? "deleting..." : "Delete All"}
+            </button>
+          </>
+        )}
       </div>
 
       {/* List */}
       <div className="flex-1 overflow-y-auto">
         {notifis.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-2 pb-10">
-            <Bell
-              size={28}
-              className="text-[#404040]"
-            />
-            <p className="text-sm text-[#525252]">
-              No notifications yet
-            </p>
+            <Bell size={28} className="text-[#404040]" />
+            <p className="text-sm text-[#525252]">No notifications yet</p>
           </div>
         )}
 
@@ -225,19 +188,12 @@ const NotificationPanel = ({ isOpen }: NotificationPanelProps) => {
               key={n.id}
               onClick={() => {
                 handleClick(n);
-                markedNotification(
-                  data?.user.id as string,
-                  n.id,
-                );
+                markedNotification(data?.user.id as string, n.id);
               }}
               className={`
                 flex gap-3 px-4 py-3 cursor-pointer border transition-colors shadow-sm
                 hover:bg-[#005700] group rounded-sm
-                ${
-                  isUnread
-                    ? "bg-[#cdcaca]"
-                    : "bg-transparent"
-                }
+                ${isUnread ? "bg-[#cdcaca]" : "bg-transparent"}
               `}
             >
               <div
@@ -268,10 +224,7 @@ const NotificationPanel = ({ isOpen }: NotificationPanelProps) => {
                     onClick={(e) => {
                       e.stopPropagation();
 
-                      deleteNotification(
-                        data?.user.id as string,
-                        n.id,
-                      );
+                      deleteNotification(data?.user.id as string, n.id);
 
                       handleDelete(n.id);
                     }}
