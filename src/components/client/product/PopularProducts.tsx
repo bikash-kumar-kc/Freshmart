@@ -18,17 +18,24 @@ const PopularProducts = () => {
   }
 
   return (
-    <div className=" w-full flex flex-col gap-6">
-      <h2 className="text-3xl font-semibold ">Popular Now</h2>
+    <div className="w-full flex flex-col gap-4 sm:gap-6 mt-6 lg:mt-0">
+      <h2 className="px-4 text-2xl font-semibold sm:text-3xl lg:px-0">
+        Popular Now
+      </h2>
+
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: 30,
-        }}
+        className="flex gap-3 overflow-x-auto px-4 pb-2 snap-x snap-mandatory scroll-px-4
+        [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+        sm:grid sm:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] sm:gap-[30px]
+        sm:overflow-visible sm:px-4 sm:pb-0 lg:px-0"
       >
         {popularProducts.map((p) => (
-          <ProductCard key={p.id} product={fromFlatProduct(p)} />
+          <div
+            key={p.id}
+            className="w-[68%] shrink-0 snap-start sm:w-auto sm:shrink"
+          >
+            <ProductCard product={fromFlatProduct(p)} />
+          </div>
         ))}
       </div>
     </div>
