@@ -227,38 +227,23 @@
 
 
 
-.h-scroll {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding: 0 16px 8px;
-  scroll-snap-type: x proximity;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.h-scroll::-webkit-scrollbar {
-  display: none;
-}
-.h-scroll > * {
-  flex: 0 0 70%;
-  scroll-snap-align: start;
-}
-
-@media (min-width: 640px) {
-  .h-scroll {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-    overflow: visible;
-    padding: 0 16px;
+@media (max-width: 639px) {
+  .h-scroll-mobile {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 0 16px 8px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
-  .h-scroll > * {
-    flex: initial;
+  .h-scroll-mobile::-webkit-scrollbar {
+    display: none;
   }
-}
-
-@media (min-width: 1024px) {
-  .h-scroll {
-    padding: 0;
+  .h-scroll-mobile > * {
+    flex: 0 0 55%;
+    scroll-snap-align: start;
+    margin-block: 0 !important; /* cancels space-y-2 so cards stay on one line */
   }
 }
