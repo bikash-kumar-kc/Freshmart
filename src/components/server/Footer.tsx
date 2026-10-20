@@ -83,7 +83,7 @@ const FooterColumn = ({
 
 const Footer = () => {
   return (
-    <footer className=" w-full   bg-[#0a1502] text-green-200 pb-20 lg:pb-0">
+    <footer className=" w-full   bg-[#0a1502] text-gray-200 pb-20 lg:pb-0">
       <div className=" px-6 pt-12 pb-0">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 items-center place-items-center gap-10">
           {/* Brand + social */}
@@ -99,7 +99,7 @@ const Footer = () => {
             </Link>
 
             {/* Tagline */}
-            <p className="text-[13px] text-green-400 leading-relaxed max-w-55">
+            <p className="text-[13px] text-gray-200 leading-relaxed max-w-55">
               Organic groceries delivered to your door in minutes. Fresh from
               the farm, straight to you.
             </p>
@@ -113,7 +113,7 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-8.5 h-8.5 rounded-lg border border-green-800 bg-green-900/60 flex items-center justify-center text-green-400 hover:bg-green-800 hover:text-green-100 transition-colors duration-150"
+                  className="w-8.5 h-8.5 rounded-lg border border-green-800 bg-green-900/60 flex items-center justify-center text-gray-400 hover:text-gray-300 transition-colors duration-150"
                 >
                   {s.icon}
                 </a>
@@ -123,7 +123,7 @@ const Footer = () => {
             {/* Organic badge */}
             <div className="inline-flex items-center gap-1.5 bg-green-900/60 border border-green-800 rounded-md px-2.5 py-1.5 w-fit">
               <MdEco size={14} className="text-green-400" />
-              <span className="text-[11px] text-green-400">
+              <span className="text-[11px] text-gray-200">
                 100% organic certified
               </span>
             </div>
