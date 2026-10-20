@@ -31,23 +31,23 @@ async function PageContent({ params }: PageProps) {
     notFound();
   }
 
-  // console.log("just before rendering the product page...");
   return (
     <main className="bg-amber-50 min-h-screen">
-      <div className="max-w-7xl mx-auto py-6">
-        <div className="flex items-center justify-between mb-6 px-2">
-          <div>
-            <h1 className="font-serif text-2xl font-semibold text-gray-900">
+      <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6 xl:px-0">
+        {/* Title row */}
+        <div className="flex items-center justify-between gap-3 mb-4 sm:mb-6">
+          <div className="min-w-0">
+            <h1 className="font-serif text-xl sm:text-2xl font-semibold text-gray-900 truncate">
               {activeCategory.emoji} {activeCategory.label}
             </h1>
-            <p className="text-xs text-gray-400 mt-0.5 px-10">
+            <p className="text-xs text-gray-400 mt-0.5 sm:px-10">
               organic products
             </p>
           </div>
 
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-sm font-medium
+            className="shrink-0 flex items-center gap-1.5 text-sm font-medium
             text-green-700 hover:text-white hover:bg-green-400
             px-3 py-2 transition-colors rounded-sm"
           >
@@ -56,7 +56,9 @@ async function PageContent({ params }: PageProps) {
           </Link>
         </div>
 
-        <div className="flex gap-6 items-start">
+        {/* Stacked on mobile, side by side from md */}
+        <div className="flex flex-col items-stretch md:flex-row md:items-start md:gap-6">
+          {/* Desktop sidebar */}
           <aside
             className="hidden md:flex flex-col w-75 shrink-0
             bg-white rounded-sm border border-gray-100
@@ -80,15 +82,17 @@ async function PageContent({ params }: PageProps) {
             </nav>
           </aside>
 
+          {/* Mobile category chips */}
           <div
-            className="md:hidden flex gap-2 overflow-x-auto pb-2
-            -mx-4 px-4 mb-4 scrollbar-none w-full cursor-pointer"
+            className="md:hidden flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 mb-4
+              snap-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {CATEGORIES.map((cat) => (
-              <button
+              <Link
                 key={cat.slug}
-                className={`shrink-0 flex items-center gap-1.5 px-3 py-2
-                  rounded-sm text-sm font-medium border transition-all cursor-pointer
+                href={`/categories/${cat.slug}`}
+                className={`shrink-0 snap-start flex items-center gap-1.5 px-3 py-2
+                  rounded-sm text-sm font-medium border transition-all
                   ${
                     cat.slug === activeCategory.slug
                       ? "bg-green-700 text-white border-green-700"
@@ -97,7 +101,7 @@ async function PageContent({ params }: PageProps) {
               >
                 <span>{cat.emoji}</span>
                 {cat.label}
-              </button>
+              </Link>
             ))}
           </div>
 
