@@ -63,7 +63,7 @@ const FooterColumn = ({
   links: { label: string; href: string }[];
 }) => (
   <div className="flex flex-col gap-3">
-    <p className="text-[11px] font-medium uppercase tracking-widest text-green-500">
+    <p className="text-[11px] font-medium uppercase tracking-widest text-gray-200">
       {title}
     </p>
     <ul className="flex flex-col gap-2.5">
@@ -71,7 +71,7 @@ const FooterColumn = ({
         <li key={link.label}>
           <Link
             href={link.href}
-            className="text-[13px] text-green-300/80 hover:text-green-100 transition-colors duration-150"
+            className="text-[13px] text-gray-400 hover:text-gray-300 transition-colors duration-150"
           >
             {link.label}
           </Link>
