@@ -5,14 +5,24 @@ type CategorySkeletonProps = {
 
 function CategorySkeleton({ count = 10 }: CategorySkeletonProps) {
   return (
-    <section className="w-full mt-10">
+    <section className="mt-10 w-full min-w-0">
       {/* Category Title */}
-      <div className="skeleton h-8 w-56 rounded-md mb-6" />
+      <div className="skeleton mx-4 mb-4 h-8 w-56 rounded-md sm:mb-6 lg:mx-0" />
 
       {/* Products */}
-      <div className="flex flex-wrap gap-15 mt-4 w-full ">
+      <div
+        className="mt-4 flex w-full min-w-0 flex-nowrap gap-3 overflow-hidden px-4
+          sm:flex-wrap sm:gap-15 sm:overflow-visible sm:px-0"
+      >
         {Array.from({ length: count }).map((_, index) => (
-          <ProductCardSkeleton key={index} />
+          <div
+            key={index}
+            className={`w-[55%] shrink-0 sm:w-auto sm:shrink ${
+              index > 2 ? "hidden sm:block" : ""
+            }`}
+          >
+            <ProductCardSkeleton />
+          </div>
         ))}
       </div>
     </section>
@@ -21,9 +31,9 @@ function CategorySkeleton({ count = 10 }: CategorySkeletonProps) {
 
 function ProductCardSkeleton() {
   return (
-    <div className="w-55 overflow-hidden rounded-2xl">
+    <div className="w-full overflow-hidden rounded-2xl sm:w-55">
       {/* Image */}
-      <div className="skeleton h-70 w-full rounded-2xl" />
+      <div className="skeleton h-52 w-full rounded-2xl sm:h-70" />
 
       {/* Name */}
       <div className="skeleton mt-4 h-5 w-3/4 rounded-md" />
