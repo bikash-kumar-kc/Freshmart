@@ -9,6 +9,7 @@ import ProductsSuspenseFallback from "../components/client/product/ProductsCateg
 import SpecialProductsSkeleton from "@/components/skeleton/SpecialProductSkeleton";
 import OfferedProducts from "../components/client/product/OfferedProducts";
 import PopularProducts from "../components/client/product/PopularProducts";
+import PaginationSkeleton from "@/components/skeleton/PaginationSkeleton";
 // import NotificationLayout from "../components/client/NotificationLayout";
 
 export default function Home() {
@@ -35,7 +36,7 @@ export default function Home() {
               <ProductsCategories />
             </Suspense>
           </main>
-          <Suspense fallback={<p className="mt-4">loading...</p>}>
+          <Suspense fallback={<PaginationSkeleton/>}>
             <PaginationComponent />
           </Suspense>
     </div>
