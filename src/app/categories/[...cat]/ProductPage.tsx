@@ -3,7 +3,6 @@ import { ProductCard } from "@/src/components/client/product/unifiedProductCard/
 import { db } from "@/src/db/config";
 import { products, productVariants } from "@/src/db/schema";
 import { eq, inArray } from "drizzle-orm";
-// import { ProductCard } from "../ProductCard";
 
 async function getProductsByCategory(dbName: string) {
   const productRows = await db
@@ -39,7 +38,7 @@ const ProductPage = async ({
   cat: string;
   productId: string;
 }) => {
-  if (!cat?.trim()) return;
+  if (!cat?.trim()) return null;
   const productList = await getProductsByCategory(cat);
 
   const displayedProduct = productList.find((p) => p.id === productId);
@@ -51,28 +50,17 @@ const ProductPage = async ({
   return (
     <div className="flex-1 min-w-0">
       {productList.length === 0 ? (
-        <div
-          className="flex flex-col items-center justify-center
-                py-24 text-center"
-        >
+        <div className="flex flex-col items-center justify-center py-16 sm:py-24 text-center">
           <span className="text-4xl mb-3">🌱</span>
           <p className="text-sm font-medium text-gray-500">
             No products in this category yet
           </p>
         </div>
       ) : (
-        <div
-          className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4
-                gap-3 sm:gap-4"
-        >
+        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
           {orderedProducts.map((product) => (
-            // <ProductCard
-            //   key={product.id}
-            //   product={product}
-            //   specialId={productId}
-            // />
             <ProductCard
-            key={product.id}
+              key={product.id}
               product={fromCategoryProduct(product)}
               specialId={productId}
             />
