@@ -34,13 +34,13 @@ const ProductsCategories = () => {
               touch-pan-x overscroll-x-contain
               [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
               sm:flex-wrap sm:justify-between  sm:gap-4 sm:space-y-2
-              sm:overflow-visible sm:px-0 sm:pb-0 gap-3"
+              sm:overflow-visible sm:px-0 sm:pb-0 gap-3 shrink-0"
             >
               {c?.products.map((p, index) => (
                 <div
                   key={p.productId + index}
-                  className="w-[55%] shrink-0 snap-start [&>*]:w-full
-                  sm:w-auto sm:shrink sm:[&>*]:w-auto"
+                 className="w-[55%] shrink-0 snap-start [&>*]:w-full [&>*]:min-w-0 [&>*]:max-w-full
+sm:w-auto sm:shrink sm:[&>*]:w-auto"
                 >
                   <HoverRevealCard
                     image={p.thumbnail}
