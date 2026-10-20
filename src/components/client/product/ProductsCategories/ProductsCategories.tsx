@@ -29,12 +29,12 @@ const ProductsCategories = () => {
             </h2>
 
             <div
-              className="flex min-w-0 w-full flex-row flex-nowrap items-center gap-3
+              className="flex min-w-0 w-full flex-row flex-nowrap items-center 
               overflow-x-auto px-4 pb-2 snap-x snap-proximity scroll-px-4
               touch-pan-x overscroll-x-contain
               [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
-              sm:flex-wrap sm:justify-between sm:gap-4 sm:space-y-2
-              sm:overflow-visible sm:px-0 sm:pb-0"
+              sm:flex-wrap sm:justify-between  sm:gap-4 sm:space-y-2
+              sm:overflow-visible sm:px-0 sm:pb-0 gap-3"
             >
               {c?.products.map((p, index) => (
                 <div
