@@ -142,7 +142,7 @@ const Footer = () => {
 
       {/* Bottom bar  */}
       <div className=" w-full px-6 mt-10 border-t border-green-900 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="text-[12px] text-green-600">
+        <p className="text-[12px] text-gray-200">
           &copy;FreshMart. All rights reserved.
         </p>
         <div className="flex items-center gap-5">
@@ -151,7 +151,7 @@ const Footer = () => {
               <Link
                 key={item}
                 href="#"
-                className="text-[12px] text-green-600 hover:text-green-300 transition-colors"
+                className="text-[12px] text-gray-400 hover:text-gray-300 transition-colors"
               >
                 {item}
               </Link>
