@@ -188,7 +188,7 @@ export default function ProductDetailPage({
                         </p>
                       </div>
                       <div>
-                        <div className="flex flex-col sm:flex-row items-center gap-3">
+                        <div className="flex flex-row  items-center gap-3">
                           {isVarientExist(v.id) && !!productInfo && (
                             <QuantityControl
                               value={productInfo.quantity}
