@@ -9,6 +9,7 @@ import ReduxProvider from "./providers/ReduxProvider";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import NotificationLayout from "../components/client/NotificationLayout";
+import { Suspense } from "react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,7 +33,9 @@ export default function RootLayout({
           <TanstackProvider>
             <ReduxProvider>
               <ToastContainerProvider>
-                <NotificationLayout />
+                <Suspense fallback={null}>
+                  <NotificationLayout />
+                </Suspense>
                 {children}
                 <Analytics />
                 <SpeedInsights />
