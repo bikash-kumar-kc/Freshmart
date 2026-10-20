@@ -85,7 +85,7 @@ const Footer = () => {
   return (
     <footer className=" w-full   bg-[#0a1502] text-green-200 pb-20 lg:pb-0">
       <div className=" px-6 pt-12 pb-0">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center place-items-center gap-10">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 items-center place-items-center gap-10">
           {/* Brand + social */}
           <div className="flex flex-col gap-4">
             {/* Logo */}
@@ -140,7 +140,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* ── Bottom bar ───────────────────────────────────────────────── */}
+      {/* Bottom bar  */}
       <div className=" w-full px-6 mt-10 border-t border-green-900 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="text-[12px] text-green-600">
           &copy;FreshMart. All rights reserved.
