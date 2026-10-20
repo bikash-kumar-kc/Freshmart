@@ -35,7 +35,7 @@ export default function Home() {
               <ProductsCategories />
             </Suspense>
           </main>
-          <Suspense fallback={<p>loading...</p>}>
+          <Suspense fallback={<p className="mt-4">loading...</p>}>
             <PaginationComponent />
           </Suspense>
     </div>
