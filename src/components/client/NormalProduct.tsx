@@ -19,7 +19,7 @@ export default function HoverRevealCard({
   const { slug } = CATEGORIES.find((c) => c.dbName === cat) as { slug: string };
   
   return (
-    <Link href={`/categories/${slug}/${productId}`} className="block w-full sm:w-60">
+    <Link href={`/categories/${slug}/${productId}`} className="block w-full">
   <div className="group relative w-full overflow-hidden rounded-sm flex flex-col gap-1">
     <div className="relative aspect-square w-full">
           <Image
