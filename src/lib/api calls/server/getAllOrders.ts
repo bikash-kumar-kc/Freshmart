@@ -9,7 +9,8 @@ export interface IOrderType {
     | "shipped"
     | "packaging"
     | "processing"
-    | "ontheway";
+    | "ontheway"
+    |"failed"
   displayOrderStatus?: "pending" | "cancelled" | "processing" | "delivered";
   updatedTime: string;
   totalCost?: number | null;

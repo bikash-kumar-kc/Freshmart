@@ -26,12 +26,12 @@ export const OrderCard = ({ order }: { order: IOrderType }) => {
               | "packaging"
           ];
   } else {
+    const status =
+      order.orderStatus === "failed" ? "cancelled" : order.orderStatus;
     config =
-      order.orderStatus === "packaging"
+      status === "packaging"
         ? STATUS_CONFIG["shipped"]
-        : STATUS_CONFIG[
-            order?.displayOrderStatus as "pending" | "processing" | "delivered"
-          ];
+        : STATUS_CONFIG[status as "pending" | "processing" | "delivered"];
   }
 
   const isDisplayed = order.type === "display";
@@ -45,10 +45,10 @@ export const OrderCard = ({ order }: { order: IOrderType }) => {
             {order.orderId}
           </span>
           <span
-            className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-0.5 rounded-sm border ${config.badge} ${config.text}`}
+            className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-0.5 rounded-sm border ${config?.badge} ${config?.text}`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
-            {config.label}
+            <span className={`w-1.5 h-1.5 rounded-full ${config?.dot}`} />
+            {config?.label ?? "unhandle order"}
           </span>
         </div>
         <div className="flex items-center gap-2">
