@@ -29,28 +29,27 @@ const ProductsCategories = () => {
             </h2>
 
             <div
-              className="flex min-w-0 w-full flex-row flex-nowrap items-center 
-              overflow-x-auto px-4 pb-2 snap-x snap-proximity scroll-px-4
-                overscroll-x-contain
-              [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
-              sm:flex-wrap sm:justify-between  sm:gap-4 sm:space-y-2
-              sm:overflow-visible sm:px-0 sm:pb-0 gap-3 shrink-0"
-            >
-              {c?.products.map((p, index) => (
-                <div
-                  key={p.productId + index}
-                 className="w-[55%] shrink-0 snap-start [&>*]:w-full [&>*]:min-w-0 [&>*]:max-w-full
-sm:w-auto sm:shrink sm:[&>*]:w-auto"
-                >
-                  <HoverRevealCard
-                    image={p.thumbnail}
-                    name={p.productName}
-                    cat={c.category}
-                    productId={p.productId}
-                  />
-                </div>
-              ))}
-            </div>
+  className="flex min-w-0 w-full flex-row flex-nowrap items-start gap-3
+    overflow-x-auto px-4 pb-2 snap-x snap-proximity scroll-px-4
+    overscroll-x-contain
+    [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+    sm:flex-wrap sm:justify-between sm:gap-x-4 sm:gap-y-6
+    sm:overflow-visible sm:px-0 sm:pb-0"
+>
+  {c?.products.map((p, index) => (
+    <div
+      key={p.productId + index}
+      className="w-[55%] shrink-0 snap-start sm:w-60"
+    >
+      <HoverRevealCard
+        image={p.thumbnail}
+        name={p.productName}
+        cat={c.category}
+        productId={p.productId}
+      />
+    </div>
+  ))}
+</div>
           </div>
         ))}
       </div>
